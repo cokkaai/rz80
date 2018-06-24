@@ -94,7 +94,32 @@ fn cp_s() {
 // INC r
 #[test]
 fn inc_r() {
-    unimplemented!();
+    let mut cpu = CPU::with_memory(vec![0b00_010_100]);
+    cpu.d = 0x28;
+
+    cpu.inc_r();
+
+    // If the D Register contains 28h , then upon the execution of an INC D
+    // instruction, the D Register contains 29h.
+    assert_eq!(cpu.d, 0x29);
+
+    // S is set if result is negative; otherwise, it is reset.
+    assert_eq!(cpu.get_s(), false);
+
+    // Z is set if result is 0; otherwise, it is reset.
+    assert_eq!(cpu.get_z(), false);
+    
+    // H is set if carry from bit 3; otherwise, it is reset.
+    assert_eq!(cpu.get_h(), false);
+    
+    // P/V is set if r was 7Fh before operation; otherwise, it is reset.
+    assert_eq!(cpu.get_pv(), false);
+    
+    // N is reset.
+    assert_eq!(cpu.get_n(), false);
+    
+    // C is not affected.
+    assert_eq!(cpu.get_c(), false);    
 }
 
 // INC (HL)
@@ -115,8 +140,47 @@ fn inc_iyd() {
     unimplemented!();
 }
 
-// DEC m
 #[test]
-fn dec_m() {
+fn dec_r() {
+    let mut cpu = CPU::with_memory(vec![0b00_010_101]);
+    cpu.d = 0x2a;
+
+    cpu.dec_r();
+
+    // If the D Register contains byte 2Ah , then upon the execution 
+    // of a DEC D instruction, the D Register contains 29h .
+    assert_eq!(cpu.d, 0x29);
+
+    // S is set if result is negative; otherwise, it is reset.
+    assert_eq!(cpu.get_s(), false);
+
+    // Z is set if result is 0; otherwise, it is reset.
+    assert_eq!(cpu.get_z(), false);
+    
+    // H is set if carry from bit 4; otherwise, it is reset.
+    assert_eq!(cpu.get_h(), false);
+    
+    // P/V is set if r was 7Fh before operation; otherwise, it is reset.
+    assert_eq!(cpu.get_pv(), false);
+    
+    // N is reset.
+    assert_eq!(cpu.get_n(), true);
+    
+    // C is not affected.
+    assert_eq!(cpu.get_c(), false);    
+}
+
+#[test]
+fn dec_hli() {
+    unimplemented!();
+}
+
+#[test]
+fn dec_ixdi() {
+    unimplemented!();
+}
+
+#[test]
+fn dec_iydi() {
     unimplemented!();
 }
