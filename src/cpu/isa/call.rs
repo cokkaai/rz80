@@ -1,9 +1,10 @@
+// === Call and Return Group ===
+
 use cpu::CPU;
 use cpu::bytes;
 
 #[allow(dead_code)]
 
-// === Call and Return Group ===
 impl CPU {
     fn _push_pc(&mut self) {
         // (SP – 1) ← PCH
@@ -56,7 +57,6 @@ impl CPU {
 
     // RET cc
     pub fn ret_cc(&mut self) {
-        println!("memory at 0: {}", self.memory_at_pc(0));
         if self.condition_at_pc(0) {
             self._pop_pc();
         } else {

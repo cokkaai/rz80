@@ -1,3 +1,5 @@
+// === 8-Bit Load Group ===
+
 use cpu::CPU;
 use cpu::Register16;
 use cpu::bytes;
@@ -5,8 +7,6 @@ use cpu::bytes;
 #[allow(dead_code)]
 
 impl CPU {
-    /// r = r1
-    /// M Cycles: 1, T States: 4, MHz E.T.: 1.0
     pub fn ld_r_r1(&mut self) {
         let opcode = self.memory_at_pc(0);
         let src = CPU::select_src(opcode);
@@ -16,7 +16,6 @@ impl CPU {
         self.incr_pc(1);
     }
 
-    /// M Cycles: 2, T States 7 (4, 3), 4 MHz E.T. 1.75
     pub fn ld_r_n(&mut self) {
         let opcode = self.memory_at_pc(0);
         let dest = CPU::select_dest(opcode);

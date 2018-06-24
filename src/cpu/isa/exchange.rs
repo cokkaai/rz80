@@ -1,3 +1,5 @@
+// === Exchange, Block Transfer, and Search Group ===
+
 use cpu::CPU;
 use cpu::Register16;
 use cpu::bytes;
@@ -5,6 +7,12 @@ use cpu::bytes;
 #[allow(dead_code)]
 
 impl CPU {
+    fn exchange(a: &mut u8, b: &mut u8) {
+        let t = *a;
+        *a = *b;
+        *b = t;
+    }
+
     // EX DE, HL
     pub fn ex_de_hl(&mut self) {
         Self::exchange(&mut self.d, &mut self.h);
@@ -17,12 +25,6 @@ impl CPU {
         Self::exchange(&mut self.a, &mut self.a1);
         Self::exchange(&mut self.f, &mut self.f1);
         self.incr_pc(1);
-    }
-
-    fn exchange(a: &mut u8, b: &mut u8) {
-        let t = *a;
-        *a = *b;
-        *b = t;
     }
 
     // EXX
@@ -114,30 +116,6 @@ impl CPU {
     // LDI
     pub fn ldi(&mut self) {
         self._lddiff(1);
-        /*
-        // (DE) ← (HL)
-        let addr = self.read16(Register16::de) as usize;
-        let value_addr = self.read16(Register16::hl) as usize;
-        self.memory[addr] = self.memory[value_addr];
-
-        // DE ← DE + 1
-        let value = self.read16(Register16::de) + 1;
-        self.write16(Register16::de, value);
-
-        // HL ← HL + 1
-        let value = self.read16(Register16::hl) + 1;
-        self.write16(Register16::hl, value);
-
-        // BC ← BC – 1
-        let value = self.read16(Register16::bc) - 1;
-        self.write16(Register16::bc, value);
-
-        // P/V is set if BC – 1 ≠ 0; otherwise, it is reset.
-        let value = self.read16(Register16::bc) != 0;
-        self.set_pv(value);
-
-        self.incr_pc(2);
-        */
     }
 
     // LDIR

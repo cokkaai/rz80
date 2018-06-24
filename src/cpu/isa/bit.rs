@@ -1,5 +1,7 @@
+
+// === Bit Set, Reset, and Test Group ===
+
 use cpu::CPU;
-//use cpu::bytes;
 
 #[allow(dead_code)]
 

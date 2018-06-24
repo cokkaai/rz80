@@ -2,7 +2,6 @@
 
 use cpu::CPU;
 
-// BIT b, r
 #[test]
 fn bit_b_r() {
     let mut cpu = CPU::with_memory(
@@ -21,7 +20,6 @@ fn bit_b_r() {
     assert_eq!(cpu.pc, 2);
 }
 
-// BIT b, (HL)
 #[test]
 fn bit_b_hli() {
     let mut cpu = CPU::with_memory(
@@ -39,7 +37,6 @@ fn bit_b_hli() {
     assert_eq!(cpu.pc, 2);
 }
 
-// BIT b, (IX+d)
 #[test]
 fn bit_b_ixdi() {
      let mut cpu = CPU::with_memory(
@@ -64,7 +61,6 @@ fn bit_b_ixdi() {
     assert_eq!(cpu.pc, 4);
 }
 
-// BIT b, (IY+d)
 #[test]
 fn bit_b_iydi() {
      let mut cpu = CPU::with_memory(
@@ -89,7 +85,6 @@ fn bit_b_iydi() {
     assert_eq!(cpu.pc, 4);
 }
 
-// SET b, r
 #[test]
 fn set_b_r() {
     let mut cpu = CPU::with_memory(
@@ -106,7 +101,6 @@ fn set_b_r() {
     assert_eq!(cpu.pc, 2);
 }
 
-// SET b, (HL)
 #[test]
 fn set_b_hli() {
     let mut cpu = CPU::with_memory(
@@ -125,7 +119,6 @@ fn set_b_hli() {
     assert_eq!(cpu.pc, 2);
 }
 
-// SET b, (IX+d)
 #[test]
 fn set_b_ixdi() {
     let mut cpu = CPU::with_memory(
@@ -148,7 +141,6 @@ fn set_b_ixdi() {
     assert_eq!(cpu.pc, 4);
 }
 
-// SET b, (IY+d)
 #[test]
 fn set_b_iydi() {
     let mut cpu = CPU::with_memory(
@@ -171,7 +163,6 @@ fn set_b_iydi() {
     assert_eq!(cpu.pc, 4);
 }
 
-// RES b, r
 #[test]
 pub fn res_b_r() {
     let mut cpu = CPU::with_memory(
@@ -188,7 +179,6 @@ pub fn res_b_r() {
     assert_eq!(cpu.pc, 2);
 }
 
-// RES b, (HL)
 #[test]
 pub fn res_b_hli() {
     let mut cpu = CPU::with_memory(
@@ -207,7 +197,6 @@ pub fn res_b_hli() {
     assert_eq!(cpu.pc, 2);
 }
 
-// RES b, (IX+d)
 #[test]
 pub fn res_b_ixdi() {
     let mut cpu = CPU::with_memory(
@@ -230,7 +219,6 @@ pub fn res_b_ixdi() {
     assert_eq!(cpu.pc, 4);
 }
 
-// RES b, (IY+d)
 #[test]
 pub fn res_b_iydi() {
     let mut cpu = CPU::with_memory(

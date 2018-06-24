@@ -158,18 +158,11 @@ impl CPU {
 
     /// Identifies a register from patterns embedded
     /// in the object code.
-    /// A 111
-    /// B 000
-    /// C 001
-    /// D 010
-    /// E 011
-    /// H 100
-    /// L 101
-    fn select(code: u8) -> Register {
+    pub fn select(code: u8) -> Register {
         match code {
             0b111 => Register::a,
-            0 => Register::b,
-            1 => Register::c,
+            0b000 => Register::b,
+            0b001 => Register::c,
             0b010 => Register::d,
             0b011 => Register::e,
             0b100 => Register::h,

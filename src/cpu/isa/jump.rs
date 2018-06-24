@@ -1,10 +1,11 @@
+// === Jump Group ===
+
 use cpu::CPU;
 use cpu::bytes;
 
 #[allow(dead_code)]
 
 impl CPU { 
-
     // JP nn
     pub fn jp_nn(&mut self) {
         let addr = bytes::promote(self.memory_at_pc(2), self.memory_at_pc(1));

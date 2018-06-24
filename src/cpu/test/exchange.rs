@@ -4,7 +4,6 @@ use cpu::Register16;
 use cpu::CPU;
 use cpu::bytes;
 
-// EX DE, HL
 #[test]
 fn ex_de_hl() {
     let mut cpu = CPU::new(16);
@@ -22,7 +21,6 @@ fn ex_de_hl() {
     assert_eq!(cpu.pc, 1);
 }
 
-// EX AF, AF′
 #[test]
 fn ex_af_af1() {
     let mut cpu = CPU::new(16);
@@ -40,7 +38,6 @@ fn ex_af_af1() {
     assert_eq!(cpu.pc, 1);
 }
 
-// EXX
 #[test]
 fn exx() {
     let mut cpu = CPU::new(16);
@@ -78,7 +75,6 @@ fn exx() {
     assert_eq!(cpu.pc, 1);
 }
 
-// EX (SP), HL
 #[test]
 fn ex_spi_hl() {
     // H ↔ (SP+1), L ↔ (SP)
@@ -97,7 +93,6 @@ fn ex_spi_hl() {
     assert_eq!(cpu.pc, 1);
 }
 
-// EX (SP), IX
 #[test]
 fn ex_spi_ix() {
     // IXH ↔ (SP+1), IXL ↔ (SP)
@@ -115,7 +110,6 @@ fn ex_spi_ix() {
     assert_eq!(cpu.pc, 2);
 }
 
-// EX (SP), IY
 #[test]
 fn ex_spi_iy() {
     // IYH ↔ (SP+1), IYL ↔ (SP)
@@ -133,7 +127,6 @@ fn ex_spi_iy() {
     assert_eq!(cpu.pc, 2);
 }
 
-// LDI
 #[test]
 fn ldi() {
     let mut cpu = CPU::with_memory(vec!(0x90, 0x48, 3, 4));

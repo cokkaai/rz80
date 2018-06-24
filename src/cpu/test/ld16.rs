@@ -1,7 +1,8 @@
+// === 16-Bit Load Group ===
+
 use cpu::Register16;
 use cpu::CPU;
 
-// LD dd, nn – see page 99
 #[test]
 fn ld_dd_nn() {
     let mut cpu = CPU::with_memory(
@@ -26,7 +27,6 @@ fn ld_dd_nn() {
     assert_eq!(cpu.pc, 6);
 }
 
-// LD IX, nn – see page 100
 #[test]
 fn ld_ix_nn() {
     let mut cpu = CPU::with_memory(
@@ -53,7 +53,6 @@ fn ld_ix_nn() {
     assert_eq!(cpu.pc, 8);
 }
 
-// LD IY, nn – see page 101
 #[test]
 fn ld_iy_nn() {
     let mut cpu = CPU::with_memory(
@@ -80,7 +79,6 @@ fn ld_iy_nn() {
     assert_eq!(cpu.pc, 8);
 }
 
-// LD HL, (nn) – see page 102
 #[test]
 fn ld_hl_nni() {
     let mut cpu = CPU::with_memory(
@@ -103,7 +101,6 @@ fn ld_hl_nni() {
     assert_eq!(cpu.pc, 3);
 }
 
-// LD dd, (nn) – see page 103
 #[test]
 fn ld_dd_nni() {
     let mut cpu = CPU::with_memory(
@@ -134,7 +131,6 @@ fn ld_dd_nni() {
     assert_eq!(cpu.pc, 8);
 }
 
-// LD IX, (nn) – see page 105
 #[test]
 fn ld_ix_nni() {
     let mut cpu = CPU::with_memory(
@@ -156,7 +152,6 @@ fn ld_ix_nni() {
     assert_eq!(cpu.pc, 4);
 }
 
-// LD IY, (nn) – see page 106
 #[test]
 fn ld_iy_nni() {
     let mut cpu = CPU::with_memory(
@@ -178,7 +173,6 @@ fn ld_iy_nni() {
     assert_eq!(cpu.pc, 4);
 }
 
-// LD (nn), HL – see page 107
 #[test]
 fn ld_nni_hl() {
     let mut cpu = CPU::with_memory(
@@ -203,7 +197,6 @@ fn ld_nni_hl() {
     assert_eq!(cpu.pc, 3);
 }
 
-// LD (nn), dd – see page 108
 #[test]
 fn ld_nni_dd() {
     let mut cpu = CPU::with_memory(
@@ -237,7 +230,6 @@ fn ld_nni_dd() {
     assert_eq!(cpu.pc, 8);
 }
 
-// LD (nn), IX – see page 110
 #[test]
 fn ld_nni_ix() {
     let mut cpu = CPU::with_memory(
@@ -261,7 +253,6 @@ fn ld_nni_ix() {
     assert_eq!(cpu.pc, 4);
 }
 
-// LD (nn), IY – see page 111
 #[test]
 fn ld_nni_iy() {
     let mut cpu = CPU::with_memory(
@@ -285,7 +276,6 @@ fn ld_nni_iy() {
     assert_eq!(cpu.pc, 4);
 }
 
-// LD SP, HL – see page 112
 #[test]
 fn ld_sp_hl() {
     let mut cpu = CPU::new(16);
@@ -298,7 +288,6 @@ fn ld_sp_hl() {
     assert_eq!(cpu.pc, 1);
 }
 
-// LD SP, IX – see page 113
 #[test]
 fn ld_sp_ix() {
     let mut cpu = CPU::new(16);
@@ -311,7 +300,6 @@ fn ld_sp_ix() {
     assert_eq!(cpu.pc, 2);
 }
 
-// LD SP, IY – see page 114
 #[test]
 fn ld_sp_iy() {
     let mut cpu = CPU::new(16);
@@ -324,7 +312,6 @@ fn ld_sp_iy() {
     assert_eq!(cpu.pc, 2);
 }
 
-// PUSH qq – see page 115
 #[test]
 fn push_qq() {
     let mut cpu = CPU::with_memory(
@@ -359,7 +346,6 @@ fn push_qq() {
     assert_eq!(cpu.pc, 2);
 }
 
-// PUSH IX – see page 117
 #[test]
 fn push_ix() {
     let mut cpu = CPU::with_memory(
@@ -385,7 +371,6 @@ fn push_ix() {
     assert_eq!(cpu.pc, 2);
 }
 
-// PUSH IY – see page 118
 #[test]
 fn push_iy() {
     let mut cpu = CPU::with_memory(
@@ -411,7 +396,6 @@ fn push_iy() {
     assert_eq!(cpu.pc, 2);
 }
 
-// POP qq – see page 119
 #[test]
 fn pop_qq() {
     let mut cpu = CPU::with_memory(
@@ -436,7 +420,6 @@ fn pop_qq() {
     assert_eq!(cpu.pc, 1);
 }
 
-// POP IX – see page 121
 #[test]
 fn pop_ix() {
     let mut cpu = CPU::with_memory(
@@ -460,7 +443,6 @@ fn pop_ix() {
     assert_eq!(cpu.pc, 2);
 }
 
-// POP IY – see page 122
 #[test]
 fn pop_iy() {
     let mut cpu = CPU::with_memory(
