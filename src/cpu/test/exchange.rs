@@ -1,16 +1,19 @@
 // === Exchange, Block Transfer, and Search Group ===
 
+use cpu::bytes;
+use cpu::CpuBuilder;
 use cpu::Register16;
 use cpu::CPU;
-use cpu::bytes;
 
 #[test]
 fn ex_de_hl() {
-    let mut cpu = CPU::new(16);
-    cpu.d = 1;
-    cpu.e = 2;
-    cpu.h = 3;
-    cpu.l = 4;
+    let mut cpu = CpuBuilder::new()
+        .with_d(1)
+        .with_e(2)
+        .with_h(3)
+        .with_l(4)
+        .with_memory_size(16)
+        .build();
 
     cpu.ex_de_hl();
 
@@ -23,116 +26,137 @@ fn ex_de_hl() {
 
 #[test]
 fn ex_af_af1() {
-    let mut cpu = CPU::new(16);
-    cpu.a = 1;
-    cpu.f = 2;
-    cpu.a1 = 3;
-    cpu.f1 = 4;
+    let mut cpu = CpuBuilder::new()
+        .with_a(1)
+        .with_f(2)
+        .with_memory_size(16)
+        .build();
 
     cpu.ex_af_af1();
 
-    assert_eq!(cpu.a, 3);
-    assert_eq!(cpu.f, 4);
-    assert_eq!(cpu.a1, 1);
-    assert_eq!(cpu.f1, 2);
-    assert_eq!(cpu.pc, 1);
+    cpu.a = 3;
+    cpu.f = 4;
+
+    cpu.ex_af_af1();
+
+    assert_eq!(cpu.a, 1);
+    assert_eq!(cpu.f, 2);
+    assert_eq!(cpu.a1, 3);
+    assert_eq!(cpu.f1, 4);
+    assert_eq!(cpu.pc, 2);
 }
 
 #[test]
 fn exx() {
-    let mut cpu = CPU::new(16);
-
-    cpu.b = 1;
-    cpu.c = 2;
-    cpu.d = 3;
-    cpu.e = 4;
-    cpu.h = 5;
-    cpu.l = 6;
-
-    cpu.b1 = 11;
-    cpu.c1 = 12;
-    cpu.d1 = 13;
-    cpu.e1 = 14;
-    cpu.h1 = 15;
-    cpu.l1 = 16;
+    let mut cpu = CpuBuilder::new()
+        .with_b(1)
+        .with_c(2)
+        .with_d(3)
+        .with_e(4)
+        .with_h(5)
+        .with_l(6)
+        .with_memory_size(16)
+        .build();
 
     cpu.exx();
 
-    assert_eq!(cpu.b, 11);
-    assert_eq!(cpu.c, 12);
-    assert_eq!(cpu.d, 13);
-    assert_eq!(cpu.e, 14);
-    assert_eq!(cpu.h, 15);
-    assert_eq!(cpu.l, 16);
+    cpu.b = 11;
+    cpu.c = 12;
+    cpu.d = 13;
+    cpu.e = 14;
+    cpu.h = 15;
+    cpu.l = 16;
 
-    assert_eq!(cpu.b1, 1);
-    assert_eq!(cpu.c1, 2);
-    assert_eq!(cpu.d1, 3);
-    assert_eq!(cpu.e1, 4);
-    assert_eq!(cpu.h1, 5);
-    assert_eq!(cpu.l1, 6);
+    cpu.exx();
 
-    assert_eq!(cpu.pc, 1);
+    assert_eq!(cpu.b, 1);
+    assert_eq!(cpu.c, 2);
+    assert_eq!(cpu.d, 3);
+    assert_eq!(cpu.e, 4);
+    assert_eq!(cpu.h, 5);
+    assert_eq!(cpu.l, 6);
+
+    assert_eq!(cpu.b1, 11);
+    assert_eq!(cpu.c1, 12);
+    assert_eq!(cpu.d1, 13);
+    assert_eq!(cpu.e1, 14);
+    assert_eq!(cpu.h1, 15);
+    assert_eq!(cpu.l1, 16);
+
+    assert_eq!(cpu.pc, 2);
 }
 
 #[test]
 fn ex_spi_hl() {
-    // H ↔ (SP+1), L ↔ (SP)
-    let mut cpu = CPU::with_memory(vec!(1, 2, 3, 4));
-    cpu.h = 9;
-    cpu.l = 8;
+    let mut cpu = CpuBuilder::new()
+        .with_h(9)
+        .with_l(8)
+        .with_memory(vec![1, 2, 3, 4])
+        .build();
 
     cpu.ex_spi_hl();
 
+    // H ↔ (SP+1), L ↔ (SP)
     assert_eq!(cpu.h, 2);
-    assert_eq!(cpu.l, 1);
-
-    assert_eq!(cpu.memory[0], 8);
     assert_eq!(cpu.memory[1], 9);
+
+    // H ↔ (SP+1), L ↔ (SP)
+    assert_eq!(cpu.l, 1);
+    assert_eq!(cpu.memory[0], 8);
 
     assert_eq!(cpu.pc, 1);
 }
 
 #[test]
 fn ex_spi_ix() {
-    // IXH ↔ (SP+1), IXL ↔ (SP)
-    let mut cpu = CPU::with_memory(vec!(0x90, 0x48, 3, 4));
-    cpu.ix = 0x3988;
+    let mut cpu = CpuBuilder::new()
+        .with_ix(0x3988)
+        .with_l(8)
+        .with_memory(vec![0x90, 0x48, 3, 4])
+        .build();
 
     cpu.ex_spi_ix();
 
+    // IXH ↔ (SP+1)
     assert_eq!(bytes::high(cpu.ix), 0x48);
-    assert_eq!(bytes::low(cpu.ix), 0x90);
-
-    assert_eq!(cpu.memory[0], 0x88);
     assert_eq!(cpu.memory[1], 0x39);
+
+    // IXL ↔ (SP)
+    assert_eq!(bytes::low(cpu.ix), 0x90);
+    assert_eq!(cpu.memory[0], 0x88);
 
     assert_eq!(cpu.pc, 2);
 }
 
 #[test]
 fn ex_spi_iy() {
-    // IYH ↔ (SP+1), IYL ↔ (SP)
-    let mut cpu = CPU::with_memory(vec!(0x90, 0x48, 3, 4));
-    cpu.iy = 0x3988;
+    let mut cpu = CpuBuilder::new()
+        .with_iy(0x3988)
+        .with_l(8)
+        .with_memory(vec![0x90, 0x48, 3, 4])
+        .build();
 
     cpu.ex_spi_iy();
 
+    // IYH ↔ (SP+1)
     assert_eq!(bytes::high(cpu.iy), 0x48);
-    assert_eq!(bytes::low(cpu.iy), 0x90);
-
-    assert_eq!(cpu.memory[0], 0x88);
     assert_eq!(cpu.memory[1], 0x39);
+
+    // IYL ↔ (SP)
+    assert_eq!(bytes::low(cpu.iy), 0x90);
+    assert_eq!(cpu.memory[0], 0x88);
 
     assert_eq!(cpu.pc, 2);
 }
 
 #[test]
 fn ldi() {
-    let mut cpu = CPU::with_memory(vec!(0x90, 0x48, 3, 4));
-    cpu.write16(Register16::bc, 3);
-    cpu.write16(Register16::de, 0);
-    cpu.write16(Register16::hl, 1);
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![0x90, 0x48, 3, 4])
+        .with_bc(3)
+        .with_de(0)
+        .with_hl(1)
+        .build();
 
     cpu.ldi();
 
@@ -154,15 +178,12 @@ fn ldi() {
 
 #[test]
 fn ldir() {
-    let mut cpu = CPU::with_memory(
-        vec!(0x90, 0x91, 0x92, 0x93, 
-             0x44, 0x45, 0x46, 0x47,
-             3, 4),
-    );
-
-    cpu.write16(Register16::bc, 3);
-    cpu.write16(Register16::de, 0);
-    cpu.write16(Register16::hl, 4);
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![0x90, 0x91, 0x92, 0x93, 0x44, 0x45, 0x46, 0x47, 3, 4])
+        .with_bc(3)
+        .with_de(0)
+        .with_hl(4)
+        .build();
 
     cpu.ldir();
 
@@ -173,13 +194,13 @@ fn ldir() {
     assert_eq!(cpu.memory[3], 0x93);
 
     // DE ← DE + 1
-    assert_eq!(cpu.read16(Register16::de), 3);
+    assert_eq!(cpu.read_de(), 3);
 
     // HL ← HL + 1
-    assert_eq!(cpu.read16(Register16::hl), 7);
+    assert_eq!(cpu.read_hl(), 7);
 
     // BC ← BC – 1
-    assert_eq!(cpu.read16(Register16::bc), 0);
+    assert_eq!(cpu.read_bc(), 0);
 
     // P/V is set if BC – 1 ≠ 0; otherwise, it is reset.
     assert_eq!(cpu.get_pv(), false);
@@ -187,10 +208,12 @@ fn ldir() {
 
 #[test]
 fn ldd() {
-    let mut cpu = CPU::with_memory(vec!(0x90, 0x48, 3, 4));
-    cpu.write16(Register16::bc, 3);
-    cpu.write16(Register16::de, 3);
-    cpu.write16(Register16::hl, 1);
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![0x90, 0x48, 3, 4])
+        .with_bc(3)
+        .with_de(3)
+        .with_hl(1)
+        .build();
 
     cpu.ldd();
 
@@ -215,15 +238,12 @@ fn ldd() {
 
 #[test]
 fn lddr() {
-    let mut cpu = CPU::with_memory(
-        vec!(0x90, 0x91, 0x92, 0x93, 
-             0x44, 0x45, 0x46, 0x47,
-             3, 4),
-    );
-
-    cpu.write16(Register16::bc, 3);
-    cpu.write16(Register16::de, 3);
-    cpu.write16(Register16::hl, 7);
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![0x90, 0x91, 0x92, 0x93, 0x44, 0x45, 0x46, 0x47, 3, 4])
+        .with_bc(3)
+        .with_de(3)
+        .with_hl(7)
+        .build();
 
     cpu.lddr();
 
@@ -248,15 +268,12 @@ fn lddr() {
 
 #[test]
 fn cpi() {
-    let mut cpu = CPU::with_memory(
-        vec!(0x90, 0x91, 0x92, 0x93, 
-             0x3b, 0x45, 0x46, 0x47,
-             3, 4),
-    );
-
-    cpu.a = 0x3b;
-    cpu.write_bc(1);
-    cpu.write_hl(4);
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![0x90, 0x91, 0x92, 0x93, 0x3b, 0x45, 0x46, 0x47, 3, 4])
+        .with_a(0x3b)
+        .with_bc(1)
+        .with_hl(4)
+        .build();
 
     cpu.cpi();
 
@@ -265,7 +282,7 @@ fn cpi() {
 
     // HL ← HL +1
     assert_eq!(cpu.read_hl(), 5);
-    
+
     // Z is set if A is (HL); otherwise, it is reset.
     assert_eq!(cpu.get_z(), true);
 
@@ -290,15 +307,12 @@ fn cpi() {
 
 #[test]
 fn cpir() {
-    let mut cpu = CPU::with_memory(
-        vec!(0x90, 0x91, 0x92, 0x93, 
-             0x3b, 0x45, 0x46, 0x47,
-             3, 4),
-    );
-
-    cpu.a = 0x3b;
-    cpu.write16(Register16::bc, 2);
-    cpu.write16(Register16::hl, 4);
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![0x90, 0x91, 0x92, 0x93, 0x3b, 0x45, 0x46, 0x47, 3, 4])
+        .with_a(0x3b)
+        .with_bc(2)
+        .with_hl(4)
+        .build();
 
     cpu.cpir();
 
@@ -307,7 +321,7 @@ fn cpir() {
 
     // HL ← HL +1
     assert_eq!(cpu.read16(Register16::hl), 6);
-    
+
     // Z is set if A is (HL); otherwise, it is reset.
     assert_eq!(cpu.get_z(), false);
 
@@ -329,15 +343,12 @@ fn cpir() {
 
 #[test]
 fn cpd() {
-    let mut cpu = CPU::with_memory(
-        vec!(0x90, 0x91, 0x92, 0x93, 
-             0x3b, 0x45, 0x46, 0x47,
-             3, 4),
-    );
-
-    cpu.a = 0x3b;
-    cpu.write16(Register16::bc, 1);
-    cpu.write16(Register16::hl, 4);
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![0x90, 0x91, 0x92, 0x93, 0x3b, 0x45, 0x46, 0x47, 3, 4])
+        .with_a(0x3b)
+        .with_bc(1)
+        .with_hl(4)
+        .build();
 
     cpu.cpd();
 
@@ -346,22 +357,19 @@ fn cpd() {
 
     // HL ← HL - 1
     assert_eq!(cpu.read16(Register16::hl), 3);
-    
+
     // PC += 2
     assert_eq!(cpu.pc, 2);
 }
 
 #[test]
 fn cpdr() {
-    let mut cpu = CPU::with_memory(
-        vec!(0x90, 0x91, 0x92, 0x93, 
-             0x3b, 0x45, 0x46, 0x47,
-             3, 4),
-    );
-
-    cpu.a = 0x3b;
-    cpu.write16(Register16::bc, 2);
-    cpu.write16(Register16::hl, 4);
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![0x90, 0x91, 0x92, 0x93, 0x3b, 0x45, 0x46, 0x47, 3, 4])
+        .with_a(0x3b)
+        .with_bc(2)
+        .with_hl(4)
+        .build();
 
     cpu.cpdr();
 
@@ -370,7 +378,7 @@ fn cpdr() {
 
     // HL ← HL - 1
     assert_eq!(cpu.read_hl(), 2);
-    
+
     // PC += 2
     assert_eq!(cpu.pc, 2);
 }

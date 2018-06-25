@@ -1,4 +1,7 @@
 #[cfg(test)]
+mod builder;
+
+#[cfg(test)]
 mod registers;
 
 #[cfg(test)]

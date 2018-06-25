@@ -1,9 +1,11 @@
 mod bytes;
 mod registers;
+mod builder;
 mod test;
 mod isa;
 
 pub use self::registers::*;
+pub use self::builder::CpuBuilder;
 
 #[derive(Debug)]
 pub struct CPU {
@@ -41,12 +43,13 @@ pub struct CPU {
 
 #[allow(dead_code)]
 impl CPU {
-    // TODO: Add builder pattern
+    #[deprecated]
     pub fn new(ram_size: u16) -> CPU {
         let memory = Vec::with_capacity(ram_size as usize);
         CPU::with_memory(memory)
     }
 
+    #[deprecated]
     pub fn with_memory(memory: Vec<u8>) -> CPU {
         CPU {
             pc: 0,
