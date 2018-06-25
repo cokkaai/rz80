@@ -1,3 +1,4 @@
+use cpu::CpuBuilder;
 use cpu::CPU;
 
 // === 8-Bit Arithmetic Group ===
@@ -5,16 +6,16 @@ use cpu::CPU;
 // ADD A, r
 #[test]
 fn add_a_r() {
-    let mut cpu = CPU::with_memory(
-        vec![
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
             0b10000_001, // ADD A, C
-            0x66, 
-            0x66, 
             0x66,
-        ],
-    );
-    cpu.a = 7;
-    cpu.c = 4;
+            0x66,
+            0x66,
+        ])
+        .with_a(7)
+        .with_c(4)
+        .build();
 
     cpu.add_a_r();
 
@@ -22,7 +23,6 @@ fn add_a_r() {
     assert_eq!(cpu.pc, 1);
     // S is set if result is negative; otherwise, it is reset.
     assert_eq!(cpu.get_z(), false);
-    
 }
 
 // ADD A, n
@@ -94,8 +94,10 @@ fn cp_s() {
 // INC r
 #[test]
 fn inc_r() {
-    let mut cpu = CPU::with_memory(vec![0b00_010_100]);
-    cpu.d = 0x28;
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![0b00_010_100])
+        .with_d(0x28)
+        .build();
 
     cpu.inc_r();
 
@@ -108,25 +110,28 @@ fn inc_r() {
 
     // Z is set if result is 0; otherwise, it is reset.
     assert_eq!(cpu.get_z(), false);
-    
+
     // H is set if carry from bit 3; otherwise, it is reset.
     assert_eq!(cpu.get_h(), false);
-    
+
     // P/V is set if r was 7Fh before operation; otherwise, it is reset.
     assert_eq!(cpu.get_pv(), false);
-    
+
     // N is reset.
     assert_eq!(cpu.get_n(), false);
-    
+
     // C is not affected.
-    assert_eq!(cpu.get_c(), false);    
+    assert_eq!(cpu.get_c(), false);
 }
 
 // INC (HL)
 #[test]
 fn inc_hli() {
-    let mut cpu = CPU::with_memory(vec![0x34, 0x00, 0x00, 0x00]);
-    cpu.write_hl(0x02);
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![0x34, 0x00, 0x00, 0x00])
+        .with_hl(0x02)
+        .build();
+
     cpu.inc_hli();
 
     // (HL) ← (HL) + 1
@@ -137,7 +142,7 @@ fn inc_hli() {
 
     // Z is set if result is 0; otherwise, it is reset.
     assert_eq!(cpu.get_z(), false);
-    
+
     // H is set if carry from bit 3; otherwise, it is reset.
     assert_eq!(cpu.get_h(), false);
 
@@ -146,7 +151,7 @@ fn inc_hli() {
 
     // N is reset.
     assert_eq!(cpu.get_n(), false);
-    
+
     // C is not affected.
 
     // PC += 1
@@ -156,9 +161,13 @@ fn inc_hli() {
 // INC (IX+d)
 #[test]
 fn inc_ixdi() {
-    let mut cpu = CPU::with_memory(vec![0xfd, 0x34, 0x8, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x06]);
-    cpu.ix = 0x01;
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
+            0xfd, 0x34, 0x8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x06,
+        ])
+        .with_ix(0x01)
+        .build();
+
     cpu.inc_ixdi();
 
     // (IX+d) ← (IX+d) + 1
@@ -188,9 +197,13 @@ fn inc_ixdi() {
 // INC (IY+d)
 #[test]
 fn inc_iydi() {
-    let mut cpu = CPU::with_memory(vec![0xfd, 0x34, 0x8, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x06]);
-    cpu.iy = 0x01;
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
+            0xfd, 0x34, 0x8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x06,
+        ])
+        .with_iy(0x01)
+        .build();
+
     cpu.inc_iydi();
 
     // (IY+d) ← (IY+d) + 1
@@ -219,11 +232,14 @@ fn inc_iydi() {
 
 #[test]
 fn dec_r() {
-    let mut cpu = CPU::with_memory(vec![0b00_010_101]);
-    cpu.d = 0x2a;
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![0b00_010_101])
+        .with_d(0x2a)
+        .build();
+
     cpu.dec_r();
 
-    // If the D Register contains byte 2Ah , then upon the execution 
+    // If the D Register contains byte 2Ah , then upon the execution
     // of a DEC D instruction, the D Register contains 29h .
     assert_eq!(cpu.d, 0x29);
 
@@ -232,24 +248,27 @@ fn dec_r() {
 
     // Z is set if result is 0; otherwise, it is reset.
     assert_eq!(cpu.get_z(), false);
-    
+
     // H is set if borrow from bit 4, otherwise, it is reset.
     assert_eq!(cpu.get_h(), false);
-    
+
     // P/V is set if r was 7Fh before operation; otherwise, it is reset.
     assert_eq!(cpu.get_pv(), false);
-    
+
     // N is reset.
     assert_eq!(cpu.get_n(), true);
-    
+
     // C is not affected.
-    assert_eq!(cpu.get_c(), false);    
+    assert_eq!(cpu.get_c(), false);
 }
 
 #[test]
 fn dec_hli() {
-    let mut cpu = CPU::with_memory(vec![0x34, 0x00, 0x0e, 0x00]);
-    cpu.write_hl(0x02);
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![0x34, 0x00, 0x0e, 0x00])
+        .with_hl(0x02)
+        .build();
+
     cpu.dec_hli();
 
     // (HL) ← (HL) - 1
@@ -260,7 +279,7 @@ fn dec_hli() {
 
     // Z is set if result is 0; otherwise, it is reset.
     assert_eq!(cpu.get_z(), false);
-    
+
     // H is set if borrow from bit 4, otherwise, it is reset.
     assert_eq!(cpu.get_h(), false);
 
@@ -269,7 +288,7 @@ fn dec_hli() {
 
     // N is reset.
     assert_eq!(cpu.get_n(), true);
-    
+
     // C is not affected.
 
     // PC += 1
@@ -278,9 +297,13 @@ fn dec_hli() {
 
 #[test]
 fn dec_ixdi() {
-    let mut cpu = CPU::with_memory(vec![0xdd, 0x35, 0x8, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x06]);
-    cpu.ix = 0x01;
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
+            0xdd, 0x35, 0x8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x06,
+        ])
+        .with_ix(0x01)
+        .build();
+
     cpu.dec_ixdi();
 
     // (IX+d) ← (IX+d) - 1
@@ -291,7 +314,7 @@ fn dec_ixdi() {
 
     // Z is set if result is 0; otherwise, it is reset.
     assert_eq!(cpu.get_z(), false);
-    
+
     // H is set if borrow from bit 4, otherwise, it is reset.
     assert_eq!(cpu.get_h(), false);
 
@@ -300,7 +323,7 @@ fn dec_ixdi() {
 
     // N is reset.
     assert_eq!(cpu.get_n(), true);
-    
+
     // C is not affected.
 
     // PC += 3
@@ -309,9 +332,13 @@ fn dec_ixdi() {
 
 #[test]
 fn dec_iydi() {
-    let mut cpu = CPU::with_memory(vec![0xfd, 0x35, 0x8, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x06]);
-    cpu.iy = 0x01;
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
+            0xfd, 0x35, 0x8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x06,
+        ])
+        .with_iy(0x01)
+        .build();
+
     cpu.dec_iydi();
 
     // (IY+d) ← (IY+d) - 1
@@ -322,7 +349,7 @@ fn dec_iydi() {
 
     // Z is set if result is 0; otherwise, it is reset.
     assert_eq!(cpu.get_z(), false);
-    
+
     // H is set if borrow from bit 4, otherwise, it is reset.
     assert_eq!(cpu.get_h(), false);
 
@@ -331,7 +358,7 @@ fn dec_iydi() {
 
     // N is reset.
     assert_eq!(cpu.get_n(), true);
-    
+
     // C is not affected.
 
     // PC += 3

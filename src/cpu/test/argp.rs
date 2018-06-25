@@ -1,5 +1,6 @@
 // === General-Purpose Arithmetic and CPU Control Groups ===
 
+use cpu::CpuBuilder;
 use cpu::CPU;
 
 #[test]
@@ -9,8 +10,10 @@ fn daa() {
 
 #[test]
 fn cpl() {
-    let mut cpu = CPU::new(10);
-    cpu.a = 0b1011_0100;
+    let mut cpu = CpuBuilder::new()
+        .with_memory_size(10)
+        .with_a(0b1011_0100)
+        .build();
 
     cpu.cpl();
 
@@ -21,8 +24,10 @@ fn cpl() {
 
 #[test]
 fn neg() {
-    let mut cpu = CPU::new(10);
-    cpu.a = 0b1001_1000;
+    let mut cpu = CpuBuilder::new()
+        .with_memory_size(10)
+        .with_a(0b1001_1000)
+        .build();
 
     cpu.neg();
 
@@ -58,7 +63,7 @@ fn ccf() {
     // S is not affected.
     // Z is not affected.
     // P/V is not affected.
-    
+
     // H, previous carry is copied.
     assert_eq!(cpu.get_h(), true);
 
@@ -71,8 +76,8 @@ fn ccf() {
 
 #[test]
 fn scf() {
-    let mut cpu = CPU::new(10);
-   
+    let mut cpu = CpuBuilder::new().with_memory_size(10).build();
+
     cpu.scf();
 
     assert_eq!(cpu.get_c(), true);
@@ -83,8 +88,8 @@ fn scf() {
 
 #[test]
 fn nop() {
-    let mut cpu = CPU::new(10);
-   
+    let mut cpu = CpuBuilder::new().with_memory_size(10).build();
+
     cpu.nop();
 
     assert_eq!(cpu.pc, 1);
@@ -97,7 +102,7 @@ fn halt() {
 
 #[test]
 fn di() {
-    let mut cpu = CPU::new(10);
+    let mut cpu = CpuBuilder::new().with_memory_size(10).build();
 
     cpu.di();
 
@@ -108,7 +113,7 @@ fn di() {
 
 #[test]
 fn ei() {
-    let mut cpu = CPU::new(10);
+    let mut cpu = CpuBuilder::new().with_memory_size(10).build();
 
     cpu.ei();
 

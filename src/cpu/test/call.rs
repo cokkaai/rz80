@@ -1,14 +1,14 @@
 // === Call and Return Group ===
 
+use cpu::CpuBuilder;
 use cpu::CPU;
 
 #[test]
 fn call_nn() {
-    let mut cpu = CPU::with_memory(vec![
-        0xcd, 0x04, 0x00, 0x00,
-        0xaa, 0xbb, 0xcc, 0xdd,
-    ]);
-    cpu.sp = 8;
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![0xcd, 0x04, 0x00, 0x00, 0xaa, 0xbb, 0xcc, 0xdd])
+        .with_sp(8)
+        .build();
 
     cpu.call_nn();
 
@@ -19,11 +19,10 @@ fn call_nn() {
 
 #[test]
 fn call_cc_nn() {
-    let mut cpu = CPU::with_memory(vec![
-        0b11_001_100, 0x04, 0x00, 0x00,
-        0xaa, 0xbb, 0xcc, 0xdd,
-    ]);
-    cpu.sp = 8;
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![0b11_001_100, 0x04, 0x00, 0x00, 0xaa, 0xbb, 0xcc, 0xdd])
+        .with_sp(8)
+        .build();
 
     cpu.call_nn();
 
@@ -34,11 +33,10 @@ fn call_cc_nn() {
 
 #[test]
 fn ret() {
-    let mut cpu = CPU::with_memory(vec![
-        0xc9, 0x04, 0x00, 0x00,
-        0xaa, 0xbb, 0x04, 0x00,
-    ]);
-    cpu.sp = 6;
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![0xc9, 0x04, 0x00, 0x00, 0xaa, 0xbb, 0x04, 0x00])
+        .with_sp(6)
+        .build();
 
     cpu.ret();
 
@@ -48,11 +46,10 @@ fn ret() {
 
 #[test]
 fn ret_cc() {
-    let mut cpu = CPU::with_memory(vec![
-        0b11_000_000, 0x04, 0x00, 0x00,
-        0xaa, 0xbb, 0x04, 0x00,
-    ]);
-    cpu.sp = 6;
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![0b11_000_000, 0x04, 0x00, 0x00, 0xaa, 0xbb, 0x04, 0x00])
+        .with_sp(6)
+        .build();
 
     cpu.ret_cc();
 
@@ -66,13 +63,12 @@ fn reti() {
 
 #[test]
 fn retn() {
-    let mut cpu = CPU::with_memory(vec![
-        0xc9, 0x04, 0x00, 0x00,
-        0xaa, 0xbb, 0x04, 0x00,
-    ]);
-    cpu.sp = 6;
-    cpu.iff1 = false;
-    cpu.iff2 = true;
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![0xc9, 0x04, 0x00, 0x00, 0xaa, 0xbb, 0x04, 0x00])
+        .with_sp(6)
+        .with_iff1(false)
+        .with_iff2(true)
+        .build();
 
     cpu.retn();
 
@@ -84,7 +80,11 @@ fn retn() {
 
 #[test]
 fn rst_p() {
-    let mut cpu = CPU::with_memory(vec![0b11_001_111, 0, 0, 0]);
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![0b11_001_111, 0, 0, 0])
+        .build();
+
     cpu.rst_p();
+
     assert_eq!(cpu.pc, 0x08);
 }

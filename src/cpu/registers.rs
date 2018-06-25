@@ -230,7 +230,7 @@ impl CPU {
 
     pub fn read16(&mut self, reg: Register16) -> u16 {
         match reg {
-            Register16::af => bytes::promote(self.a, self.f),
+            Register16::af => self.read_af(),
             Register16::bc => self.read_bc(),
             Register16::de => self.read_de(),
             Register16::hl => self.read_hl(),
@@ -249,6 +249,10 @@ impl CPU {
     }
 
     // ===== Register AF =====
+    
+    pub fn read_af(&self) -> u16 {
+        bytes::promote(self.a, self.f)
+    }
 
     pub fn write_af(&mut self, value: u16) {
         self.a = bytes::high(value);
