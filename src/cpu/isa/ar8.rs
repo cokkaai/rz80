@@ -108,85 +108,113 @@ impl CPU {
         }
     }
 
-    // INC r
-    pub fn inc_r(&mut self) {
-        let opcode = self.memory_at_pc(0);
-        let result = self._add_r(Self::select_reg(opcode), 1);
+    fn _add_addr(&mut self, addr: usize, value: i32) -> (u8, u8) {
+        let old = self.memory[addr];
+        self.memory[addr] = (self.memory[addr] as i32 + value) as u8;
+        (old, self.memory[addr])
+    }
 
+    fn _evaluate_flags_after_inc(&mut self, old_value: u8, new_value: u8) {
         // S is set if result is negative; otherwise, it is reset.
-        self.set_s_from_byte(result.1);
+        self.set_s_from_byte(new_value);
 
         // Z is set if result is 0; otherwise, it is reset.
-        self.set_z_from_byte(result.1);
+        self.set_z_from_byte(new_value);
         
         // H is set if carry from bit 3; otherwise, it is reset.
         // TODO: Implement as requested!
         self.set_h(false);
-        
-        // P/V is set if r was 7Fh before operation; otherwise, it is reset.
-        self.set_pv(result.0 == 0x7f);
-        
+
+        // P/V is set if (HL) was 7Fh before operation; otherwise, it is reset.
+        self.set_pv(old_value == 0x7f);
+
         // N is reset.
         self.set_n(false);
         
         // C is not affected.
+    }
 
+    fn _evaluate_flags_after_dec(&mut self, old_value: u8, new_value: u8) {
+        // S is set if result is negative; otherwise, it is reset.
+        self.set_s_from_byte(new_value);
+
+        // Z is set if result is 0; otherwise, it is reset.
+        self.set_z_from_byte(new_value);
+        
+        // H is set if borrow from bit 4, otherwise, it is reset.
+        // TODO: Implement as requested!
+        self.set_h(false);
+        
+        // P/V is set if r was 80h before operation; otherwise, it is reset.
+        self.set_pv(old_value == 0x80);
+        
+        // N is set.
+        self.set_n(true);
+        
+        // C is not affected.
+    }
+
+    // INC r
+    pub fn inc_r(&mut self) {
+        let opcode = self.memory_at_pc(0);
+        let result = self._add_r(Self::select_reg(opcode), 1);
+        self._evaluate_flags_after_inc(result.0, result.1);
         self.incr_pc(1);
     }
 
     // INC (HL)
     pub fn inc_hli(&mut self) {
-        unimplemented!();
+        let addr = self.read_hl() as usize;
+        let result = self._add_addr(addr, 1);
+        self._evaluate_flags_after_inc(result.0, result.1);
+        self.incr_pc(1);
     }
 
     // INC (IX+d)
-    pub fn inc_ixd(&mut self) {
-        unimplemented!();
+    pub fn inc_ixdi(&mut self) {
+        let addr = self.ix as usize + self.memory_at_pc(2) as usize;
+        let result = self._add_addr(addr, 1);
+        self._evaluate_flags_after_inc(result.0, result.1);
+        self.incr_pc(3);
     }
 
     // INC (IY+d)
-    pub fn inc_iyd(&mut self) {
-        unimplemented!();
+    pub fn inc_iydi(&mut self) {
+        let addr = self.iy as usize + self.memory_at_pc(2) as usize;
+        let result = self._add_addr(addr, 1);
+        self._evaluate_flags_after_inc(result.0, result.1);
+        self.incr_pc(3);
     }
 
     // DEC r
     pub fn dec_r(&mut self) {
         let opcode = self.memory_at_pc(0);
         let result = self._add_r(Self::select_reg(opcode), -1);
-
-        // S is set if result is negative; otherwise, it is reset.
-        self.set_s_from_byte(result.1);
-
-        // Z is set if result is 0; otherwise, it is reset.
-        self.set_z_from_byte(result.1);
-        
-        // H is set if carry from bit 4; otherwise, it is reset.
-        // TODO: Implement as requested!
-        self.set_h(false);
-        
-        // P/V is set if r was 80h before operation; otherwise, it is reset.
-        self.set_pv(result.0 == 0x80);
-        
-        // N is reset.
-        self.set_n(true);
-        
-        // C is not affected.
-
+        self._evaluate_flags_after_dec(result.0, result.1);
         self.incr_pc(1);
     }
 
     // DEC (HL)
     pub fn dec_hli(&mut self) {
-        unimplemented!();
+        let addr = self.read_hl() as usize;
+        let result = self._add_addr(addr, -1);
+        self._evaluate_flags_after_dec(result.0, result.1);
+        self.incr_pc(1);
     }
 
     // DEC (IX+d)
     pub fn dec_ixdi(&mut self) {
-        unimplemented!();
+        let addr = self.ix as usize + self.memory_at_pc(2) as usize;
+        let result = self._add_addr(addr, -1);
+        self._evaluate_flags_after_dec(result.0, result.1);
+        self.incr_pc(3);
     }
 
     // DEC (IY+d)
     pub fn dec_iydi(&mut self) {
-        unimplemented!();
+        let addr = self.iy as usize + self.memory_at_pc(2) as usize;
+        let result = self._add_addr(addr, -1);
+        self._evaluate_flags_after_dec(result.0, result.1);
+        self.incr_pc(3);
     }
 }

@@ -41,6 +41,7 @@ pub struct CPU {
 
 #[allow(dead_code)]
 impl CPU {
+    // TODO: Add builder pattern
     pub fn new(ram_size: u16) -> CPU {
         let memory = Vec::with_capacity(ram_size as usize);
         CPU::with_memory(memory)
