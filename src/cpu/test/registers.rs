@@ -1,3 +1,4 @@
+use cpu::CpuBuilder;
 use cpu::Register;
 use cpu::Register16;
 use cpu::CPU;
@@ -5,7 +6,7 @@ use cpu::{C_MASK, H_MASK, N_MASK, PV_MASK, S_MASK, Z_MASK};
 
 #[test]
 fn get_s() {
-    let mut cpu = CPU::new(16);
+    let mut cpu = CpuBuilder::new().with_memory_size(16).build();
 
     // Initial value is 0
     assert_eq!(cpu.get_s(), false);
@@ -30,7 +31,7 @@ fn get_s() {
 
 #[test]
 fn status_flag_z() {
-    let mut cpu = CPU::new(16);
+    let mut cpu = CpuBuilder::new().with_memory_size(16).build();
 
     assert_eq!(cpu.get_z(), false);
 
@@ -46,7 +47,7 @@ fn status_flag_z() {
 
 #[test]
 fn status_flag_h() {
-    let mut cpu = CPU::new(16);
+    let mut cpu = CpuBuilder::new().with_memory_size(16).build();
 
     assert_eq!(cpu.get_h(), false);
 
@@ -62,7 +63,7 @@ fn status_flag_h() {
 
 #[test]
 fn status_flag_pv() {
-    let mut cpu = CPU::new(16);
+    let mut cpu = CpuBuilder::new().with_memory_size(16).build();
 
     assert_eq!(cpu.get_pv(), false);
 
@@ -78,7 +79,7 @@ fn status_flag_pv() {
 
 #[test]
 fn status_flag_n() {
-    let mut cpu = CPU::new(16);
+    let mut cpu = CpuBuilder::new().with_memory_size(16).build();
 
     assert_eq!(cpu.get_n(), false);
 
@@ -94,7 +95,7 @@ fn status_flag_n() {
 
 #[test]
 fn status_flag_c() {
-    let mut cpu = CPU::new(16);
+    let mut cpu = CpuBuilder::new().with_memory_size(16).build();
 
     assert_eq!(cpu.get_c(), false);
 
@@ -132,7 +133,7 @@ fn select_dest() {
 
 #[test]
 fn read() {
-    let mut cpu = CPU::new(16);
+    let mut cpu = CpuBuilder::new().with_memory_size(16).build();
 
     cpu.a = 1;
     cpu.b = 2;
@@ -153,7 +154,7 @@ fn read() {
 
 #[test]
 fn write() {
-    let mut cpu = CPU::new(16);
+    let mut cpu = CpuBuilder::new().with_memory_size(16).build();
 
     cpu.write(Register::a, 1);
 
@@ -182,7 +183,7 @@ fn write() {
 
 #[test]
 fn read_hl() {
-    let mut cpu = CPU::new(16);
+    let mut cpu = CpuBuilder::new().with_memory_size(16).build();
 
     cpu.h = 0xab;
     cpu.l = 0xcd;
@@ -192,7 +193,7 @@ fn read_hl() {
 
 #[test]
 fn write_hl() {
-    let mut cpu = CPU::new(16);
+    let mut cpu = CpuBuilder::new().with_memory_size(16).build();
 
     cpu.write_hl(0xabcd);
 
@@ -202,7 +203,7 @@ fn write_hl() {
 
 #[test]
 fn read_bc() {
-    let mut cpu = CPU::new(16);
+    let mut cpu = CpuBuilder::new().with_memory_size(16).build();
 
     cpu.b = 0xab;
     cpu.c = 0xcd;
@@ -212,7 +213,7 @@ fn read_bc() {
 
 #[test]
 fn write_bc() {
-    let mut cpu = CPU::new(16);
+    let mut cpu = CpuBuilder::new().with_memory_size(16).build();
 
     cpu.write_bc(0xabcd);
 
@@ -222,7 +223,7 @@ fn write_bc() {
 
 #[test]
 fn read_de() {
-    let mut cpu = CPU::new(16);
+    let mut cpu = CpuBuilder::new().with_memory_size(16).build();
 
     cpu.d = 0xab;
     cpu.e = 0xcd;
@@ -232,7 +233,7 @@ fn read_de() {
 
 #[test]
 fn write_de() {
-    let mut cpu = CPU::new(16);
+    let mut cpu = CpuBuilder::new().with_memory_size(16).build();
 
     cpu.write16(Register16::de, 0xabcd);
 

@@ -1,16 +1,16 @@
 // === Bit Set, Reset, and Test Group ===
 
-use cpu::CPU;
+use cpu::CpuBuilder;
 
 #[test]
 fn bit_b_r() {
-    let mut cpu = CPU::with_memory(
-        vec![
-            0xcb,           // BIT 7, E
-            0b01_111_011,   
-        ]
-    );
-    cpu.e = 0b1000_0000;
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
+            0xcb, // BIT 7, E
+            0b01_111_011,
+        ])
+        .with_e(0b1000_0000)
+        .build();
 
     cpu.bit_b_r();
 
@@ -22,12 +22,12 @@ fn bit_b_r() {
 
 #[test]
 fn bit_b_hli() {
-    let mut cpu = CPU::with_memory(
-        vec![
-            0xcb,           // BIT 5, (HL)
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
+            0xcb, // BIT 5, (HL)
             0b01_101_110,
-        ]
-    );
+        ])
+        .build();
 
     cpu.bit_b_hli();
 
@@ -39,19 +39,19 @@ fn bit_b_hli() {
 
 #[test]
 fn bit_b_ixdi() {
-     let mut cpu = CPU::with_memory(
-        vec![
-            0xdd,           // BIT 6, (IX + 4)
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
+            0xdd, // BIT 6, (IX + 4)
             0xcb,
             0x04,
-            0b01_110_110,    
+            0b01_110_110,
             0x45,
             0x46,
             0b1110_1111,
             0x01,
-        ]
-    );
-    cpu.ix = 3;
+        ])
+        .with_ix(3)
+        .build();
 
     cpu.bit_b_ixdi();
 
@@ -63,9 +63,9 @@ fn bit_b_ixdi() {
 
 #[test]
 fn bit_b_iydi() {
-     let mut cpu = CPU::with_memory(
-        vec![
-            0xfd,           // BIT 6, (IY + 4)
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
+            0xfd, // BIT 6, (IY + 4)
             0xcb,
             0x04,
             0b01_110_110,
@@ -73,9 +73,9 @@ fn bit_b_iydi() {
             0x46,
             0b1110_1111,
             0x01,
-        ]
-    );
-    cpu.iy = 3;
+        ])
+        .with_iy(3)
+        .build();
 
     cpu.bit_b_iydi();
 
@@ -87,13 +87,13 @@ fn bit_b_iydi() {
 
 #[test]
 fn set_b_r() {
-    let mut cpu = CPU::with_memory(
-        vec![
-            0xcb,           // SET 2, E
-            0b11_010_011,   
-        ]
-    );
-    cpu.e = 0b1000_0000;
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
+            0xcb, // SET 2, E
+            0b11_010_011,
+        ])
+        .with_e(0b1000_0000)
+        .build();
 
     cpu.set_b_r();
 
@@ -103,15 +103,15 @@ fn set_b_r() {
 
 #[test]
 fn set_b_hli() {
-    let mut cpu = CPU::with_memory(
-        vec![
-            0xcb,           // SET 5, (HL)
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
+            0xcb, // SET 5, (HL)
             0b11_101_110,
             0,
-            0
-        ]
-    );
-    cpu.write_hl(3);
+            0,
+        ])
+        .with_hl(3)
+        .build();
 
     cpu.set_b_hli();
 
@@ -121,19 +121,19 @@ fn set_b_hli() {
 
 #[test]
 fn set_b_ixdi() {
-    let mut cpu = CPU::with_memory(
-        vec![
-            0xdd,           // SET 6, (IX + 4)
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
+            0xdd, // SET 6, (IX + 4)
             0xcb,
             0x04,
-            0b11_110_110,    
+            0b11_110_110,
             0x45,
             0x46,
             0b1110_1111,
             0x01,
-        ]
-    );
-    cpu.ix = 3;
+        ])
+        .with_ix(3)
+        .build();
 
     cpu.set_b_ixdi();
 
@@ -143,19 +143,19 @@ fn set_b_ixdi() {
 
 #[test]
 fn set_b_iydi() {
-    let mut cpu = CPU::with_memory(
-        vec![
-            0xfd,           // SET 6, (IY + 4)
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
+            0xfd, // SET 6, (IY + 4)
             0xcb,
             0x04,
-            0b11_110_110,    
+            0b11_110_110,
             0x45,
             0x46,
             0b1110_1111,
             0x01,
-        ]
-    );
-    cpu.iy = 3;
+        ])
+        .with_iy(3)
+        .build();
 
     cpu.set_b_iydi();
 
@@ -165,13 +165,13 @@ fn set_b_iydi() {
 
 #[test]
 pub fn res_b_r() {
-    let mut cpu = CPU::with_memory(
-        vec![
-            0xcb,           // RES 2, E
-            0b10_010_011,   
-        ]
-    );
-    cpu.e = 0b1000_0100;
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
+            0xcb, // RES 2, E
+            0b10_010_011,
+        ])
+        .with_e(0b1000_0100)
+        .build();
 
     cpu.res_b_r();
 
@@ -181,15 +181,15 @@ pub fn res_b_r() {
 
 #[test]
 pub fn res_b_hli() {
-    let mut cpu = CPU::with_memory(
-        vec![
-            0xcb,           // RES 5, (HL)
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
+            0xcb, // RES 5, (HL)
             0b10_101_110,
             0,
-            0b0010_0000
-        ]
-    );
-    cpu.write_hl(3);
+            0b0010_0000,
+        ])
+        .with_hl(3)
+        .build();
 
     cpu.res_b_hli();
 
@@ -199,9 +199,9 @@ pub fn res_b_hli() {
 
 #[test]
 pub fn res_b_ixdi() {
-    let mut cpu = CPU::with_memory(
-        vec![
-            0xdd,           // RES 6, (IX + 4)
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
+            0xdd, // RES 6, (IX + 4)
             0xcb,
             0x04,
             0b10_110_110,
@@ -209,9 +209,9 @@ pub fn res_b_ixdi() {
             0x46,
             0b1110_1111,
             0xff,
-        ]
-    );
-    cpu.ix = 3;
+        ])
+        .with_ix(3)
+        .build();
 
     cpu.res_b_ixdi();
 
@@ -221,9 +221,9 @@ pub fn res_b_ixdi() {
 
 #[test]
 pub fn res_b_iydi() {
-    let mut cpu = CPU::with_memory(
-        vec![
-            0xdd,           // RES 6, (IX + 4)
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
+            0xdd, // RES 6, (IX + 4)
             0xcb,
             0x04,
             0b10_110_110,
@@ -231,9 +231,9 @@ pub fn res_b_iydi() {
             0x46,
             0b1110_1111,
             0xff,
-        ]
-    );
-    cpu.iy = 3;
+        ])
+        .with_iy(3)
+        .build();
 
     cpu.res_b_iydi();
 

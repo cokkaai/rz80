@@ -43,43 +43,6 @@ pub struct CPU {
 
 #[allow(dead_code)]
 impl CPU {
-    #[deprecated]
-    pub fn new(ram_size: u16) -> CPU {
-        let memory = Vec::with_capacity(ram_size as usize);
-        CPU::with_memory(memory)
-    }
-
-    #[deprecated]
-    pub fn with_memory(memory: Vec<u8>) -> CPU {
-        CPU {
-            pc: 0,
-            sp: 0,
-            ix: 0,
-            iy: 0,
-            i: 0,
-            r: 0,
-            a: 0,
-            b: 0,
-            c: 0,
-            d: 0,
-            e: 0,
-            f: 0,
-            h: 0,
-            l: 0,
-            a1: 0,
-            b1: 0,
-            c1: 0,
-            d1: 0,
-            e1: 0,
-            f1: 0,
-            h1: 0,
-            l1: 0,
-            iff1: false,
-            iff2: false,
-            memory: memory,
-        }
-    }
-
     /// Read memory at address: pc + offset
     fn memory_at_pc(&self, offset_from_pc: u16) -> u8 {
         self.memory[(self.pc + offset_from_pc) as usize]

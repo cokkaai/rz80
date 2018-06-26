@@ -1,7 +1,6 @@
 // === Call and Return Group ===
 
 use cpu::CpuBuilder;
-use cpu::CPU;
 
 #[test]
 fn call_nn() {

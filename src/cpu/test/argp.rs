@@ -1,7 +1,6 @@
 // === General-Purpose Arithmetic and CPU Control Groups ===
 
 use cpu::CpuBuilder;
-use cpu::CPU;
 
 #[test]
 fn daa() {
@@ -54,8 +53,10 @@ fn neg() {
 
 #[test]
 fn ccf() {
-    let mut cpu = CPU::new(10);
-    cpu.set_c(true);
+    let mut cpu = CpuBuilder::new()
+        .with_memory_size(16)
+        .with_flag_c(true)
+        .build();
 
     // CY ← !CY
     cpu.ccf();

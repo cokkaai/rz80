@@ -1,27 +1,27 @@
 // === 16-Bit Load Group ===
 
+use cpu::CpuBuilder;
 use cpu::Register16;
-use cpu::CPU;
 
 #[test]
 fn ld_dd_nn() {
-    let mut cpu = CPU::with_memory(
-        vec![
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
             0b00_00_0001, // LD BC 0x0402
-            0x02, 
-            0xa4, 
+            0x02,
+            0xa4,
             0b00_11_0001, // LD SP 0xcaf3
-            0xf3, 
+            0xf3,
             0xca,
             0x66,
             0x66,
-        ],
-    );
+        ])
+        .build();
 
     cpu.ld_dd_nn();
     assert_eq!(cpu.read16(Register16::bc), 0xa402);
     assert_eq!(cpu.pc, 3);
-    
+
     cpu.ld_dd_nn();
     assert_eq!(cpu.sp, 0xcaf3);
     assert_eq!(cpu.pc, 6);
@@ -29,20 +29,13 @@ fn ld_dd_nn() {
 
 #[test]
 fn ld_ix_nn() {
-    let mut cpu = CPU::with_memory(
-        vec![
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
             0xdd, // LD IX, 0xcaf3
-            0x21,
-            0xf3,
-            0xca,
-            0xdd, // LD IX, 0xaaff
-            0x21,
-            0xff,
-            0xaa,
-            0x66,
-            0x66,
-        ],
-    );
+            0x21, 0xf3, 0xca, 0xdd, // LD IX, 0xaaff
+            0x21, 0xff, 0xaa, 0x66, 0x66,
+        ])
+        .build();
 
     cpu.ld_ix_nn();
     assert_eq!(cpu.ix, 0xcaf3);
@@ -55,25 +48,18 @@ fn ld_ix_nn() {
 
 #[test]
 fn ld_iy_nn() {
-    let mut cpu = CPU::with_memory(
-        vec![
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
             0xfd, // LD IY, 0xcaf3
-            0x21,
-            0xf3,
-            0xca,
-            0xfd, // LD IY, 0xaaff
-            0x21,
-            0xff,
-            0xaa,
-            0x66,
-            0x66,
-        ],
-    );
+            0x21, 0xf3, 0xca, 0xfd, // LD IY, 0xaaff
+            0x21, 0xff, 0xaa, 0x66, 0x66,
+        ])
+        .build();
 
     cpu.ld_iy_nn();
     assert_eq!(cpu.iy, 0xcaf3);
     assert_eq!(cpu.pc, 4);
-    
+
     cpu.ld_iy_nn();
     assert_eq!(cpu.iy, 0xaaff);
     assert_eq!(cpu.pc, 8);
@@ -81,18 +67,12 @@ fn ld_iy_nn() {
 
 #[test]
 fn ld_hl_nni() {
-    let mut cpu = CPU::with_memory(
-        vec![
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
             0x2a, // LD HL, (0x000a)
-            0x04,
-            0x0,
-            0x66,
-            0xf3,
-            0xca,
-            0x66,
-            0x66,
-        ],
-    );
+            0x04, 0x0, 0x66, 0xf3, 0xca, 0x66, 0x66,
+        ])
+        .build();
 
     cpu.ld_hl_nni();
 
@@ -103,8 +83,8 @@ fn ld_hl_nni() {
 
 #[test]
 fn ld_dd_nni() {
-    let mut cpu = CPU::with_memory(
-        vec![
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
             0xed, // LD BC, (0x000a)
             0b01_00_1011,
             0x0a,
@@ -119,9 +99,9 @@ fn ld_dd_nni() {
             0x02,
             0xf3,
             0xca,
-        ],
-    );
-    
+        ])
+        .build();
+
     cpu.ld_dd_nni();
     assert_eq!(cpu.read16(Register16::bc), 0x0201);
     assert_eq!(cpu.pc, 4);
@@ -133,18 +113,12 @@ fn ld_dd_nni() {
 
 #[test]
 fn ld_ix_nni() {
-    let mut cpu = CPU::with_memory(
-        vec![
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
             0xdd, // LD IX, (0x0006)
-            0x2a,
-            0x06,
-            0x0,
-            0x66,
-            0x66,
-            0xf3,
-            0xca,
-        ],
-    );
+            0x2a, 0x06, 0x0, 0x66, 0x66, 0xf3, 0xca,
+        ])
+        .build();
 
     cpu.ld_ix_nni();
 
@@ -154,18 +128,12 @@ fn ld_ix_nni() {
 
 #[test]
 fn ld_iy_nni() {
-    let mut cpu = CPU::with_memory(
-        vec![
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
             0xfd, // LD IY, (0x0006)
-            0x2a,
-            0x06,
-            0x0,
-            0x66,
-            0x66,
-            0xf3,
-            0xca,
-        ],
-    );
+            0x2a, 0x06, 0x0, 0x66, 0x66, 0xf3, 0xca,
+        ])
+        .build();
 
     cpu.ld_iy_nni();
 
@@ -175,20 +143,15 @@ fn ld_iy_nni() {
 
 #[test]
 fn ld_nni_hl() {
-    let mut cpu = CPU::with_memory(
-        vec![
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
             0x22, // LD (0x0006), HL
-            0x06,
-            0x0,
-            0x66,
-            0x66,
-            0x66,
-            0x55, // Data
+            0x06, 0x0, 0x66, 0x66, 0x66, 0x55, // Data
             0x55,
-        ],
-    );
-    cpu.h = 0xca;
-    cpu.l = 0xf3;
+        ])
+        .with_h(0xca)
+        .with_l(0xf3)
+        .build();
 
     cpu.ld_nni_hl();
 
@@ -199,8 +162,8 @@ fn ld_nni_hl() {
 
 #[test]
 fn ld_nni_dd() {
-    let mut cpu = CPU::with_memory(
-        vec![
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
             0xed, // LD (0x0008), SP
             0b01_11_0011,
             0x08,
@@ -213,11 +176,11 @@ fn ld_nni_dd() {
             0x44,
             0x55,
             0x55,
-        ],
-    );
-    cpu.sp = 0xcaf3;
-    cpu.h = 0xba;
-    cpu.l = 0xb3;
+        ])
+        .with_sp(0xcaf3)
+        .with_h(0xba)
+        .with_l(0xb3)
+        .build();
 
     cpu.ld_nni_dd();
     assert_eq!(cpu.memory[0x0008], 0xf3);
@@ -232,19 +195,13 @@ fn ld_nni_dd() {
 
 #[test]
 fn ld_nni_ix() {
-    let mut cpu = CPU::with_memory(
-        vec![
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
             0xdd, // LD (0x0006), IX
-            0x22,
-            0x06,
-            0x0,
-            0x66,
-            0x66,
-            0x55,
-            0x55,
-        ],
-    );
-    cpu.ix = 0xcaf3;
+            0x22, 0x06, 0x0, 0x66, 0x66, 0x55, 0x55,
+        ])
+        .with_ix(0xcaf3)
+        .build();
 
     cpu.ld_nni_ix();
 
@@ -255,19 +212,13 @@ fn ld_nni_ix() {
 
 #[test]
 fn ld_nni_iy() {
-    let mut cpu = CPU::with_memory(
-        vec![
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
             0xfd, // LD (0x0006), IY
-            0x22,
-            0x06,
-            0x0,
-            0x66,
-            0x66,
-            0x55,
-            0x55,
-        ],
-    );
-    cpu.iy = 0xcaf3;
+            0x22, 0x06, 0x0, 0x66, 0x66, 0x55, 0x55,
+        ])
+        .with_iy(0xcaf3)
+        .build();
 
     cpu.ld_nni_iy();
 
@@ -278,43 +229,50 @@ fn ld_nni_iy() {
 
 #[test]
 fn ld_sp_hl() {
-    let mut cpu = CPU::new(16);
-    cpu.write_hl(0xcaf3);
-    cpu.sp = 0x1234;
+    let mut cpu = CpuBuilder::new()
+        .with_memory_size(16)
+        .with_hl(0xcaf3)
+        .with_sp(0x1234)
+        .build();
 
     cpu.ld_sp_hl();
-    
+
     assert_eq!(cpu.sp, 0xcaf3);
     assert_eq!(cpu.pc, 1);
 }
 
 #[test]
 fn ld_sp_ix() {
-    let mut cpu = CPU::new(16);
-    cpu.ix = 0xcaf3;
-    cpu.sp = 0x1234;
+    let mut cpu = CpuBuilder::new()
+        .with_memory_size(16)
+        .with_ix(0xcaf3)
+        .with_sp(0x1234)
+        .build();
 
     cpu.ld_sp_ix();
-    
+
     assert_eq!(cpu.sp, 0xcaf3);
     assert_eq!(cpu.pc, 2);
 }
 
 #[test]
 fn ld_sp_iy() {
-    let mut cpu = CPU::new(16);
-    cpu.iy = 0xcaf3;
-    cpu.sp = 0x1234;
+    let mut cpu = CpuBuilder::new()
+        .with_memory_size(16)
+        .with_iy(0xcaf3)
+        .with_sp(0x1234)
+        .build();
 
     cpu.ld_sp_iy();
-    
+
     assert_eq!(cpu.sp, 0xcaf3);
     assert_eq!(cpu.pc, 2);
 }
 
 #[test]
 fn push_qq() {
-    let mut cpu = CPU::with_memory(
+    let mut cpu = CpuBuilder::new()
+    .with_memory(
         vec![
             0b11_00_0101, // PUSH BC
             0b11_10_0101, // PUSH HL
@@ -325,13 +283,13 @@ fn push_qq() {
             0,
             0,
         ],
-    );
-
-    cpu.sp = 0x0008;
-    cpu.b = 0xca; // BC = 0xcaf3
-    cpu.c = 0xf3;
-    cpu.h = 0x12; // HL = 0x1234
-    cpu.l = 0x34;
+    )
+    .with_sp(0x0008)
+    .with_b(0xca) // BC = 0xcaf3
+    .with_c(0xf3)
+    .with_h(0x12) // HL = 0x1234
+    .with_l(0x34)
+    .build();
 
     cpu.push_qq();
     assert_eq!(cpu.memory[7], 0xca);
@@ -348,23 +306,17 @@ fn push_qq() {
 
 #[test]
 fn push_ix() {
-    let mut cpu = CPU::with_memory(
-        vec![
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
             0xdd, // PUSH IX
-            0xe5,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-        ],
-    );
-
-    cpu.sp = 0x0008;
-    cpu.ix = 0xcaf3;
+            0xe5, 0, 0, 0, 0, 0, 0,
+        ])
+        .with_sp(0x0008)
+        .with_ix(0xcaf3)
+        .build();
 
     cpu.push_ix();
+
     assert_eq!(cpu.memory[7], 0xca);
     assert_eq!(cpu.memory[6], 0xf3);
     assert_eq!(cpu.sp, 6);
@@ -373,23 +325,17 @@ fn push_ix() {
 
 #[test]
 fn push_iy() {
-    let mut cpu = CPU::with_memory(
-        vec![
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
             0xfd, // PUSH IY
-            0xe5,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-        ],
-    );
-
-    cpu.sp = 0x0008;
-    cpu.iy = 0xcaf3;
+            0xe5, 0, 0, 0, 0, 0, 0,
+        ])
+        .with_sp(0x0008)
+        .with_iy(0xcaf3)
+        .build();
 
     cpu.push_iy();
+
     assert_eq!(cpu.memory[7], 0xca);
     assert_eq!(cpu.memory[6], 0xf3);
     assert_eq!(cpu.sp, 6);
@@ -398,8 +344,8 @@ fn push_iy() {
 
 #[test]
 fn pop_qq() {
-    let mut cpu = CPU::with_memory(
-        vec![
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
             0b11_11_0001, // POP AF
             0,
             0,
@@ -408,12 +354,12 @@ fn pop_qq() {
             0,
             0xf3,
             0xca,
-        ],
-    );
-
-    cpu.sp = 0x0006;
+        ])
+        .with_sp(0x0006)
+        .build();
 
     cpu.pop_qq();
+
     assert_eq!(cpu.a, 0xca);
     assert_eq!(cpu.f, 0xf3);
     assert_eq!(cpu.sp, 8);
@@ -422,22 +368,16 @@ fn pop_qq() {
 
 #[test]
 fn pop_ix() {
-    let mut cpu = CPU::with_memory(
-        vec![
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
             0xdd, // POP IX
-            0xe1,
-            0,
-            0,
-            0,
-            0,
-            0xf3,
-            0xca,
-        ],
-    );
-
-    cpu.sp = 0x0006;
+            0xe1, 0, 0, 0, 0, 0xf3, 0xca,
+        ])
+        .with_sp(0x0006)
+        .build();
 
     cpu.pop_ix();
+
     assert_eq!(cpu.ix, 0xcaf3);
     assert_eq!(cpu.sp, 8);
     assert_eq!(cpu.pc, 2);
@@ -445,22 +385,16 @@ fn pop_ix() {
 
 #[test]
 fn pop_iy() {
-    let mut cpu = CPU::with_memory(
-        vec![
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![
             0xfd, // POP IY
-            0xe1,
-            0,
-            0,
-            0,
-            0,
-            0xf3,
-            0xca,
-        ],
-    );
-
-    cpu.sp = 0x0006;
+            0xe1, 0, 0, 0, 0, 0xf3, 0xca,
+        ])
+        .with_sp(0x0006)
+        .build();
 
     cpu.pop_iy();
+
     assert_eq!(cpu.iy, 0xcaf3);
     assert_eq!(cpu.sp, 8);
     assert_eq!(cpu.pc, 2);

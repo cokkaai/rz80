@@ -1,5 +1,4 @@
 use cpu::CpuBuilder;
-use cpu::CPU;
 
 // === 8-Bit Arithmetic Group ===
 

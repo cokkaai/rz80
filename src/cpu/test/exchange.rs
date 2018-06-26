@@ -3,7 +3,6 @@
 use cpu::bytes;
 use cpu::CpuBuilder;
 use cpu::Register16;
-use cpu::CPU;
 
 #[test]
 fn ex_de_hl() {
