@@ -19,7 +19,13 @@ fn create_system() {
         .with_memory_size(16384)
         .with_pc(12)
         .with_r(13)
-        .with_sp(14);
+        .with_sp(14)
+        .with_flag_c(true)
+        .with_flag_s(true)
+        .with_flag_z(true)
+        .with_flag_h(true)
+        .with_flag_n(true)
+        .with_flag_pv(true);
     
     let cpu = builder.build();
 
@@ -28,7 +34,7 @@ fn create_system() {
     assert_eq!(cpu.c, 3);
     assert_eq!(cpu.d, 4);
     assert_eq!(cpu.e, 5);
-    assert_eq!(cpu.f, 6);
+    assert_eq!(cpu.f, 0b1101_0111);  // Position S Z X H X P/V N C
     assert_eq!(cpu.h, 7);
     assert_eq!(cpu.i, 8);
     assert_eq!(cpu.iff1, true);
@@ -40,6 +46,12 @@ fn create_system() {
     assert_eq!(cpu.pc, 12);
     assert_eq!(cpu.r, 13);
     assert_eq!(cpu.sp, 14);
+    assert_eq!(cpu.get_c(), true);
+    assert_eq!(cpu.get_h(), true);
+    assert_eq!(cpu.get_s(), true);
+    assert_eq!(cpu.get_z(), true);
+    assert_eq!(cpu.get_n(), true);
+    assert_eq!(cpu.get_pv(), true);
 }
 
 #[test]
