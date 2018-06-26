@@ -136,11 +136,6 @@ impl CpuBuilder {
         self
     }
 
-    pub fn with_f(mut self, value: u8) -> CpuBuilder {
-        self.f = value;
-        self
-    }
-
     pub fn with_h(mut self, value: u8) -> CpuBuilder {
         self.h = value;
         self

@@ -27,9 +27,10 @@ fn ex_de_hl() {
 fn ex_af_af1() {
     let mut cpu = CpuBuilder::new()
         .with_a(1)
-        .with_f(2)
+        .with_flag_n(true)
         .with_memory_size(16)
         .build();
+
 
     cpu.ex_af_af1();
 

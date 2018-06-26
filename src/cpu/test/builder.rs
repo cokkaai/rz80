@@ -8,7 +8,6 @@ fn create_system() {
         .with_c(3)
         .with_d(4)
         .with_e(5)
-        .with_f(6)
         .with_h(7)
         .with_i(8)
         .with_iff1(true)
