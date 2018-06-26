@@ -5,91 +5,166 @@ fn rlca() {
     unimplemented!();
 }
 
-// RLA
 #[test]
 fn rla() {
     unimplemented!();
 }
 
-// RRCA
 #[test]
 fn rrca() {
     unimplemented!();
 }
 
-// RRA
 #[test]
 fn rra() {
     unimplemented!();
 }
 
-// RLC r
 #[test]
 fn rlc_r() {
     unimplemented!();
 }
 
-// RLC (HL)
 #[test]
 fn rlc() {
     unimplemented!();
 }
 
-// RLC (IX+d)
 #[test]
 fn rlc_ixdi() {
     unimplemented!();
 }
 
-// RLC (IY+d)
 #[test]
 fn rlc_iydi() {
     unimplemented!();
 }
 
-// RL m
 #[test]
-fn rl_m() {
+fn rl_r() {
     unimplemented!();
 }
 
-// RRC m
 #[test]
-fn rrc_m() {
+fn rl_hli() {
     unimplemented!();
 }
 
-// RR m
 #[test]
-fn rr_m() {
+fn rl_ixdi() {
     unimplemented!();
 }
 
-// SLA m
 #[test]
-fn sla_m() {
+fn rl_iydi() {
     unimplemented!();
 }
 
-// SRA m
 #[test]
-fn sra_m() {
+fn rrc_r() {
     unimplemented!();
 }
 
-// SRL m
 #[test]
-fn srl_m() {
+fn rrc_hli() {
     unimplemented!();
 }
 
-// RLD
+#[test]
+fn rrc_ixdi() {
+    unimplemented!();
+}
+
+#[test]
+fn rrc_iydi() {
+    unimplemented!();
+}
+
+#[test]
+fn rr_r() {
+    unimplemented!();
+}
+
+#[test]
+fn rr_hli() {
+    unimplemented!();
+}
+
+#[test]
+fn rr_ixdi() {
+    unimplemented!();
+}
+
+#[test]
+fn rr_iydi() {
+    unimplemented!();
+}
+
+#[test]
+fn sla_r() {
+    unimplemented!();
+}
+
+#[test]
+fn sla_hli() {
+    unimplemented!();
+}
+
+#[test]
+fn sla_ixdi() {
+    unimplemented!();
+}
+
+#[test]
+fn sla_iydi() {
+    unimplemented!();
+}
+
+#[test]
+fn sra_r() {
+    unimplemented!();
+}
+
+#[test]
+fn sra_hli() {
+    unimplemented!();
+}
+
+#[test]
+fn sra_ixdi() {
+    unimplemented!();
+}
+
+#[test]
+fn sra_iydi() {
+    unimplemented!();
+}
+
+#[test]
+fn srl_r() {
+    unimplemented!();
+}
+
+#[test]
+fn srl_hli() {
+    unimplemented!();
+}
+
+#[test]
+fn srl_ixdi() {
+    unimplemented!();
+}
+
+#[test]
+fn srl_iydi() {
+    unimplemented!();
+}
+
 #[test]
 fn rld() {
     unimplemented!();
 }
 
-// RRD
 #[test]
 fn rrd() {
     unimplemented!();

@@ -2,7 +2,6 @@ use cpu::CpuBuilder;
 
 // === 8-Bit Arithmetic Group ===
 
-// ADD A, r
 #[test]
 fn add_a_r() {
     let mut cpu = CpuBuilder::new()
@@ -24,70 +23,253 @@ fn add_a_r() {
     assert_eq!(cpu.get_z(), false);
 }
 
-// ADD A, n
 #[test]
-fn add_d_n() {
+fn add_a_n() {
     unimplemented!();
 }
 
-// ADD A, (HL)
 #[test]
 fn add_a_hli() {
     unimplemented!();
 }
 
-// ADD A, (IX + d)
 #[test]
 fn add_a_ixd() {
     unimplemented!();
 }
 
-// ADD A, (IY + d)
 #[test]
 fn add_a_iyd() {
     unimplemented!();
 }
 
-// ADC A, s
 #[test]
-fn adc_a_s() {
+fn adc_a_r() {
     unimplemented!();
 }
 
-// SUB s
 #[test]
-fn sub_s() {
+fn adc_a_n() {
     unimplemented!();
 }
 
-// SBC A, s
 #[test]
-fn sbc_a_s() {
+fn adc_a_hli() {
     unimplemented!();
 }
 
-// AND s
 #[test]
-fn and_s() {
+fn adc_a_ixdi() {
     unimplemented!();
 }
 
-// OR s
 #[test]
-fn or_s() {
+fn adc_a_iydi() {
     unimplemented!();
 }
 
-// XOR s
 #[test]
-fn xor_s() {
+fn sub_r() {
     unimplemented!();
 }
 
-// CP s
 #[test]
-fn cp_s() {
+fn sub_n() {
     unimplemented!();
+}
+
+#[test]
+fn sub_hli() {
+    unimplemented!();
+}
+
+#[test]
+fn sub_ixdi() {
+    unimplemented!();
+}
+
+#[test]
+fn sub_iydi() {
+    unimplemented!();
+}
+
+#[test]
+fn sbc_a_r() {
+    unimplemented!();
+}
+
+#[test]
+fn sbc_a_n() {
+    unimplemented!();
+}
+
+#[test]
+fn sbc_a_hli() {
+    unimplemented!();
+}
+
+#[test]
+fn sbc_a_ixdi() {
+    unimplemented!();
+}
+
+#[test]
+fn sbc_a_iydi() {
+    unimplemented!();
+}
+
+#[test]
+fn and_r() {
+    unimplemented!();
+}
+
+#[test]
+fn and_n() {
+    unimplemented!();
+}
+
+#[test]
+fn and_hli() {
+    unimplemented!();
+}
+
+#[test]
+fn and_ixdi() {
+    unimplemented!();
+}
+
+#[test]
+fn and_iydi() {
+    unimplemented!();
+}
+
+#[test]
+fn or_r() {
+    unimplemented!();
+}
+
+#[test]
+fn or_n() {
+    unimplemented!();
+}
+
+#[test]
+fn or_hli() {
+    unimplemented!();
+}
+
+#[test]
+fn or_ixdi() {
+    unimplemented!();
+}
+
+#[test]
+fn or_iydi() {
+    unimplemented!();
+}
+
+#[test]
+fn xor_r() {
+    unimplemented!();
+}
+
+#[test]
+fn xor_n() {
+    unimplemented!();
+}
+
+#[test]
+fn xor_hli() {
+    unimplemented!();
+}
+
+#[test]
+fn xor_ixdi() {
+    unimplemented!();
+}
+
+#[test]
+fn xor_iydi() {
+    unimplemented!();
+}
+
+#[test]
+fn cp_r() {
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec!(0b10111_000))
+        .with_a(0x63)
+        .with_b(0x60)
+        .build();
+    
+    cpu.cp_r();
+
+    // TODO: opcode description is not clear.
+    // Investigate docs other than the manual.
+    assert_eq!(cpu.get_pv(), false);
+    assert_eq!(cpu.get_n(), false);
+}
+
+#[test]
+fn cp_n() {
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec!(0xfe, 0x09))
+        .with_a(0x63)
+        .build();
+    
+    cpu.cp_n();
+
+    // TODO: opcode description is not clear.
+    // Investigate docs other than the manual.
+    assert_eq!(cpu.get_pv(), false);
+    assert_eq!(cpu.get_n(), false);
+}
+
+#[test]
+fn cp_hli() {
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec!(0xbe, 0, 0, 0x60))
+        .with_hl(0x03)
+        .with_a(0x63)
+        .build();
+    
+    cpu.cp_hli();
+
+    // TODO: opcode description is not clear.
+    // Investigate docs other than the manual.
+    assert_eq!(cpu.get_pv(), false);
+    assert_eq!(cpu.get_n(), false);
+}
+
+#[test]
+fn cp_ixdi() {
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec!(0xdd, 0xbe, 0x01, 0x60))
+        .with_ix(0x02)
+        .with_a(0x63)
+        .build();
+    
+    cpu.cp_ixdi();
+
+    // TODO: opcode description is not clear.
+    // Investigate docs other than the manual.
+    assert_eq!(cpu.get_pv(), false);
+    assert_eq!(cpu.get_n(), false);
+}
+
+#[test]
+fn cp_iydi() {
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec!(0xfd, 0xbe, 0x01, 0x60))
+        .with_iy(0x02)
+        .with_a(0x63)
+        .build();
+    
+    cpu.cp_iydi();
+
+    // TODO: opcode description is not clear.
+    // Investigate docs other than the manual.
+    assert_eq!(cpu.get_pv(), false);
+    assert_eq!(cpu.get_n(), false);
 }
 
 // INC r
