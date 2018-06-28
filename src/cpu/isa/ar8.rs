@@ -63,8 +63,37 @@ impl CPU {
         unimplemented!();
     }
 
-    // CP s
-    pub fn cp_s(&mut self) {
+    fn _eval_cp_flags(&mut self) {
+        unimplemented!();
+    }
+
+    // CP R
+    pub fn cp_r(&mut self) {
+        self._eval_cp_flags();
+        unimplemented!();
+    }
+
+    // CP N
+    pub fn cp_n(&mut self) {
+        self._eval_cp_flags();
+        unimplemented!();
+    }
+
+    // CP (HL)
+    pub fn cp_hli(&mut self) {
+        self._eval_cp_flags();
+        unimplemented!();
+    }
+
+    // CP (IX+d)
+    pub fn cp_ixdi(&mut self) {
+        self._eval_cp_flags();
+        unimplemented!();
+    }
+
+    // CP (IY+d)
+    pub fn cp_iydi(&mut self) {
+        self._eval_cp_flags();
         unimplemented!();
     }
 
