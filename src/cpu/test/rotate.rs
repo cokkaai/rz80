@@ -1,33 +1,170 @@
 // === Rotate and Shift Group ===
 
+use cpu::CpuBuilder;
+
 #[test]
 fn rlca() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_a(0b1010_1010)
+        .with_memory_size(16)
+        .build();
+
+    cpu.rlca();
+
+    // S, Z, P/V are not affected.
+    assert_eq!(cpu.get_s(), false);
+    assert_eq!(cpu.get_z(), false);
+    assert_eq!(cpu.get_pv(), false);
+
+    // H, N are reset.
+    assert_eq!(cpu.get_h(), false);
+    assert_eq!(cpu.get_h(), false);
+
+    // C is data from bit 7 of Accumulator.
+    assert_eq!(cpu.get_c(), true);
+    
+    // The contents of the Accumulator (Register A) are rotated left 1 bit position.
+    assert_eq!(cpu.a, 0b0101_0101);
 }
 
 #[test]
 fn rla() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_a(0b0111_0110)
+        .with_flag_c(true)
+        .with_memory_size(16)
+        .build();
+
+    cpu.rla();
+
+    // S, Z, P/V are not affected.
+    assert_eq!(cpu.get_s(), false);
+    assert_eq!(cpu.get_z(), false);
+    assert_eq!(cpu.get_pv(), false);
+
+    // H, N are reset.
+    assert_eq!(cpu.get_h(), false);
+    assert_eq!(cpu.get_n(), false);
+
+    // C is data from bit 7 of Accumulator.
+    assert_eq!(cpu.get_c(), false);
+    
+    // The contents of the Accumulator (Register A) are rotated left 1 bit position.
+    assert_eq!(cpu.a, 0b1110_1101);
 }
 
 #[test]
 fn rrca() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_a(0b0001_0001)
+        .with_flag_c(false)
+        .with_memory_size(16)
+        .build();
+
+    cpu.rrca();
+
+    // S, Z, P/V are not affected.
+    assert_eq!(cpu.get_s(), false);
+    assert_eq!(cpu.get_z(), false);
+    assert_eq!(cpu.get_pv(), false);
+
+    // H, N are reset.
+    assert_eq!(cpu.get_h(), false);
+    assert_eq!(cpu.get_n(), false);
+
+    // C is data from bit 0 of Accumulator.
+    assert_eq!(cpu.get_c(), true);
+    
+    // The contents of the Accumulator (Register A) are rotated right 1 bit position.
+    assert_eq!(cpu.a, 0b1000_1000);
 }
 
 #[test]
 fn rra() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_a(0b0001_0001)
+        .with_flag_c(false)
+        .with_memory_size(16)
+        .build();
+
+    cpu.rra();
+
+    // S, Z, P/V are not affected.
+    assert_eq!(cpu.get_s(), false);
+    assert_eq!(cpu.get_z(), false);
+    assert_eq!(cpu.get_pv(), false);
+
+    // H, N are reset.
+    assert_eq!(cpu.get_h(), false);
+    assert_eq!(cpu.get_n(), false);
+
+    // C is data from bit 0 of Accumulator.
+    assert_eq!(cpu.get_c(), true);
+    
+    // The contents of the Accumulator (Register A) are rotated right 1 bit
+    // position through the Carry flag. The previous contents of the Carry
+    // flag are copied to bit 7.
+    assert_eq!(cpu.a, 0b0000_1000);
 }
 
 #[test]
 fn rlc_r() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_l(0b1010_1010)
+        .with_memory(vec!(0xcb, 0b0000_0101, 0, 0))
+        .build();
+
+    cpu.rlc_r();
+
+    // S is set if result is negative; otherwise, it is reset.
+    assert_eq!(cpu.get_s(), false);
+
+    // Z is set if result is 0; otherwise, it is reset.
+    assert_eq!(cpu.get_z(), false);
+    
+    // P/V is set if parity even; otherwise, it is reset.
+    assert_eq!(cpu.get_pv(), false);
+
+    // H, N are reset.
+    assert_eq!(cpu.get_h(), false);
+    assert_eq!(cpu.get_n(), false);
+
+    // C is data from bit 7 of source register.
+    assert_eq!(cpu.get_c(), true);
+    
+    // The contents of register r are rotated left 1 bit position. The contents of bit 7 
+    // are copied to the Carry flag and also to bit 0.
+    assert_eq!(cpu.l, 0b0101_0101);
 }
 
 #[test]
-fn rlc() {
-    unimplemented!();
+fn rlc_hli() {
+    let mut cpu = CpuBuilder::new()
+        .with_flag_c(false)
+        .with_hl(6)
+        .with_memory(vec!(0xcb, 0x06, 0, 0, 0xca, 0xfe, 0xba, 0xbe))
+        .build();
+
+    // 0xba = 0b1011_1010
+    cpu.rlc_hli();
+
+    // S is set if result is negative; otherwise, it is reset.
+    assert_eq!(cpu.get_s(), false);
+
+    // Z is set if result is 0; otherwise, it is reset.
+    assert_eq!(cpu.get_z(), false);
+    
+    // P/V is set if parity even; otherwise, it is reset.
+    assert_eq!(cpu.get_pv(), false);
+
+    // H, N are reset.
+    assert_eq!(cpu.get_h(), false);
+    assert_eq!(cpu.get_n(), false);
+
+    // C is data from bit 7 of source register.
+    assert_eq!(cpu.get_c(), true);
+    
+    assert_eq!(cpu.memory[6], 0b0111_0101);
 }
 
 #[test]

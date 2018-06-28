@@ -1,36 +1,110 @@
 use cpu::CPU;
+use cpu::Register;
 
 #[allow(dead_code)]
 
 impl CPU {
-    // RLCA
     pub fn rlca(&mut self) {
-        unimplemented!();
+        let carry = (self.a & 0b1000_0000) != 0;
+        self.set_c(carry);
+        self.set_h(false);
+        self.set_n(false);
+
+        let result = self.a.rotate_left(1);
+        self.a = result;
     }
 
-    // RLA
     pub fn rla(&mut self) {
-        unimplemented!();
+        let lsb = match self.get_c() {
+            true => 1,
+            false => 0,
+        };
+
+        let carry = (self.a & 0b1000_0000) != 0;
+        self.set_c(carry);
+        self.set_h(false);
+        self.set_n(false);
+
+        let result = self.a << 1;
+        self.a = result | lsb;
     }
 
     // RRCA
     pub fn rrca(&mut self) {
-        unimplemented!();
+        let carry = (self.a & 0b0000_0001) != 0;
+        self.set_c(carry);
+        self.set_h(false);
+        self.set_n(false);
+
+        let result = self.a.rotate_right(1);
+        self.a = result;
     }
 
-    // RRA
     pub fn rra(&mut self) {
-        unimplemented!();
+        let msb = match self.get_c() {
+            true => 1,
+            false => 0,
+        };
+
+        let carry = (self.a & 0b0000_0001) != 0;
+        self.set_c(carry);
+        self.set_h(false);
+        self.set_n(false);
+
+        let result = self.a >> 1;
+        self.a = result | msb;
     }
 
-    // RLC r
+    fn _set_rlc_flags_from_result(&mut self, result: u8) {
+        self.set_c((result & 0b0000_0001) != 0);
+        self.set_s_from_byte(result);
+        self.set_z_from_byte(result);
+        self.set_h(false);
+        self.set_n(false);
+    }
+
     pub fn rlc_r(&mut self) {
-        unimplemented!();
+        let opcode = self.memory_at_pc(1);
+
+        let result = match Self::select_src(opcode) {
+            Register::a => {
+                self.a = self.a.rotate_left(1);
+                self.a
+            },
+            Register::b => {
+                self.b = self.b.rotate_left(1);
+                self.b
+            },
+            Register::c => {
+                self.c = self.c.rotate_left(1);
+                self.c
+            },
+            Register::d => {
+                self.d = self.d.rotate_left(1);
+                self.d
+            },
+            Register::e => {
+                self.e = self.e.rotate_left(1);
+                self.e
+            },
+            Register::h => {
+                self.h = self.h.rotate_left(1);
+                self.h
+            },
+            Register::l => {
+                self.l = self.l.rotate_left(1);
+                self.l
+            },
+        };
+
+        self._set_rlc_flags_from_result(result);
     }
 
-    // RLC (HL)
-    pub fn rlc(&mut self) {
-        unimplemented!();
+    pub fn rlc_hli(&mut self) {
+        let addr = self.read_hl() as usize;
+        self.memory[addr] = self.memory[addr].rotate_left(1);
+        let result = self.memory[addr];
+        self._set_rlc_flags_from_result(result);
     }
 
     // RLC (IX+d)
