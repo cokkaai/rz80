@@ -122,6 +122,11 @@ impl CPU {
         self.set_status_flag(PV_MASK, value);
     }
 
+    pub fn set_pv_from_byte(&mut self, byte: u8) {
+        // TODO: Verify that complies with Z80 impl
+        self.set_pv((byte & 0b0000_0001) == 0);
+    }
+
     pub fn parity_is_odd(&self) -> bool {
         !self.read_status_flag(PV_MASK)
     }
