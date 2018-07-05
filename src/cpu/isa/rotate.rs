@@ -1,11 +1,12 @@
 use cpu::CPU;
 use cpu::Register;
+use cpu::bytes;
 
 #[allow(dead_code)]
 
 impl CPU {
     pub fn rlca(&mut self) {
-        let carry = (self.a & 0b1000_0000) != 0;
+        let carry = bytes::msb(self.a) != 0;
         self.set_c(carry);
         self.set_h(false);
         self.set_n(false);
@@ -22,7 +23,7 @@ impl CPU {
             false => 0,
         };
 
-        let carry = (self.a & 0b1000_0000) != 0;
+        let carry = bytes::msb(self.a) != 0;
         self.set_c(carry);
         self.set_h(false);
         self.set_n(false);
@@ -35,7 +36,7 @@ impl CPU {
 
     // RRCA
     pub fn rrca(&mut self) {
-        let carry = (self.a & 0b0000_0001) != 0;
+        let carry = bytes::lsb(self.a) != 0;
         self.set_c(carry);
         self.set_h(false);
         self.set_n(false);
@@ -46,20 +47,59 @@ impl CPU {
         self.incr_pc(1);
     }
 
-    pub fn rra(&mut self) {
+    fn rr_reg(&mut self, reg: Register) -> u8 {
         let msb = match self.get_c() {
-            true => 1,
+            true => 0b1000_0000,
             false => 0,
         };
 
-        let carry = (self.a & 0b0000_0001) != 0;
+        let (result, carry) = match reg {
+            Register::a => {
+                let carry = bytes::lsb(self.a) != 0;
+                self.a = (self.a >> 1) | msb;
+                (self.a, carry)
+            },
+            Register::b => {
+                let carry = bytes::lsb(self.b) != 0;
+                self.b = (self.b >> 1) | msb;
+                (self.b, carry)
+            },
+            Register::c => {
+                let carry = bytes::lsb(self.c) != 0;
+                self.c = (self.c >> 1) | msb;
+                (self.c, carry)
+            },
+            Register::d => {
+                let carry = bytes::lsb(self.d) != 0;
+                self.d = (self.d >> 1) | msb;
+                (self.d, carry)
+            },
+            Register::e => {
+                let carry = bytes::lsb(self.e) != 0;
+                self.e = (self.e >> 1) | msb;
+                (self.e, carry)
+            },
+            Register::h => {
+                let carry = bytes::lsb(self.h) != 0;
+                self.h = (self.h >> 1) | msb;
+                (self.h, carry)
+            },
+            Register::l => {
+                let carry = bytes::lsb(self.l) != 0;
+                self.l = (self.l >> 1) | msb;
+                (self.l, carry)
+            },
+        };
+
         self.set_c(carry);
         self.set_h(false);
         self.set_n(false);
 
-        let result = self.a >> 1;
-        self.a = result | msb;
+        result
+    }
 
+    pub fn rra(&mut self) {
+        self.rr_reg(Register::a);
         self.incr_pc(1);
     }
 
@@ -150,8 +190,19 @@ impl CPU {
         self.incr_pc(4);
     }
 
-    // RL m
-    pub fn rl_m(&mut self) {
+    pub fn rl_r(&mut self) {
+        unimplemented!();
+    }
+
+    pub fn rl_hli(&mut self) {
+        unimplemented!();
+    }
+
+    pub fn rl_ixdi(&mut self) {
+        unimplemented!();
+    }
+
+    pub fn rl_iydi(&mut self) {
         unimplemented!();
     }
 
@@ -212,32 +263,77 @@ impl CPU {
         self.incr_pc(4);
     }
 
-    // RR m
-    pub fn rr_m(&mut self) {
+    pub fn rr_r(&mut self) {
+        let reg = Self::select_src(self.memory_at_pc(1));
+        let result = self.rr_reg(reg);
+        self.set_pv_from_byte(result);
+        self.incr_pc(2);
+    }
+
+    pub fn rr_hli(&mut self) {
         unimplemented!();
     }
 
-    // SLA m
-    pub fn sla_m(&mut self) {
+    pub fn rr_ixdi(&mut self) {
         unimplemented!();
     }
 
-    // SRA m
-    pub fn sra_m(&mut self) {
+    pub fn rr_iydi(&mut self) {
         unimplemented!();
     }
 
-    // SRL m
-    pub fn srl_m(&mut self) {
+    pub fn sla_r(&mut self) {
         unimplemented!();
     }
 
-    // RLD
+    pub fn sla_hli(&mut self) {
+        unimplemented!();
+    }
+
+    pub fn sla_ixdi(&mut self) {
+        unimplemented!();
+    }
+
+    pub fn sla_iydi(&mut self) {
+        unimplemented!();
+    }
+
+    pub fn sra_r(&mut self) {
+        unimplemented!();
+    }
+
+    pub fn sra_hli(&mut self) {
+        unimplemented!();
+    }
+
+    pub fn sra_ixdi(&mut self) {
+        unimplemented!();
+    }
+
+    pub fn sra_iydi(&mut self) {
+        unimplemented!();
+    }
+
+    pub fn srl_r(&mut self) {
+        unimplemented!();
+    }
+
+    pub fn srl_hli(&mut self) {
+        unimplemented!();
+    }
+
+    pub fn srl_ixdi(&mut self) {
+        unimplemented!();
+    }
+
+    pub fn srl_iydi(&mut self) {
+        unimplemented!();
+    }
+
     pub fn rld(&mut self) {
         unimplemented!();
     }
 
-    // RRD
     pub fn rrd(&mut self) {
         unimplemented!();
     }
