@@ -33,6 +33,17 @@ pub enum Register16 {
     sp,
 }
 
+pub trait RegisterOperations<T> {
+    fn msb(&self) -> bool;
+    fn lsb(&self) -> bool;
+    fn incr(&mut self) -> (T, bool);
+    fn decr(&mut self) -> (T, bool);
+    fn reg_add(&mut self, value: T) -> (T, bool);
+    fn reg_sub(&mut self, value: T) -> (T, bool);
+    fn is_zero(&self) -> bool;
+    fn set(&mut self, bitmask: T) -> T;
+    fn reset(&mut self, bitmask: T) -> T;
+}
 #[allow(dead_code)]
 impl CPU {
     // ===== FLAG S =====
@@ -163,8 +174,8 @@ impl CPU {
 
     /// Identifies a register from patterns embedded
     /// in the object code.
-    pub fn select(code: u8) -> Register {
-        match code {
+    pub fn select(opcode: u8) -> Register {
+        match opcode {
             0b111 => Register::a,
             0b000 => Register::b,
             0b001 => Register::c,

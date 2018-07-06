@@ -49,41 +49,101 @@ impl RegisterOperations<u16> for u16 {
 
 }
 
-// #[test]
-// fn add_10_to_u8_binding() {
-//     let mut data = 9u8;
+#[cfg(test)]
+mod test {
+    use cpu::registers::RegisterOperations;
 
-//     let (result, overflow) = data.reg_add(10);
+    #[test]
+    fn msb() {
+        assert_eq!(0x8000u16.msb(), true);
+        assert_eq!(0x0001u16.msb(), false);
+        assert_eq!(0x0000u16.msb(), false);
+    }
 
-//     assert_eq!(result, 19);
-//     assert_eq!(data, 19);
-//     assert_eq!(overflow, false);
-// }
+    #[test]
+    fn lsb() {
+        assert_eq!(0x8000u16.lsb(), false);
+        assert_eq!(0x0001u16.lsb(), true);
+        assert_eq!(0x0000u16.lsb(), false);
+    }
 
-// #[test]
-// fn add_10_to_u8_part_of_a_struct() {
-//     struct Container {
-//         data: u8
-//     }
+    #[test]
+    fn incr() {
+        assert_eq!(0u16.incr(), (1u16, false));
+        assert_eq!(254u16.incr(), (255u16, false));
+        assert_eq!(65534u16.incr(), (65535u16, false));
+        assert_eq!(65535u16.incr(), (0u16, true));
+    }
 
-//     let mut container = Container {
-//         data: 9u8
-//     };
+    #[test]
+    fn decr() {
+        assert_eq!(65535u16.decr(), (65534u16, false));
+        assert_eq!(255u16.decr(), (254u16, false));
+        assert_eq!(1u16.decr(), (0u16, false));
+        assert_eq!(0u16.decr(), (65535u16, true));
+    }
 
-//     let (result, overflow) = container.data.reg_add(10);
+    #[test]
+    fn add_10_to_u16_binding() {
+        let mut data = 9u16;
 
-//     assert_eq!(result, 19);
-//     assert_eq!(container.data, 19);
-//     assert_eq!(overflow, false);
-// }
+        let (result, overflow) = data.reg_add(10);
 
-// #[test]
-// fn overflow_u8() {
-//     let mut data = 1u8;
+        assert_eq!(result, 19);
+        assert_eq!(data, 19);
+        assert_eq!(overflow, false);
+    }
 
-//     let (result, overflow) = data.reg_add(u8::max_value());
+    #[test]
+    fn add_10_to_u6_part_of_a_struct() {
+        struct Container {
+            data: u16,
+        }
 
-//     assert_eq!(result, 0);
-//     assert_eq!(data, 0);
-//     assert_eq!(overflow, true);
-// }
+        let mut container = Container { data: 9u16 };
+
+        let (result, overflow) = container.data.reg_add(10);
+
+        assert_eq!(result, 19);
+        assert_eq!(container.data, 19);
+        assert_eq!(overflow, false);
+    }
+
+    #[test]
+    fn overflow_u16() {
+        let mut data = 1u16;
+
+        let (result, overflow) = data.reg_add(u16::max_value());
+
+        assert_eq!(result, 0);
+        assert_eq!(data, 0);
+        assert_eq!(overflow, true);
+    }
+
+    #[test]
+    fn sub() {
+        assert_eq!(65535u16.reg_sub(10), (65525u16, false));
+        assert_eq!(65535u16.reg_sub(65535), (0u16, false));
+        assert_eq!(100u16.reg_sub(255), (65381u16, true));
+    }
+
+    #[test]
+    fn zero() {
+        assert_eq!(1u16.is_zero(), false);
+        assert_eq!(0u16.is_zero(), true);
+    }
+
+    #[test]
+    fn set() {
+        assert_eq!(0u16.set(14), 14);
+        assert_eq!(1u16.set(2), 3);
+        assert_eq!(1u16.set(7), 7);
+    }
+
+    #[test]
+    fn reset() {
+        assert_eq!(14u16.reset(0), 0);
+        assert_eq!(0xcafeu16.reset(0x0003u16), 2);
+        assert_eq!(0xca01u16.reset(0x00ffu16), 1);
+    }
+}

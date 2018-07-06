@@ -1,8 +1,11 @@
 mod bytes;
 mod registers;
+mod reg8;
+mod reg16;
 mod builder;
-mod test;
 mod isa;
+#[cfg(test)]
+mod test;
 
 pub use self::registers::*;
 pub use self::builder::CpuBuilder;

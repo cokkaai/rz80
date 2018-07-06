@@ -389,7 +389,31 @@ fn rrc_iydi() {
 
 #[test]
 fn rr_r() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_flag_c(false)
+        .with_a(0b1101_1101)
+        .with_memory(vec!(0xcb, 0b0000_1111, 0xba, 0xbe))
+        .build();
+
+    cpu.rr_r();
+
+    // S is set if result is negative; otherwise, it is reset.
+    assert_eq!(cpu.get_s(), false);
+
+    // Z is set if result is 0; otherwise, it is reset.
+    assert_eq!(cpu.get_z(), false);
+    
+    // P/V is set if parity even; otherwise, it is reset.
+    assert_eq!(cpu.get_pv(), true);
+
+    // H, N are reset.
+    assert_eq!(cpu.get_h(), false);
+    assert_eq!(cpu.get_n(), false);
+
+    // C is data from bit 0 of source register.
+    assert_eq!(cpu.get_c(), true);
+    
+    assert_eq!(cpu.pc, 2);
 }
 
 #[test]
