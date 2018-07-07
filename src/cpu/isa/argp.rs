@@ -1,9 +1,9 @@
-use cpu::CPU;
+use cpu::Cpu;
 use cpu::bytes;
 
 #[allow(dead_code)]
 
-impl CPU {
+impl Cpu {
     // DAA
     pub fn daa(&mut self) {
         unimplemented!();

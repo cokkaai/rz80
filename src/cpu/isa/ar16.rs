@@ -1,8 +1,8 @@
-use cpu::CPU;
+use cpu::Cpu;
 
 #[allow(dead_code)]
 
-impl CPU {
+impl Cpu {
     // ADD HL, ss
     pub fn add_hl_ss(&mut self) {
         unimplemented!();

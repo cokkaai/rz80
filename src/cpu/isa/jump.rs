@@ -1,11 +1,11 @@
 // === Jump Group ===
 
-use cpu::CPU;
+use cpu::Cpu;
 use cpu::RegisterPromote;
 
 #[allow(dead_code)]
 
-impl CPU { 
+impl Cpu { 
     // JP nn
     pub fn jp_nn(&mut self) {
         let addr = (self.memory_at_pc(2), self.memory_at_pc(1)).promote();

@@ -1,12 +1,12 @@
 // === Call and Return Group ===
 
-use cpu::CPU;
+use cpu::Cpu;
 use cpu::RegisterDemote;
 use cpu::RegisterPromote;
 
 #[allow(dead_code)]
 
-impl CPU {
+impl Cpu {
     fn _push_pc(&mut self) {
         // (SP – 1) ← PCH
         self.sp -= 1;

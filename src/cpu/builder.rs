@@ -1,4 +1,4 @@
-use cpu::CPU;
+use cpu::Cpu;
 use cpu::RegisterDemote;
 
 #[derive(Debug)]
@@ -214,8 +214,8 @@ impl CpuBuilder {
         self
     }
 
-    pub fn build(self) -> CPU {
-        let mut cpu = CPU {
+    pub fn build(self) -> Cpu {
+        let mut cpu = Cpu {
             pc: self.pc,
             sp: self.sp,
             ix: self.ix,

@@ -1,16 +1,16 @@
 // === 8-Bit Load Group ===
 
-use cpu::CPU;
+use cpu::Cpu;
 use cpu::Register16;
 use cpu::bytes;
 
 #[allow(dead_code)]
 
-impl CPU {
+impl Cpu {
     pub fn ld_r_r1(&mut self) {
         let opcode = self.memory_at_pc(0);
-        let src = CPU::select_src(opcode);
-        let dest = CPU::select_dest(opcode);
+        let src = Cpu::select_src(opcode);
+        let dest = Cpu::select_dest(opcode);
         let value = self.read(src);
         self.write(dest, value);
         self.incr_pc(1);
@@ -18,7 +18,7 @@ impl CPU {
 
     pub fn ld_r_n(&mut self) {
         let opcode = self.memory_at_pc(0);
-        let dest = CPU::select_dest(opcode);
+        let dest = Cpu::select_dest(opcode);
         let value = self.memory_at_pc(1);
         self.write(dest, value);
         self.incr_pc(2);
@@ -26,7 +26,7 @@ impl CPU {
 
     pub fn ld_r_hl(&mut self) {
         let opcode = self.memory_at_pc(0);
-        let dest = CPU::select_dest(opcode);
+        let dest = Cpu::select_dest(opcode);
         let addr = self.read16(Register16::hl) as usize;
         let value = self.memory[addr];
         self.write(dest, value);
@@ -37,7 +37,7 @@ impl CPU {
         // memory_at_pc(0) is always 0xdd
         let opcode = self.memory_at_pc(1);
         let addr = self.ix as usize + bytes::compl2(self.memory_at_pc(2)) as usize;
-        let dest = CPU::select_dest(opcode);
+        let dest = Cpu::select_dest(opcode);
         let value = self.memory[addr];
         self.write(dest, value);
         self.incr_pc(3);
@@ -47,7 +47,7 @@ impl CPU {
         // memory_at_pc(0) is always 0xfd
         let opcode = self.memory_at_pc(1);
         let addr = self.iy as usize + bytes::compl2(self.memory_at_pc(2)) as usize;
-        let dest = CPU::select_dest(opcode);
+        let dest = Cpu::select_dest(opcode);
         let value = self.memory[addr];
         self.write(dest, value);
         self.incr_pc(3);
@@ -55,7 +55,7 @@ impl CPU {
 
     pub fn ld_hl_r(&mut self) {
         let opcode = self.memory_at_pc(0);
-        let src = CPU::select_src(opcode);
+        let src = Cpu::select_src(opcode);
         let addr = self.read16(Register16::hl) as usize;
         self.memory[addr] = self.read(src);
         self.incr_pc(1);
@@ -64,7 +64,7 @@ impl CPU {
     pub fn ld_ixd_r(&mut self) {
         // memory_at_pc(0) is always 0xdd
         let opcode = self.memory_at_pc(1);
-        let src = CPU::select_src(opcode);
+        let src = Cpu::select_src(opcode);
         let addr = self.ix as usize + bytes::compl2(self.memory_at_pc(2)) as usize;
         self.memory[addr] = self.read(src);
         self.incr_pc(3);
@@ -73,7 +73,7 @@ impl CPU {
     pub fn ld_iyd_r(&mut self) {
         // memory_at_pc(0) is always 0xfd
         let opcode = self.memory_at_pc(1);
-        let src = CPU::select_src(opcode);
+        let src = Cpu::select_src(opcode);
         let addr = self.iy as usize + bytes::compl2(self.memory_at_pc(2)) as usize;
         self.memory[addr] = self.read(src);
         self.incr_pc(3);

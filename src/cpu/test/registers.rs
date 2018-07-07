@@ -1,7 +1,7 @@
 use cpu::CpuBuilder;
 use cpu::Register;
 use cpu::Register16;
-use cpu::CPU;
+use cpu::Cpu;
 use cpu::{C_MASK, H_MASK, N_MASK, PV_MASK, S_MASK, Z_MASK};
 
 #[test]
@@ -111,24 +111,24 @@ fn status_flag_c() {
 
 #[test]
 fn select_src() {
-    assert_eq!(CPU::select_src(0b00_000_111), Register::a);
-    assert_eq!(CPU::select_src(0b00_000_000), Register::b);
-    assert_eq!(CPU::select_src(0b00_000_001), Register::c);
-    assert_eq!(CPU::select_src(0b00_000_010), Register::d);
-    assert_eq!(CPU::select_src(0b00_000_011), Register::e);
-    assert_eq!(CPU::select_src(0b00_000_100), Register::h);
-    assert_eq!(CPU::select_src(0b00_000_101), Register::l);
+    assert_eq!(Cpu::select_src(0b00_000_111), Register::a);
+    assert_eq!(Cpu::select_src(0b00_000_000), Register::b);
+    assert_eq!(Cpu::select_src(0b00_000_001), Register::c);
+    assert_eq!(Cpu::select_src(0b00_000_010), Register::d);
+    assert_eq!(Cpu::select_src(0b00_000_011), Register::e);
+    assert_eq!(Cpu::select_src(0b00_000_100), Register::h);
+    assert_eq!(Cpu::select_src(0b00_000_101), Register::l);
 }
 
 #[test]
 fn select_dest() {
-    assert_eq!(CPU::select_dest(0b00_111_000), Register::a);
-    assert_eq!(CPU::select_dest(0b00_000_000), Register::b);
-    assert_eq!(CPU::select_dest(0b00_001_000), Register::c);
-    assert_eq!(CPU::select_dest(0b00_010_000), Register::d);
-    assert_eq!(CPU::select_dest(0b00_011_000), Register::e);
-    assert_eq!(CPU::select_dest(0b00_100_000), Register::h);
-    assert_eq!(CPU::select_dest(0b00_101_000), Register::l);
+    assert_eq!(Cpu::select_dest(0b00_111_000), Register::a);
+    assert_eq!(Cpu::select_dest(0b00_000_000), Register::b);
+    assert_eq!(Cpu::select_dest(0b00_001_000), Register::c);
+    assert_eq!(Cpu::select_dest(0b00_010_000), Register::d);
+    assert_eq!(Cpu::select_dest(0b00_011_000), Register::e);
+    assert_eq!(Cpu::select_dest(0b00_100_000), Register::h);
+    assert_eq!(Cpu::select_dest(0b00_101_000), Register::l);
 }
 
 #[test]

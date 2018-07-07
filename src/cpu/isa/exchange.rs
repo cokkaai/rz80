@@ -1,13 +1,13 @@
 // === Exchange, Block Transfer, and Search Group ===
 
-use cpu::CPU;
+use cpu::Cpu;
 use cpu::Register16;
 use cpu::RegisterDemote;
 use cpu::RegisterPromote;
 
 #[allow(dead_code)]
 
-impl CPU {
+impl Cpu {
     fn exchange(a: &mut u8, b: &mut u8) {
         let t = *a;
         *a = *b;

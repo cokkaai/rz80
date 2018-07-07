@@ -1,4 +1,4 @@
-use cpu::CPU;
+use cpu::Cpu;
 
 // Status register bit positions
 // Bit      7 6 5 4 3 2   1 0
@@ -58,7 +58,7 @@ pub trait RegisterPromote<T> {
 }
 
 #[allow(dead_code)]
-impl CPU {
+impl Cpu {
     // ===== FLAG S =====
     
     /// Read the sign flag. False means positive, true is negative.

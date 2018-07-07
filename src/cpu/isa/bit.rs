@@ -1,11 +1,11 @@
 
 // === Bit Set, Reset, and Test Group ===
 
-use cpu::CPU;
+use cpu::Cpu;
 
 #[allow(dead_code)]
 
-impl CPU {
+impl Cpu {
     fn operand_b(opcode: u8) -> u8 {
         match (opcode & 0b0011_1000) >> 3 {
             0b000 => 0b0000_0001,

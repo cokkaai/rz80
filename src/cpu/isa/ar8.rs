@@ -1,9 +1,9 @@
-use cpu::CPU;
+use cpu::Cpu;
 use cpu::Register;
 
 #[allow(dead_code)]
 
-impl CPU {
+impl Cpu {
     fn select_reg(opcode: u8) -> Register {
         Self::select((opcode & 0b0011_1000) >> 3)
     }

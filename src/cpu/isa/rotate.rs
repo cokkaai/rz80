@@ -1,10 +1,10 @@
-use cpu::CPU;
+use cpu::Cpu;
 use cpu::Register;
 use cpu::RegisterOperations;
 
 #[allow(dead_code)]
 
-impl CPU {
+impl Cpu {
     pub fn rlca(&mut self) {
         let carry = self.a.msb();
         self.set_c(carry);

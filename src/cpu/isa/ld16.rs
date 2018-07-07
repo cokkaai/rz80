@@ -1,19 +1,19 @@
 // === 16-Bit Load Group ===
 
-use cpu::CPU;
+use cpu::Cpu;
 use cpu::Register16;
 use cpu::RegisterDemote;
 use cpu::RegisterPromote;
 
 #[allow(dead_code)]
 
-impl CPU {
+impl Cpu {
     pub fn ld_dd_nn(&mut self) {
         let opcode = self.memory_at_pc(0);
         let l = self.memory_at_pc(1);
         let h = self.memory_at_pc(2);
 
-        match CPU::select_reg16(opcode) {
+        match Cpu::select_reg16(opcode) {
             Register16::bc => {
                 self.c = l;
                 self.b = h;
@@ -61,7 +61,7 @@ impl CPU {
         let addr = self.memory_at_pc(2) as usize + ((self.memory_at_pc(3) as usize) << 8);
         let value = self.memory[addr] as u16 + ((self.memory[addr + 1] as u16) << 8);
 
-        match CPU::select_reg16(opcode) {
+        match Cpu::select_reg16(opcode) {
             Register16::bc => self.write_bc(value),
             Register16::de => self.write_de(value),
             Register16::hl => self.write_hl(value),
@@ -94,7 +94,7 @@ impl CPU {
     pub fn ld_nni_dd(&mut self) {
         let addr = (self.memory_at_pc(3), self.memory_at_pc(2)).promote() as usize;
         let code = self.memory_at_pc(1);
-        match CPU::select_reg16(code) {
+        match Cpu::select_reg16(code) {
             Register16::bc => {
                 self.memory[addr] = self.c;
                 self.memory[addr + 1] = self.b;
@@ -159,7 +159,7 @@ impl CPU {
     pub fn push_qq(&mut self) {
         let opcode = self.memory_at_pc(0);
 
-        let h = match CPU::select_reg16(opcode) {
+        let h = match Cpu::select_reg16(opcode) {
             Register16::bc => self.b,
             Register16::de => self.d,
             Register16::hl => self.h,
@@ -167,7 +167,7 @@ impl CPU {
             _ => panic!(),
         };
 
-        let l = match CPU::select_reg16(opcode) {
+        let l = match Cpu::select_reg16(opcode) {
             Register16::bc => self.c,
             Register16::de => self.e,
             Register16::hl => self.l,
@@ -205,7 +205,7 @@ impl CPU {
         let l = self.pop_byte();
         let h = self.pop_byte();
 
-        match CPU::select_push16(opcode) {
+        match Cpu::select_push16(opcode) {
             Register16::af => {
                 self.a = h;
                 self.f = l;

@@ -14,7 +14,7 @@ pub use self::registers::*;
 pub use self::builder::CpuBuilder;
 
 #[derive(Debug)]
-pub struct CPU {
+pub struct Cpu {
     pub pc: u16,
     pub sp: u16,
     pub ix: u16,
@@ -48,7 +48,7 @@ pub struct CPU {
 }
 
 #[allow(dead_code)]
-impl CPU {
+impl Cpu {
     /// Read memory at address: pc + offset
     fn memory_at_pc(&self, offset_from_pc: u16) -> u8 {
         self.memory[(self.pc + offset_from_pc) as usize]

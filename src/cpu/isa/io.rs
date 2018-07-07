@@ -1,10 +1,10 @@
-use cpu::CPU;
+use cpu::Cpu;
 
 #[allow(dead_code)]
 
 // === Input and Output Group ===
 
-impl CPU {
+impl Cpu {
 
     // IN A, (n)
     pub fn in_a_ni(&mut self) {
