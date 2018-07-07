@@ -1,4 +1,15 @@
+use cpu::RegisterDemote;
 use cpu::RegisterOperations;
+
+impl RegisterDemote<u16, u8> for u16 {
+    fn high(&self) -> u8 {
+        ((*self & 0xff00) >> 8) as u8
+    }
+
+    fn low(&self) -> u8 {
+        (*self & 0x00ff) as u8
+    }
+}
 
 impl RegisterOperations<u16> for u16 {
     fn msb(&self) -> bool {
@@ -51,7 +62,8 @@ impl RegisterOperations<u16> for u16 {
 
 #[cfg(test)]
 mod test {
-    use cpu::registers::RegisterOperations;
+    use cpu::RegisterOperations;
+    use cpu::RegisterDemote;
 
     #[test]
     fn msb() {
@@ -145,5 +157,15 @@ mod test {
         assert_eq!(14u16.reset(0), 0);
         assert_eq!(0xcafeu16.reset(0x0003u16), 2);
         assert_eq!(0xca01u16.reset(0x00ffu16), 1);
+    }
+
+    #[test]
+    fn high() {
+        assert_eq!(0xcafeu16.high(), 0xcau8);
+    }
+
+    #[test]
+    fn low() {
+        assert_eq!(0xcafeu16.low(), 0xfeu8);
     }
 }

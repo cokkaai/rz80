@@ -1,12 +1,12 @@
 use cpu::CPU;
 use cpu::Register;
-use cpu::bytes;
+use cpu::RegisterOperations;
 
 #[allow(dead_code)]
 
 impl CPU {
     pub fn rlca(&mut self) {
-        let carry = bytes::msb(self.a) != 0;
+        let carry = self.a.msb();
         self.set_c(carry);
         self.set_h(false);
         self.set_n(false);
@@ -23,7 +23,7 @@ impl CPU {
             false => 0,
         };
 
-        let carry = bytes::msb(self.a) != 0;
+        let carry = self.a.msb();
         self.set_c(carry);
         self.set_h(false);
         self.set_n(false);
@@ -36,7 +36,7 @@ impl CPU {
 
     // RRCA
     pub fn rrca(&mut self) {
-        let carry = bytes::lsb(self.a) != 0;
+        let carry = self.a.lsb();
         self.set_c(carry);
         self.set_h(false);
         self.set_n(false);
@@ -55,37 +55,37 @@ impl CPU {
 
         let (result, carry) = match reg {
             Register::a => {
-                let carry = bytes::lsb(self.a) != 0;
+                let carry = self.a.lsb();
                 self.a = (self.a >> 1) | msb;
                 (self.a, carry)
             },
             Register::b => {
-                let carry = bytes::lsb(self.b) != 0;
+                let carry = self.b.lsb();
                 self.b = (self.b >> 1) | msb;
                 (self.b, carry)
             },
             Register::c => {
-                let carry = bytes::lsb(self.c) != 0;
+                let carry = self.c.lsb();
                 self.c = (self.c >> 1) | msb;
                 (self.c, carry)
             },
             Register::d => {
-                let carry = bytes::lsb(self.d) != 0;
+                let carry = self.d.lsb();
                 self.d = (self.d >> 1) | msb;
                 (self.d, carry)
             },
             Register::e => {
-                let carry = bytes::lsb(self.e) != 0;
+                let carry = self.e.lsb();
                 self.e = (self.e >> 1) | msb;
                 (self.e, carry)
             },
             Register::h => {
-                let carry = bytes::lsb(self.h) != 0;
+                let carry = self.h.lsb();
                 self.h = (self.h >> 1) | msb;
                 (self.h, carry)
             },
             Register::l => {
-                let carry = bytes::lsb(self.l) != 0;
+                let carry = self.l.lsb();
                 self.l = (self.l >> 1) | msb;
                 (self.l, carry)
             },

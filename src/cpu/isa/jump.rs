@@ -1,14 +1,14 @@
 // === Jump Group ===
 
 use cpu::CPU;
-use cpu::bytes;
+use cpu::RegisterPromote;
 
 #[allow(dead_code)]
 
 impl CPU { 
     // JP nn
     pub fn jp_nn(&mut self) {
-        let addr = bytes::promote(self.memory_at_pc(2), self.memory_at_pc(1));
+        let addr = (self.memory_at_pc(2), self.memory_at_pc(1)).promote();
         self.pc = addr;
     }
 
@@ -16,7 +16,7 @@ impl CPU {
     pub fn jp_cc_nn(&mut self) {
         // IF cc true, PC ← nn
         if self.condition_at_pc(0) {
-            self.pc = bytes::promote(self.memory_at_pc(2), self.memory_at_pc(1));
+            self.pc = (self.memory_at_pc(2), self.memory_at_pc(1)).promote();
         } else {
             self.incr_pc(3);
         }
@@ -68,7 +68,7 @@ impl CPU {
 
     // JP (HL)
     pub fn jp_hl(&mut self) {
-        let addr = bytes::promote(self.h, self.l);
+        let addr = (self.h, self.l).promote();
         self.pc = addr;
     }
 

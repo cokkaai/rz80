@@ -1,7 +1,8 @@
 // === Call and Return Group ===
 
 use cpu::CPU;
-use cpu::bytes;
+use cpu::RegisterDemote;
+use cpu::RegisterPromote;
 
 #[allow(dead_code)]
 
@@ -9,16 +10,15 @@ impl CPU {
     fn _push_pc(&mut self) {
         // (SP – 1) ← PCH
         self.sp -= 1;
-        self.memory[self.sp as usize] = bytes::high(self.pc);
+        self.memory[self.sp as usize] = self.pc.high();
         
         // (SP – 2) ← PCL
         self.sp -= 1;
-        self.memory[self.sp as usize] = bytes::low(self.pc);
+        self.memory[self.sp as usize] = self.pc.low();
     }
 
     fn _call(&mut self) {
-        let addr = bytes::promote(self.memory_at_pc(2), 
-                                 self.memory_at_pc(1));
+        let addr = (self.memory_at_pc(2), self.memory_at_pc(1)).promote();
 
         self.incr_pc(3);
         self._push_pc();
@@ -48,7 +48,7 @@ impl CPU {
         let h = self.memory[self.sp as usize];
         self.sp += 1;
 
-        self.pc = bytes::promote(h, l);
+        self.pc = (h, l).promote();
     }
 
     pub fn ret(&mut self) {

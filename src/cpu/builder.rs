@@ -1,5 +1,5 @@
 use cpu::CPU;
-use cpu::bytes;
+use cpu::RegisterDemote;
 
 #[derive(Debug)]
 pub struct CpuBuilder {
@@ -157,20 +157,20 @@ impl CpuBuilder {
     }
 
     pub fn with_bc(mut self, value: u16) -> CpuBuilder {
-        self.b = bytes::high(value);
-        self.c = bytes::low(value);
+        self.b = value.high();
+        self.c = value.low();
         self
     }
 
     pub fn with_de(mut self, value: u16) -> CpuBuilder {
-        self.d = bytes::high(value);
-        self.e = bytes::low(value);
+        self.d = value.high();
+        self.e = value.low();
         self
     }
 
     pub fn with_hl(mut self, value: u16) -> CpuBuilder {
-        self.h = bytes::high(value);
-        self.l = bytes::low(value);
+        self.h = value.high();
+        self.l = value.low();
         self
     }
 

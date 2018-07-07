@@ -2,6 +2,7 @@ mod bytes;
 mod registers;
 mod reg8;
 mod reg16;
+mod reg88;
 mod builder;
 mod isa;
 #[cfg(test)]

@@ -2,7 +2,8 @@
 
 use cpu::CPU;
 use cpu::Register16;
-use cpu::bytes;
+use cpu::RegisterDemote;
+use cpu::RegisterPromote;
 
 #[allow(dead_code)]
 
@@ -26,7 +27,7 @@ impl CPU {
                 self.h = h;
             },
             Register16::sp => {
-                self.sp = bytes::promote(h, l);
+                self.sp = (h, l).promote();
             },
             _ => panic!(),
         }
@@ -35,13 +36,13 @@ impl CPU {
     }
 
     pub fn ld_ix_nn(&mut self) {
-        let value = bytes::promote(self.memory_at_pc(3), self.memory_at_pc(2));
+        let value = (self.memory_at_pc(3), self.memory_at_pc(2)).promote();
         self.ix = value;
         self.incr_pc(4);
     }
 
     pub fn ld_iy_nn(&mut self) {
-        let value = bytes::promote(self.memory_at_pc(3), self.memory_at_pc(2));
+        let value = (self.memory_at_pc(3), self.memory_at_pc(2)).promote();
         self.iy = value;
         self.incr_pc(4);
     }
@@ -49,7 +50,7 @@ impl CPU {
     pub fn ld_hl_nni(&mut self) {
         let l = self.memory_at_pc(1);
         let h = self.memory_at_pc(2);
-        let addr = bytes::promote(h, l) as usize;
+        let addr = (h, l).promote() as usize;
         self.l = self.memory[addr];
         self.h = self.memory[addr + 1];
         self.incr_pc(3);
@@ -72,26 +73,26 @@ impl CPU {
     }
 
     pub fn ld_ix_nni(&mut self) {
-        let addr = bytes::promote(self.memory_at_pc(3), self.memory_at_pc(2)) as usize;
-        self.ix = bytes::promote(self.memory[addr + 1], self.memory[addr]);
+        let addr = (self.memory_at_pc(3), self.memory_at_pc(2)).promote() as usize;
+        self.ix = (self.memory[addr + 1], self.memory[addr]).promote();
         self.incr_pc(4);
     }
 
     pub fn ld_iy_nni(&mut self) {
-        let addr = bytes::promote(self.memory_at_pc(3), self.memory_at_pc(2)) as usize;
-        self.iy = bytes::promote(self.memory[addr + 1], self.memory[addr]);
+        let addr = (self.memory_at_pc(3), self.memory_at_pc(2)).promote() as usize;
+        self.iy = (self.memory[addr + 1], self.memory[addr]).promote();
         self.incr_pc(4);
     }
 
     pub fn ld_nni_hl(&mut self) {
-        let addr = bytes::promote(self.memory_at_pc(2), self.memory_at_pc(1)) as usize;
+        let addr = (self.memory_at_pc(2), self.memory_at_pc(1)).promote() as usize;
         self.memory[addr] = self.l;
         self.memory[addr + 1] = self.h;
         self.incr_pc(3);
     }
 
     pub fn ld_nni_dd(&mut self) {
-        let addr = bytes::promote(self.memory_at_pc(3), self.memory_at_pc(2)) as usize;
+        let addr = (self.memory_at_pc(3), self.memory_at_pc(2)).promote() as usize;
         let code = self.memory_at_pc(1);
         match CPU::select_reg16(code) {
             Register16::bc => {
@@ -107,8 +108,8 @@ impl CPU {
                 self.memory[addr + 1] = self.h;
             },
             Register16::sp => {
-                self.memory[addr] = bytes::low(self.sp);
-                self.memory[addr + 1] = bytes::high(self.sp);
+                self.memory[addr] = self.sp.low();
+                self.memory[addr + 1] = self.sp.high();
             },
             _ => panic!(),
         }
@@ -116,16 +117,16 @@ impl CPU {
     }
 
     pub fn ld_nni_ix(&mut self) {
-        let addr = bytes::promote(self.memory_at_pc(3), self.memory_at_pc(2)) as usize;
-        self.memory[addr] = bytes::low(self.ix);
-        self.memory[addr + 1] = bytes::high(self.ix);
+        let addr = (self.memory_at_pc(3), self.memory_at_pc(2)).promote() as usize;
+        self.memory[addr] = self.ix.low();
+        self.memory[addr + 1] = self.ix.high();
         self.incr_pc(4);
     }
 
     pub fn ld_nni_iy(&mut self) {
-        let addr = bytes::promote(self.memory_at_pc(3), self.memory_at_pc(2)) as usize;
-        self.memory[addr] = bytes::low(self.iy);
-        self.memory[addr + 1] = bytes::high(self.iy);
+        let addr = (self.memory_at_pc(3), self.memory_at_pc(2)).promote() as usize;
+        self.memory[addr] = self.iy.low();
+        self.memory[addr + 1] = self.iy.high();
         self.incr_pc(4);
     }
 
@@ -183,8 +184,8 @@ impl CPU {
     pub fn push_ix(&mut self) {
         let value = self.ix;
 
-        self.push_byte(bytes::high(value));
-        self.push_byte(bytes::low(value));
+        self.push_byte(value.high());
+        self.push_byte(value.low());
 
         self.incr_pc(2);
     }
@@ -192,8 +193,8 @@ impl CPU {
     pub fn push_iy(&mut self) {
         let value = self.iy;
 
-        self.push_byte(bytes::high(value));
-        self.push_byte(bytes::low(value));
+        self.push_byte(value.high());
+        self.push_byte(value.low());
 
         self.incr_pc(2);
     }
@@ -231,7 +232,7 @@ impl CPU {
         let l = self.pop_byte();
         let h = self.pop_byte();
 
-        self.ix = bytes::promote(h, l);
+        self.ix = (h, l).promote();
 
         self.incr_pc(2);
     }
@@ -240,7 +241,7 @@ impl CPU {
         let l = self.pop_byte();
         let h = self.pop_byte();
 
-        self.iy = bytes::promote(h, l);
+        self.iy = (h, l).promote();
 
         self.incr_pc(2);
     }

@@ -1,5 +1,4 @@
 use cpu::CPU;
-use cpu::bytes;
 
 // Status register bit positions
 // Bit      7 6 5 4 3 2   1 0
@@ -33,6 +32,7 @@ pub enum Register16 {
     sp,
 }
 
+/// Additional register functionalities
 pub trait RegisterOperations<T> {
     fn msb(&self) -> bool;
     fn lsb(&self) -> bool;
@@ -44,6 +44,19 @@ pub trait RegisterOperations<T> {
     fn set(&mut self, bitmask: T) -> T;
     fn reset(&mut self, bitmask: T) -> T;
 }
+
+/// Conversion between different size registers.
+/// T is the bigger register, composed by two R-sized registers.
+pub trait RegisterDemote<T, R> {
+    fn high(&self) -> R;
+    fn low(&self) -> R;
+}
+
+/// Defines register conversion to type T.
+pub trait RegisterPromote<T> {
+    fn promote(&self) -> T;
+}
+
 #[allow(dead_code)]
 impl CPU {
     // ===== FLAG S =====
@@ -267,23 +280,23 @@ impl CPU {
     // ===== Register AF =====
     
     pub fn read_af(&self) -> u16 {
-        bytes::promote(self.a, self.f)
+        (self.a, self.f).promote()
     }
 
     pub fn write_af(&mut self, value: u16) {
-        self.a = bytes::high(value);
-        self.f = bytes::low(value);
+        self.a = value.high();
+        self.f = value.low();
     }
 
     // ===== Register BC =====
     
     pub fn read_bc(&self) -> u16 {
-        bytes::promote(self.b, self.c)
+        (self.b, self.c).promote()
     }
 
     pub fn write_bc(&mut self, value: u16) {
-        self.b = bytes::high(value);
-        self.c = bytes::low(value);
+        self.b = value.high();
+        self.c = value.low();
     }
 
     pub fn add_bc(&mut self, value: i16) {
@@ -295,12 +308,12 @@ impl CPU {
     // ===== Register DE =====
     
     pub fn read_de(&self) -> u16 {
-        bytes::promote(self.d, self.e)
+        (self.d, self.e).promote()
     }
 
     pub fn write_de(&mut self, value: u16) {
-        self.d = bytes::high(value);
-        self.e = bytes::low(value);
+        self.d = value.high();
+        self.e = value.low();
     }
 
     pub fn add_de(&mut self, value: i16) {
@@ -312,12 +325,12 @@ impl CPU {
     // ===== Register HL =====
     
     pub fn read_hl(&self) -> u16 {
-        bytes::promote(self.h, self.l)
+        (self.h, self.l).promote()
     }
 
     pub fn write_hl(&mut self, value: u16) {
-        self.h = bytes::high(value);
-        self.l = bytes::low(value);
+        self.h = value.high();
+        self.l = value.low();
     }
 
     pub fn add_hl(&mut self, value: i16) {

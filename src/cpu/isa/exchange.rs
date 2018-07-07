@@ -2,7 +2,8 @@
 
 use cpu::CPU;
 use cpu::Register16;
-use cpu::bytes;
+use cpu::RegisterDemote;
+use cpu::RegisterPromote;
 
 #[allow(dead_code)]
 
@@ -60,13 +61,13 @@ impl CPU {
 
     // EX (SP), IX
     pub fn ex_spi_ix(&mut self) {
-        let h = bytes::high(self.ix);
-        let l = bytes::low(self.ix);
+        let h = self.ix.high();
+        let l = self.ix.low();
 
         let addrh = (self.sp + 1) as usize;
         let addrl = self.sp as usize;
 
-        self.ix = bytes::promote(self.memory[addrh], self.memory[addrl]);
+        self.ix = (self.memory[addrh], self.memory[addrl]).promote();
         self.memory[addrh] = h;
         self.memory[addrl] = l;
 
@@ -75,13 +76,13 @@ impl CPU {
 
     // EX (SP), IY
     pub fn ex_spi_iy(&mut self) {
-        let h = bytes::high(self.iy);
-        let l = bytes::low(self.iy);
+        let h = self.iy.high();
+        let l = self.iy.low();
 
         let addrh = (self.sp + 1) as usize;
         let addrl = self.sp as usize;
 
-        self.iy = bytes::promote(self.memory[addrh], self.memory[addrl]);
+        self.iy = (self.memory[addrh], self.memory[addrl]).promote();
         self.memory[addrh] = h;
         self.memory[addrl] = l;
 

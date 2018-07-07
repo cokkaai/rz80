@@ -1,8 +1,8 @@
 // === Exchange, Block Transfer, and Search Group ===
 
-use cpu::bytes;
 use cpu::CpuBuilder;
 use cpu::Register16;
+use cpu::RegisterDemote;
 
 #[test]
 fn ex_de_hl() {
@@ -118,11 +118,11 @@ fn ex_spi_ix() {
     cpu.ex_spi_ix();
 
     // IXH ↔ (SP+1)
-    assert_eq!(bytes::high(cpu.ix), 0x48);
+    assert_eq!(cpu.ix.high(), 0x48);
     assert_eq!(cpu.memory[1], 0x39);
 
     // IXL ↔ (SP)
-    assert_eq!(bytes::low(cpu.ix), 0x90);
+    assert_eq!(cpu.ix.low(), 0x90);
     assert_eq!(cpu.memory[0], 0x88);
 
     assert_eq!(cpu.pc, 2);
@@ -139,11 +139,11 @@ fn ex_spi_iy() {
     cpu.ex_spi_iy();
 
     // IYH ↔ (SP+1)
-    assert_eq!(bytes::high(cpu.iy), 0x48);
+    assert_eq!(cpu.iy.high(), 0x48);
     assert_eq!(cpu.memory[1], 0x39);
 
     // IYL ↔ (SP)
-    assert_eq!(bytes::low(cpu.iy), 0x90);
+    assert_eq!(cpu.iy.low(), 0x90);
     assert_eq!(cpu.memory[0], 0x88);
 
     assert_eq!(cpu.pc, 2);
