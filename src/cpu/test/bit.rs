@@ -1,6 +1,7 @@
 // === Bit Set, Reset, and Test Group ===
 
 use cpu::CpuBuilder;
+use cpu::Assertor;
 
 #[test]
 fn bit_b_r() {
@@ -14,10 +15,11 @@ fn bit_b_r() {
 
     cpu.bit_b_r();
 
-    assert_eq!(cpu.get_z(), false);
-    assert_eq!(cpu.get_h(), true);
-    assert_eq!(cpu.get_n(), false);
-    assert_eq!(cpu.pc, 2);
+    Assertor::new(cpu)
+        .zero_flag_is_reset()
+        .half_carry_flag_is_set()
+        .add_substract_flag_is_reset()
+        .program_counter_is(2);
 }
 
 #[test]
@@ -31,10 +33,11 @@ fn bit_b_hli() {
 
     cpu.bit_b_hli();
 
-    assert_eq!(cpu.get_z(), true);
-    assert_eq!(cpu.get_h(), true);
-    assert_eq!(cpu.get_n(), false);
-    assert_eq!(cpu.pc, 2);
+    Assertor::new(cpu)
+        .zero_flag_is_set()
+        .half_carry_flag_is_set()
+        .add_substract_flag_is_reset()
+        .program_counter_is(2);
 }
 
 #[test]
@@ -55,10 +58,11 @@ fn bit_b_ixdi() {
 
     cpu.bit_b_ixdi();
 
-    assert_eq!(cpu.get_z(), true);
-    assert_eq!(cpu.get_h(), true);
-    assert_eq!(cpu.get_n(), false);
-    assert_eq!(cpu.pc, 4);
+    Assertor::new(cpu)
+        .zero_flag_is_set()
+        .half_carry_flag_is_set()
+        .add_substract_flag_is_reset()
+        .program_counter_is(4);
 }
 
 #[test]
@@ -79,10 +83,11 @@ fn bit_b_iydi() {
 
     cpu.bit_b_iydi();
 
-    assert_eq!(cpu.get_z(), true);
-    assert_eq!(cpu.get_h(), true);
-    assert_eq!(cpu.get_n(), false);
-    assert_eq!(cpu.pc, 4);
+    Assertor::new(cpu)
+        .zero_flag_is_set()
+        .half_carry_flag_is_set()
+        .add_substract_flag_is_reset()
+        .program_counter_is(4);
 }
 
 #[test]
@@ -97,8 +102,9 @@ fn set_b_r() {
 
     cpu.set_b_r();
 
-    assert_eq!(cpu.e, 0b1000_0100);
-    assert_eq!(cpu.pc, 2);
+    Assertor::new(cpu)
+        .register_e_is(0b1000_0100)
+        .program_counter_is(2);
 }
 
 #[test]
@@ -115,8 +121,9 @@ fn set_b_hli() {
 
     cpu.set_b_hli();
 
-    assert_eq!(cpu.memory[3], 0b0010_0000);
-    assert_eq!(cpu.pc, 2);
+    Assertor::new(cpu)
+        .memory_at_address_is(3, 0b0010_0000)
+        .program_counter_is(2);
 }
 
 #[test]
@@ -137,8 +144,9 @@ fn set_b_ixdi() {
 
     cpu.set_b_ixdi();
 
-    assert_eq!(cpu.memory[7], 0b0100_0001);
-    assert_eq!(cpu.pc, 4);
+    Assertor::new(cpu)
+        .memory_at_address_is(7, 0b0100_0001)
+        .program_counter_is(4);
 }
 
 #[test]
@@ -159,8 +167,9 @@ fn set_b_iydi() {
 
     cpu.set_b_iydi();
 
-    assert_eq!(cpu.memory[7], 0b0100_0001);
-    assert_eq!(cpu.pc, 4);
+    Assertor::new(cpu)
+        .memory_at_address_is(7, 0b0100_0001)
+        .program_counter_is(4);
 }
 
 #[test]
@@ -175,8 +184,9 @@ pub fn res_b_r() {
 
     cpu.res_b_r();
 
-    assert_eq!(cpu.e, 0b1000_0000);
-    assert_eq!(cpu.pc, 2);
+    Assertor::new(cpu)
+        .register_e_is(0b1000_0000)
+        .program_counter_is(2);
 }
 
 #[test]
@@ -193,8 +203,9 @@ pub fn res_b_hli() {
 
     cpu.res_b_hli();
 
-    assert_eq!(cpu.memory[3], 0b0000_0000);
-    assert_eq!(cpu.pc, 2);
+    Assertor::new(cpu)
+        .memory_at_address_is(3, 0)
+        .program_counter_is(2);
 }
 
 #[test]
@@ -215,8 +226,9 @@ pub fn res_b_ixdi() {
 
     cpu.res_b_ixdi();
 
-    assert_eq!(cpu.memory[7], 0b1011_1111);
-    assert_eq!(cpu.pc, 4);
+    Assertor::new(cpu)
+        .memory_at_address_is(7, 0b1011_1111)
+        .program_counter_is(4);
 }
 
 #[test]
@@ -237,6 +249,7 @@ pub fn res_b_iydi() {
 
     cpu.res_b_iydi();
 
-    assert_eq!(cpu.memory[7], 0b1011_1111);
-    assert_eq!(cpu.pc, 4);
+    Assertor::new(cpu)
+        .memory_at_address_is(7, 0b1011_1111)
+        .program_counter_is(4);
 }

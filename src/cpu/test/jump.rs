@@ -1,6 +1,7 @@
 // === Jump Group ===
 
 use cpu::CpuBuilder;
+use cpu::Assertor;
 
 #[test]
 fn jp_nn() {
@@ -10,8 +11,7 @@ fn jp_nn() {
 
     cpu.jp_nn();
 
-    // PC ← nn
-    assert_eq!(cpu.pc, 0x0007);
+    Assertor::new(cpu).program_counter_is(7);
 }
 
 #[test]
@@ -22,7 +22,8 @@ fn jp_cc_nn() {
         .build();
 
     cpu.jp_cc_nn();
-    assert_eq!(cpu.pc, 0x0007);
+
+    Assertor::new(cpu).program_counter_is(7);
 }
 
 #[test]
@@ -33,7 +34,7 @@ fn jr_e() {
 
     cpu.jr_e();
 
-    assert_eq!(cpu.pc, 0x04);
+    Assertor::new(cpu).program_counter_is(4);
 }
 
 #[test]
@@ -45,7 +46,7 @@ fn jr_c_e() {
 
     cpu.jr_c_e();
 
-    assert_eq!(cpu.pc, 0x04);
+    Assertor::new(cpu).program_counter_is(4);
 }
 
 #[test]
@@ -57,7 +58,7 @@ fn jr_nc_e() {
 
     cpu.jr_nc_e();
 
-    assert_eq!(cpu.pc, 0x04);
+    Assertor::new(cpu).program_counter_is(4);
 }
 
 #[test]
@@ -69,7 +70,7 @@ fn jr_z_e() {
 
     cpu.jr_z_e();
 
-    assert_eq!(cpu.pc, 0x04);
+    Assertor::new(cpu).program_counter_is(4);
 }
 
 #[test]
@@ -81,7 +82,7 @@ fn jr_nz_e() {
 
     cpu.jr_nz_e();
 
-    assert_eq!(cpu.pc, 0x04);
+    Assertor::new(cpu).program_counter_is(4);
 }
 
 #[test]
@@ -94,7 +95,7 @@ fn jp_hl() {
     cpu.jp_hl();
 
     // PC ← HL
-    assert_eq!(cpu.pc, 0x0009);
+    Assertor::new(cpu).program_counter_is(9);
 }
 
 #[test]
@@ -107,7 +108,7 @@ fn jp_ix() {
     cpu.jp_ix();
 
     // PC ← IX
-    assert_eq!(cpu.pc, 0x0009);
+    Assertor::new(cpu).program_counter_is(9);
 }
 
 #[test]
@@ -120,7 +121,7 @@ fn jp_iy() {
     cpu.jp_iy();
 
     // PC ← IY
-    assert_eq!(cpu.pc, 0x0009);
+    Assertor::new(cpu).program_counter_is(9);
 }
 
 #[test]
@@ -131,8 +132,5 @@ fn djnz_e() {
         .build();
 
     cpu.djnz_e();
-    assert_eq!(cpu.pc, 4);
-
-    cpu.djnz_e();
-    assert_eq!(cpu.pc, 6);
+    Assertor::new(cpu).program_counter_is(4);
 }

@@ -1,6 +1,7 @@
 // === Call and Return Group ===
 
 use cpu::CpuBuilder;
+use cpu::Assertor;
 
 #[test]
 fn call_nn() {
@@ -14,6 +15,11 @@ fn call_nn() {
     assert_eq!(cpu.memory[7], 0x00);
     assert_eq!(cpu.memory[6], 0x03);
     assert_eq!(cpu.pc, 0x04);
+
+    Assertor::new(cpu)
+        .memory_at_address_is(7, 0)
+        .memory_at_address_is(6, 3)
+        .program_counter_is(4);
 }
 
 #[test]
@@ -25,9 +31,10 @@ fn call_cc_nn() {
 
     cpu.call_nn();
 
-    assert_eq!(cpu.memory[7], 0x00);
-    assert_eq!(cpu.memory[6], 0x03);
-    assert_eq!(cpu.pc, 0x04);
+    Assertor::new(cpu)
+        .memory_at_address_is(7, 0)
+        .memory_at_address_is(6, 3)
+        .program_counter_is(4);
 }
 
 #[test]
@@ -41,6 +48,9 @@ fn ret() {
 
     assert_eq!(cpu.pc, 0x04);
     assert_eq!(cpu.sp, 0x08);
+    Assertor::new(cpu)
+        .stack_pointer_is(8)
+        .program_counter_is(4);
 }
 
 #[test]
@@ -52,7 +62,7 @@ fn ret_cc() {
 
     cpu.ret_cc();
 
-    assert_eq!(cpu.pc, 0x04);
+    Assertor::new(cpu).program_counter_is(4);
 }
 
 #[test]
@@ -71,10 +81,11 @@ fn retn() {
 
     cpu.retn();
 
-    assert_eq!(cpu.pc, 0x04);
-    assert_eq!(cpu.sp, 0x08);
-    assert_eq!(cpu.iff1, true);
-    assert_eq!(cpu.iff2, true);
+    Assertor::new(cpu)
+        .interrupt_flip_flop_1_is_set()
+        .interrupt_flip_flop_1_is_set()
+        .stack_pointer_is(8)
+        .program_counter_is(4);
 }
 
 #[test]
@@ -85,5 +96,5 @@ fn rst_p() {
 
     cpu.rst_p();
 
-    assert_eq!(cpu.pc, 0x08);
+    Assertor::new(cpu).program_counter_is(8);
 }

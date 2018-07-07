@@ -3,6 +3,7 @@
 use cpu::Cpu;
 use cpu::Register16;
 use cpu::RegisterDemote;
+// use cpu::RegisterOperations;
 use cpu::RegisterPromote;
 
 #[allow(dead_code)]
@@ -102,6 +103,9 @@ impl Cpu {
         // HL ← HL + 1
         let value = self.read16(Register16::hl) as i32 + delta as i32;
         self.write16(Register16::hl, value as u16);
+        // TODO: Updating a composed 16 register could be done in one instruction
+        // like below provided the reg_add fn accepts i16.
+        // (self.h, self.l).reg_add(delta);
 
         // BC ← BC – 1
         let value = self.read16(Register16::bc) - 1;

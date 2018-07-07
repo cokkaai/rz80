@@ -1,4 +1,5 @@
 use cpu::CpuBuilder;
+use cpu::Assertor;
 
 #[test]
 fn create_system() {
@@ -28,29 +29,31 @@ fn create_system() {
     
     let cpu = builder.build();
 
-    assert_eq!(cpu.a, 1);
-    assert_eq!(cpu.b, 2);
-    assert_eq!(cpu.c, 3);
-    assert_eq!(cpu.d, 4);
-    assert_eq!(cpu.e, 5);
-    assert_eq!(cpu.f, 0b1101_0111);  // Position S Z X H X P/V N C
-    assert_eq!(cpu.h, 7);
-    assert_eq!(cpu.i, 8);
-    assert_eq!(cpu.iff1, true);
-    assert_eq!(cpu.iff2, false);
-    assert_eq!(cpu.ix, 9);
-    assert_eq!(cpu.iy, 10);
-    assert_eq!(cpu.l, 11);
-    assert_eq!(cpu.memory.capacity(), 16384);
-    assert_eq!(cpu.pc, 12);
-    assert_eq!(cpu.r, 13);
-    assert_eq!(cpu.sp, 14);
-    assert_eq!(cpu.get_c(), true);
-    assert_eq!(cpu.get_h(), true);
-    assert_eq!(cpu.get_s(), true);
-    assert_eq!(cpu.get_z(), true);
-    assert_eq!(cpu.get_n(), true);
-    assert_eq!(cpu.get_pv(), true);
+
+    Assertor::new(cpu)
+        .register_a_is(1)
+        .register_b_is(2)
+        .register_c_is(3)
+        .register_d_is(4)
+        .register_e_is(5)
+        .register_f_is(0b1101_0111)     // Position S Z X H X P/V N C
+        .register_h_is(7)
+        .register_l_is(11)
+        .interrupt_flip_flop_1_is_set()
+        .interrupt_flip_flop_2_is_reset()
+        .interrupt_vector_is(8)
+        .index_register_ix_is(9)
+        .index_register_iy_is(10)
+        .program_counter_is(12)
+        .stack_pointer_is(14)
+        .memory_refresh_register_is(13)
+        .sign_flag_is_positive()
+        .zero_flag_is_set()
+        .half_carry_flag_is_set()
+        .carry_flag_is_set()
+        .parity_overflow_flag_is_set()
+        .add_substract_flag_is_set()
+        .memory_size_is(16384);
 }
 
 #[test]
@@ -60,8 +63,9 @@ fn create_system_with_preset_memory() {
     
     let cpu = builder.build();
 
-    assert_eq!(cpu.memory[0], 1);
-    assert_eq!(cpu.memory[1], 2);
-    assert_eq!(cpu.memory[2], 3);
-    assert_eq!(cpu.memory[3], 4);
+    Assertor::new(cpu)
+        .memory_at_address_is(0, 1)
+        .memory_at_address_is(1, 2)
+        .memory_at_address_is(2, 3)
+        .memory_at_address_is(3, 4);
 }

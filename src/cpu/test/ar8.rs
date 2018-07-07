@@ -1,4 +1,5 @@
 use cpu::CpuBuilder;
+use cpu::Assertor;
 
 // === 8-Bit Arithmetic Group ===
 
@@ -17,10 +18,10 @@ fn add_a_r() {
 
     cpu.add_a_r();
 
-    assert_eq!(cpu.a, 11);
-    assert_eq!(cpu.pc, 1);
-    // S is set if result is negative; otherwise, it is reset.
-    assert_eq!(cpu.get_z(), false);
+    Assertor::new(cpu)
+        .register_a_is(11)
+        .zero_flag_is_reset()
+        .program_counter_is(1);
 }
 
 #[test]
@@ -205,8 +206,9 @@ fn cp_r() {
 
     // TODO: opcode description is not clear.
     // Investigate docs other than the manual.
-    assert_eq!(cpu.get_pv(), false);
-    assert_eq!(cpu.get_n(), false);
+    Assertor::new(cpu)
+        .parity_overflow_flag_is_reset()
+        .add_substract_flag_is_reset();
 }
 
 #[test]

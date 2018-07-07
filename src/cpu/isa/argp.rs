@@ -14,7 +14,7 @@ impl Cpu {
         self.a = !self.a;
         self.set_h(true);
         self.set_n(false);
-        self.incr_pc(2);
+        self.incr_pc(1);
     }
 
     // NEG

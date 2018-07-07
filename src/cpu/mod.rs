@@ -13,6 +13,9 @@ mod test;
 pub use self::registers::*;
 pub use self::builder::CpuBuilder;
 
+#[cfg(test)]
+pub use self::assertor::Assertor;
+
 #[derive(Debug)]
 pub struct Cpu {
     pub pc: u16,

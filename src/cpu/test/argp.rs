@@ -1,6 +1,7 @@
 // === General-Purpose Arithmetic and CPU Control Groups ===
 
 use cpu::CpuBuilder;
+use cpu::Assertor;
 
 #[test]
 fn daa() {
@@ -16,9 +17,11 @@ fn cpl() {
 
     cpu.cpl();
 
-    assert_eq!(cpu.a, 0b0100_1011);
-    assert_eq!(cpu.get_h(), true);
-    assert_eq!(cpu.get_n(), false);
+    Assertor::new(cpu)
+        .register_a_is(0b0100_1011)
+        .half_carry_flag_is_set()
+        .parity_overflow_flag_is_reset()
+        .program_counter_is(1);
 }
 
 #[test]
@@ -30,25 +33,15 @@ fn neg() {
 
     cpu.neg();
 
-    assert_eq!(cpu.a, 0b0110_1000);
-
-    // S is set if result is negative; otherwise, it is reset.
-    assert_eq!(cpu.get_s(), false);
-
-    // Z is set if result is 0; otherwise, it is reset.
-    assert_eq!(cpu.get_z(), false);
-
-    // H is set if borrow from bit 4; otherwise, it is reset.
-    assert_eq!(cpu.get_h(), false);
-
-    // P/V is set if Accumulator was 80h before operation; otherwise, it is reset.
-    assert_eq!(cpu.get_pv(), false);
-
-    // N is set.
-    assert_eq!(cpu.get_n(), true);
-
-    // C is set if Accumulator was not 00h before operation; otherwise, it is reset.
-    assert_eq!(cpu.get_c(), true);
+    Assertor::new(cpu)
+        .register_a_is(0b0110_1000)
+        .sign_flag_is_negative()
+        .zero_flag_is_reset()
+        .half_carry_flag_is_reset()
+        .parity_overflow_flag_is_reset()
+        .add_substract_flag_is_set()
+        .carry_flag_is_set()
+        .program_counter_is(2);
 }
 
 #[test]
@@ -61,18 +54,14 @@ fn ccf() {
     // CY ← !CY
     cpu.ccf();
 
-    // S is not affected.
-    // Z is not affected.
-    // P/V is not affected.
-
-    // H, previous carry is copied.
-    assert_eq!(cpu.get_h(), true);
-
-    // N is reset.
-    assert_eq!(cpu.get_n(), false);
-
-    // C is set if CY was 0 before operation; otherwise, it is reset.
-    assert_eq!(cpu.get_c(), false);
+    Assertor::new(cpu)
+        .sign_flag_is_negative()
+        .zero_flag_is_reset()
+        .parity_overflow_flag_is_reset()
+        .half_carry_flag_is_set()
+        .add_substract_flag_is_reset()
+        .carry_flag_is_reset()
+        .program_counter_is(1);
 }
 
 #[test]
@@ -81,10 +70,11 @@ fn scf() {
 
     cpu.scf();
 
-    assert_eq!(cpu.get_c(), true);
-    assert_eq!(cpu.get_h(), false);
-    assert_eq!(cpu.get_n(), false);
-    assert_eq!(cpu.pc, 1);
+    Assertor::new(cpu)
+        .carry_flag_is_set()
+        .half_carry_flag_is_reset()
+        .add_substract_flag_is_reset()
+        .program_counter_is(1);
 }
 
 #[test]
@@ -93,7 +83,7 @@ fn nop() {
 
     cpu.nop();
 
-    assert_eq!(cpu.pc, 1);
+    Assertor::new(cpu).program_counter_is(1);
 }
 
 #[test]
@@ -107,9 +97,10 @@ fn di() {
 
     cpu.di();
 
-    assert_eq!(cpu.iff1, false);
-    assert_eq!(cpu.iff2, false);
-    assert_eq!(cpu.pc, 1);
+    Assertor::new(cpu)
+        .interrupt_flip_flop_1_is_reset()
+        .interrupt_flip_flop_2_is_reset()
+        .program_counter_is(1);
 }
 
 #[test]
@@ -118,9 +109,10 @@ fn ei() {
 
     cpu.ei();
 
-    assert_eq!(cpu.iff1, true);
-    assert_eq!(cpu.iff2, true);
-    assert_eq!(cpu.pc, 1);
+    Assertor::new(cpu)
+        .interrupt_flip_flop_1_is_set()
+        .interrupt_flip_flop_2_is_set()
+        .program_counter_is(1);
 }
 
 // IM 0
