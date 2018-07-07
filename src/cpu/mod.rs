@@ -6,6 +6,8 @@ mod reg88;
 mod builder;
 mod isa;
 #[cfg(test)]
+mod assertor;
+#[cfg(test)]
 mod test;
 
 pub use self::registers::*;
