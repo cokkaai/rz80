@@ -188,6 +188,54 @@ impl Assertor {
         self
     }
 
+    /// Tests the A1 register value
+    pub fn register_a1_is(&self, value: u8) -> &Assertor {
+        assert_eq!(self.cpu.a1, value);
+        self
+    }
+
+    /// Tests the B1 register value
+    pub fn register_b1_is(&self, value: u8) -> &Assertor {
+        assert_eq!(self.cpu.b1, value);
+        self
+    }
+
+    /// Tests the C1 register value
+    pub fn register_c1_is(&self, value: u8) -> &Assertor {
+        assert_eq!(self.cpu.c1, value);
+        self
+    }
+
+    /// Tests the D1 register value
+    pub fn register_d1_is(&self, value: u8) -> &Assertor {
+        assert_eq!(self.cpu.d1, value);
+        self
+    }
+
+    /// Tests the E1 register value
+    pub fn register_e1_is(&self, value: u8) -> &Assertor {
+        assert_eq!(self.cpu.e1, value);
+        self
+    }
+
+    /// Tests the F1 register value
+    pub fn register_f1_is(&self, value: u8) -> &Assertor {
+        assert_eq!(self.cpu.f1, value);
+        self
+    }
+
+    /// Tests the H1 register value
+    pub fn register_h1_is(&self, value: u8) -> &Assertor {
+        assert_eq!(self.cpu.h1, value);
+        self
+    }
+
+    /// Tests the L1 register value
+    pub fn register_l1_is(&self, value: u8) -> &Assertor {
+        assert_eq!(self.cpu.l1, value);
+        self
+    }
+
     /// Tests the AF register value
     pub fn register_af_is(&self, value: u16) -> &Assertor {
         assert_eq!((self.cpu.a, self.cpu.f).promote(), value);
@@ -196,7 +244,7 @@ impl Assertor {
 
     /// Tests the BC register value
     pub fn register_bc_is(&self, value: u16) -> &Assertor {
-        assert_eq!((self.cpu.c, self.cpu.c).promote(), value);
+        assert_eq!((self.cpu.b, self.cpu.c).promote(), value);
         self
     }
 
