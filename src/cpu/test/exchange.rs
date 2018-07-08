@@ -1,8 +1,9 @@
 // === Exchange, Block Transfer, and Search Group ===
 
 use cpu::CpuBuilder;
-use cpu::Register16;
-use cpu::RegisterDemote;
+//use cpu::Register16;
+//use cpu::RegisterDemote;
+use cpu::Assertor;
 
 #[test]
 fn ex_de_hl() {
@@ -16,11 +17,12 @@ fn ex_de_hl() {
 
     cpu.ex_de_hl();
 
-    assert_eq!(cpu.d, 3);
-    assert_eq!(cpu.e, 4);
-    assert_eq!(cpu.h, 1);
-    assert_eq!(cpu.l, 2);
-    assert_eq!(cpu.pc, 1);
+    Assertor::new(cpu)
+        .register_d_is(3)
+        .register_e_is(4)
+        .register_h_is(1)
+        .register_l_is(2)
+        .program_counter_is(1);
 }
 
 #[test]
@@ -39,11 +41,12 @@ fn ex_af_af1() {
 
     cpu.ex_af_af1();
 
-    assert_eq!(cpu.a, 1);
-    assert_eq!(cpu.f, 2);
-    assert_eq!(cpu.a1, 3);
-    assert_eq!(cpu.f1, 4);
-    assert_eq!(cpu.pc, 2);
+    Assertor::new(cpu)
+        .register_a_is(1)
+        .register_f_is(2)
+        .register_a1_is(3)
+        .register_f1_is(4)
+        .program_counter_is(2);
 }
 
 #[test]
@@ -69,21 +72,20 @@ fn exx() {
 
     cpu.exx();
 
-    assert_eq!(cpu.b, 1);
-    assert_eq!(cpu.c, 2);
-    assert_eq!(cpu.d, 3);
-    assert_eq!(cpu.e, 4);
-    assert_eq!(cpu.h, 5);
-    assert_eq!(cpu.l, 6);
-
-    assert_eq!(cpu.b1, 11);
-    assert_eq!(cpu.c1, 12);
-    assert_eq!(cpu.d1, 13);
-    assert_eq!(cpu.e1, 14);
-    assert_eq!(cpu.h1, 15);
-    assert_eq!(cpu.l1, 16);
-
-    assert_eq!(cpu.pc, 2);
+    Assertor::new(cpu)
+        .register_b_is(1)
+        .register_c_is(2)
+        .register_d_is(3)
+        .register_e_is(4)
+        .register_h_is(5)
+        .register_l_is(6)
+        .register_b1_is(11)
+        .register_c1_is(12)
+        .register_d1_is(13)
+        .register_e1_is(14)
+        .register_h1_is(15)
+        .register_l1_is(16)
+        .program_counter_is(2);
 }
 
 #[test]
@@ -96,15 +98,14 @@ fn ex_spi_hl() {
 
     cpu.ex_spi_hl();
 
-    // H ↔ (SP+1), L ↔ (SP)
-    assert_eq!(cpu.h, 2);
-    assert_eq!(cpu.memory[1], 9);
-
-    // H ↔ (SP+1), L ↔ (SP)
-    assert_eq!(cpu.l, 1);
-    assert_eq!(cpu.memory[0], 8);
-
-    assert_eq!(cpu.pc, 1);
+    Assertor::new(cpu)
+        // H ↔ (SP+1), L ↔ (SP)
+        .register_h_is(2)
+        .memory_at_address_is(1, 9)
+        // H ↔ (SP+1), L ↔ (SP)
+        .register_l_is(1)
+        .memory_at_address_is(0, 8)
+        .program_counter_is(1);
 }
 
 #[test]
@@ -117,15 +118,12 @@ fn ex_spi_ix() {
 
     cpu.ex_spi_ix();
 
-    // IXH ↔ (SP+1)
-    assert_eq!(cpu.ix.high(), 0x48);
-    assert_eq!(cpu.memory[1], 0x39);
-
-    // IXL ↔ (SP)
-    assert_eq!(cpu.ix.low(), 0x90);
-    assert_eq!(cpu.memory[0], 0x88);
-
-    assert_eq!(cpu.pc, 2);
+    // IXH ↔ (SP+1) IXL ↔ (SP)
+    Assertor::new(cpu)
+        .index_register_ix_is(0x4890)
+        .memory_at_address_is(1, 0x39)
+        .memory_at_address_is(0, 0x88)
+        .program_counter_is(2);
 }
 
 #[test]
@@ -138,15 +136,12 @@ fn ex_spi_iy() {
 
     cpu.ex_spi_iy();
 
-    // IYH ↔ (SP+1)
-    assert_eq!(cpu.iy.high(), 0x48);
-    assert_eq!(cpu.memory[1], 0x39);
-
-    // IYL ↔ (SP)
-    assert_eq!(cpu.iy.low(), 0x90);
-    assert_eq!(cpu.memory[0], 0x88);
-
-    assert_eq!(cpu.pc, 2);
+    // IYH ↔ (SP+1) IYL ↔ (SP)
+    Assertor::new(cpu)
+        .index_register_iy_is(0x4890)
+        .memory_at_address_is(1, 0x39)
+        .memory_at_address_is(0, 0x88)
+        .program_counter_is(2);
 }
 
 #[test]
@@ -160,20 +155,13 @@ fn ldi() {
 
     cpu.ldi();
 
-    // (DE) ← (HL)
-    assert_eq!(cpu.memory[0], 0x48);
-
-    // DE ← DE + 1
-    assert_eq!(cpu.read16(Register16::de), 1);
-
-    // HL ← HL + 1
-    assert_eq!(cpu.read16(Register16::hl), 2);
-
-    // BC ← BC – 1
-    assert_eq!(cpu.read16(Register16::bc), 2);
-
-    // P/V is set if BC – 1 ≠ 0; otherwise, it is reset.
-    assert_eq!(cpu.get_pv(), true);
+    Assertor::new(cpu)
+        .memory_at_address_is(0, 0x48)      // (DE) ← (HL)
+        .register_de_is(1)              // DE ← DE + 1
+        .register_hl_is(2)              // HL ← HL + 1
+        .register_bc_is(2)              // BC ← BC – 1
+        .parity_overflow_flag_is_set()  // P/V is set if BC – 1 ≠ 0
+        .program_counter_is(2);
 }
 
 #[test]
@@ -187,23 +175,16 @@ fn ldir() {
 
     cpu.ldir();
 
-    // (DE) ← (HL)
-    assert_eq!(cpu.memory[0], 0x44);
-    assert_eq!(cpu.memory[1], 0x45);
-    assert_eq!(cpu.memory[2], 0x46);
-    assert_eq!(cpu.memory[3], 0x93);
-
-    // DE ← DE + 1
-    assert_eq!(cpu.read_de(), 3);
-
-    // HL ← HL + 1
-    assert_eq!(cpu.read_hl(), 7);
-
-    // BC ← BC – 1
-    assert_eq!(cpu.read_bc(), 0);
-
-    // P/V is set if BC – 1 ≠ 0; otherwise, it is reset.
-    assert_eq!(cpu.get_pv(), false);
+    Assertor::new(cpu)
+        .memory_at_address_is(0, 0x44)      // (DE) ← (HL)
+        .memory_at_address_is(1, 0x45)
+        .memory_at_address_is(2, 0x46)
+        .memory_at_address_is(3, 0x93)
+        .register_de_is(3)              // DE ← DE + 1
+        .register_hl_is(7)              // HL ← HL + 1
+        .register_bc_is(0)              // BC ← BC – 1
+        .parity_overflow_flag_is_reset()  // P/V is set if BC – 1 ≠ 0
+        .program_counter_is(2);
 }
 
 #[test]
@@ -217,23 +198,16 @@ fn ldd() {
 
     cpu.ldd();
 
-    // (DE) ← (HL)
-    assert_eq!(cpu.memory[0], 0x90);
-    assert_eq!(cpu.memory[1], 0x48);
-    assert_eq!(cpu.memory[2], 3);
-    assert_eq!(cpu.memory[3], 0x48);
-
-    // DE ← DE + 1
-    assert_eq!(cpu.read16(Register16::de), 2);
-
-    // HL ← HL + 1
-    assert_eq!(cpu.read16(Register16::hl), 0);
-
-    // BC ← BC – 1
-    assert_eq!(cpu.read16(Register16::bc), 2);
-
-    // P/V is set if BC – 1 ≠ 0; otherwise, it is reset.
-    assert_eq!(cpu.get_pv(), true);
+    Assertor::new(cpu)
+        .memory_at_address_is(0, 0x90)      // (DE) ← (HL)
+        .memory_at_address_is(1, 0x48)
+        .memory_at_address_is(2, 0x3)
+        .memory_at_address_is(3, 0x48)
+        .register_de_is(2)              // DE ← DE + 1
+        .register_hl_is(0)              // HL ← HL + 1
+        .register_bc_is(2)              // BC ← BC – 1
+        .parity_overflow_flag_is_set()  // P/V is set if BC – 1 ≠ 0
+        .program_counter_is(2);
 }
 
 #[test]
@@ -247,23 +221,16 @@ fn lddr() {
 
     cpu.lddr();
 
-    // (DE) ← (HL)
-    assert_eq!(cpu.memory[0], 0x90);
-    assert_eq!(cpu.memory[1], 0x45);
-    assert_eq!(cpu.memory[2], 0x46);
-    assert_eq!(cpu.memory[3], 0x47);
-
-    // DE ← DE - 1
-    assert_eq!(cpu.read16(Register16::de), 0);
-
-    // HL ← HL - 1
-    assert_eq!(cpu.read16(Register16::hl), 4);
-
-    // BC ← BC – 1
-    assert_eq!(cpu.read16(Register16::bc), 0);
-
-    // P/V is set if BC – 1 ≠ 0; otherwise, it is reset.
-    assert_eq!(cpu.get_pv(), false);
+    Assertor::new(cpu)
+        .memory_at_address_is(0, 0x90)      // (DE) ← (HL)
+        .memory_at_address_is(1, 0x45)
+        .memory_at_address_is(2, 0x46)
+        .memory_at_address_is(3, 0x47)
+        .register_de_is(0)              // DE ← DE - 1
+        .register_hl_is(4)              // HL ← HL - 1
+        .register_bc_is(0)              // BC ← BC - 1
+        .parity_overflow_flag_is_reset()  // P/V is set if BC – 1 ≠ 0
+        .program_counter_is(2);
 }
 
 #[test]
@@ -277,32 +244,16 @@ fn cpi() {
 
     cpu.cpi();
 
-    // BC ← BC – 1
-    assert_eq!(cpu.read_bc(), 0);
-
-    // HL ← HL +1
-    assert_eq!(cpu.read_hl(), 5);
-
-    // Z is set if A is (HL); otherwise, it is reset.
-    assert_eq!(cpu.get_z(), true);
-
-    // P/V is set if BC – 1 is not 0; otherwise, it is reset.
-    assert_eq!(cpu.get_pv(), false);
-
-    // S is set if result is negative; otherwise, it is reset.
-    assert_eq!(cpu.get_s(), false);
-
-    // C is not affected.
-    assert_eq!(cpu.get_c(), false);
-
-    // H is set if borrow from bit 4; otherwise, it is reset.
-    assert_eq!(cpu.get_h(), false);
-
-    // N is set.
-    assert_eq!(cpu.get_n(), false);
-
-    // PC += 2
-    assert_eq!(cpu.pc, 2);
+    Assertor::new(cpu)
+        .register_bc_is(0)          // BC ← BC-1
+        .register_hl_is(5)          // HL ← HL+1
+        .zero_flag_is_set()         // Z is set if A is (HL)
+        .parity_overflow_flag_is_reset()  // P/V is set if BC-1 != 0
+        .sign_flag_is_negative()    // S is set if result is negative
+        .carry_flag_is_reset()
+        .half_carry_flag_is_reset()
+        .add_substract_flag_is_set()
+        .program_counter_is(2);
 }
 
 #[test]
@@ -316,29 +267,16 @@ fn cpir() {
 
     cpu.cpir();
 
-    // BC ← BC – 1
-    assert_eq!(cpu.read_bc(), 0);
-
-    // HL ← HL +1
-    assert_eq!(cpu.read16(Register16::hl), 6);
-
-    // Z is set if A is (HL); otherwise, it is reset.
-    assert_eq!(cpu.get_z(), false);
-
-    // P/V is set if BC – 1 is not 0; otherwise, it is reset.
-    assert_eq!(cpu.get_pv(), true);
-
-    // S is set if result is negative; otherwise, it is reset.
-    assert_eq!(cpu.get_s(), false);
-
-    // C is not affected.
-    assert_eq!(cpu.get_c(), false);
-
-    // H is set if borrow from bit 4; otherwise, it is reset.
-    assert_eq!(cpu.get_h(), false);
-
-    // N is set.
-    assert_eq!(cpu.get_n(), false);
+    Assertor::new(cpu)
+        .register_bc_is(0)  // BC ← BC-1
+        .register_hl_is(6)  // HL ← HL+1
+        .zero_flag_is_reset()// Z is set if A is (HL)
+        .parity_overflow_flag_is_set()  // P/V is set if BC-1 != 0
+        .sign_flag_is_positive()    // S is set if result is negative
+        .carry_flag_is_reset()// C is not affected
+        .half_carry_flag_is_reset()// H is set if borrow from bit 4
+        .add_substract_flag_is_set()
+        .program_counter_is(2);
 }
 
 #[test]
@@ -352,14 +290,10 @@ fn cpd() {
 
     cpu.cpd();
 
-    // BC ← BC – 1
-    assert_eq!(cpu.read16(Register16::bc), 0);
-
-    // HL ← HL - 1
-    assert_eq!(cpu.read16(Register16::hl), 3);
-
-    // PC += 2
-    assert_eq!(cpu.pc, 2);
+    Assertor::new(cpu)
+        .register_bc_is(0)  // BC ← BC-1
+        .register_hl_is(3)  // HL ← HL-1
+        .program_counter_is(2);
 }
 
 #[test]
@@ -373,12 +307,8 @@ fn cpdr() {
 
     cpu.cpdr();
 
-    // BC ← BC – 1
-    assert_eq!(cpu.read_bc(), 0);
-
-    // HL ← HL - 1
-    assert_eq!(cpu.read_hl(), 2);
-
-    // PC += 2
-    assert_eq!(cpu.pc, 2);
+    Assertor::new(cpu)
+        .register_bc_is(0)  // BC ← BC-1
+        .register_hl_is(2)  // HL ← HL-1
+        .program_counter_is(2);
 }

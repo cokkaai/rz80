@@ -180,6 +180,9 @@ impl Cpu {
 
         // H is set if borrow from bit 4; otherwise, it is reset.
         self.set_h_from_byte(diff);
+    
+        // N is set.
+        self.set_n(true);
 
         self.pc += 2;
     }
