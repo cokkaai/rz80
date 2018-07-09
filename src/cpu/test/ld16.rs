@@ -1,7 +1,7 @@
 // === 16-Bit Load Group ===
 
 use cpu::CpuBuilder;
-use cpu::Register16;
+use cpu::Assertor;
 
 #[test]
 fn ld_dd_nn() {
@@ -19,12 +19,10 @@ fn ld_dd_nn() {
         .build();
 
     cpu.ld_dd_nn();
-    assert_eq!(cpu.read16(Register16::bc), 0xa402);
-    assert_eq!(cpu.pc, 3);
 
-    cpu.ld_dd_nn();
-    assert_eq!(cpu.sp, 0xcaf3);
-    assert_eq!(cpu.pc, 6);
+    Assertor::new(cpu)
+        .register_bc_is(0xa402)
+        .program_counter_is(3);
 }
 
 #[test]
@@ -38,12 +36,10 @@ fn ld_ix_nn() {
         .build();
 
     cpu.ld_ix_nn();
-    assert_eq!(cpu.ix, 0xcaf3);
-    assert_eq!(cpu.pc, 4);
 
-    cpu.ld_ix_nn();
-    assert_eq!(cpu.ix, 0xaaff);
-    assert_eq!(cpu.pc, 8);
+    Assertor::new(cpu)
+        .index_register_ix_is(0xcaf3)
+        .program_counter_is(4);
 }
 
 #[test]
@@ -57,12 +53,10 @@ fn ld_iy_nn() {
         .build();
 
     cpu.ld_iy_nn();
-    assert_eq!(cpu.iy, 0xcaf3);
-    assert_eq!(cpu.pc, 4);
 
-    cpu.ld_iy_nn();
-    assert_eq!(cpu.iy, 0xaaff);
-    assert_eq!(cpu.pc, 8);
+    Assertor::new(cpu)
+        .index_register_iy_is(0xcaf3)
+        .program_counter_is(4);
 }
 
 #[test]
@@ -76,9 +70,10 @@ fn ld_hl_nni() {
 
     cpu.ld_hl_nni();
 
-    assert_eq!(cpu.h, 0xca);
-    assert_eq!(cpu.l, 0xf3);
-    assert_eq!(cpu.pc, 3);
+    Assertor::new(cpu)
+        .register_h_is(0xca)
+        .register_l_is(0xf3)
+        .program_counter_is(3);
 }
 
 #[test]
@@ -103,12 +98,10 @@ fn ld_dd_nni() {
         .build();
 
     cpu.ld_dd_nni();
-    assert_eq!(cpu.read16(Register16::bc), 0x0201);
-    assert_eq!(cpu.pc, 4);
 
-    cpu.ld_dd_nni();
-    assert_eq!(cpu.sp, 0xcaf3);
-    assert_eq!(cpu.pc, 8);
+    Assertor::new(cpu)
+        .register_bc_is(0x0201)
+        .program_counter_is(4);
 }
 
 #[test]
@@ -122,8 +115,9 @@ fn ld_ix_nni() {
 
     cpu.ld_ix_nni();
 
-    assert_eq!(cpu.ix, 0xcaf3);
-    assert_eq!(cpu.pc, 4);
+    Assertor::new(cpu)
+        .index_register_ix_is(0xcaf3)
+        .program_counter_is(4);
 }
 
 #[test]
@@ -137,8 +131,9 @@ fn ld_iy_nni() {
 
     cpu.ld_iy_nni();
 
-    assert_eq!(cpu.iy, 0xcaf3);
-    assert_eq!(cpu.pc, 4);
+    Assertor::new(cpu)
+        .index_register_iy_is(0xcaf3)
+        .program_counter_is(4);
 }
 
 #[test]
@@ -155,9 +150,10 @@ fn ld_nni_hl() {
 
     cpu.ld_nni_hl();
 
-    assert_eq!(cpu.memory[0x06], 0xf3);
-    assert_eq!(cpu.memory[0x07], 0xca);
-    assert_eq!(cpu.pc, 3);
+    Assertor::new(cpu)
+        .memory_at_address_is(6, 0xf3)
+        .memory_at_address_is(7, 0xca)
+        .program_counter_is(3);
 }
 
 #[test]
@@ -183,219 +179,225 @@ fn ld_nni_dd() {
         .build();
 
     cpu.ld_nni_dd();
-    assert_eq!(cpu.memory[0x0008], 0xf3);
-    assert_eq!(cpu.memory[0x0009], 0xca);
-    assert_eq!(cpu.pc, 4);
 
-    cpu.ld_nni_dd();
-    assert_eq!(cpu.memory[0x000a], 0xb3);
-    assert_eq!(cpu.memory[0x000b], 0xba);
-    assert_eq!(cpu.pc, 8);
+    Assertor::new(cpu)
+        .memory_at_address_is(8, 0xf3)
+        .memory_at_address_is(9, 0xca)
+        .program_counter_is(4);
 }
 
 #[test]
 fn ld_nni_ix() {
-    let mut cpu = CpuBuilder::new()
-        .with_memory(vec![
-            0xdd, // LD (0x0006), IX
-            0x22, 0x06, 0x0, 0x66, 0x66, 0x55, 0x55,
-        ])
-        .with_ix(0xcaf3)
-        .build();
+let mut cpu = CpuBuilder::new()
+    .with_memory(vec![
+        0xdd, // LD (0x0006), IX
+        0x22, 0x06, 0x0, 0x66, 0x66, 0x55, 0x55,
+    ])
+    .with_ix(0xcaf3)
+    .build();
 
-    cpu.ld_nni_ix();
+cpu.ld_nni_ix();
 
-    assert_eq!(cpu.memory[0x06], 0xf3);
-    assert_eq!(cpu.memory[0x07], 0xca);
-    assert_eq!(cpu.pc, 4);
+
+Assertor::new(cpu)
+    .memory_at_address_is(6, 0xf3)
+    .memory_at_address_is(7, 0xca)
+    .program_counter_is(4);
 }
 
 #[test]
 fn ld_nni_iy() {
-    let mut cpu = CpuBuilder::new()
-        .with_memory(vec![
-            0xfd, // LD (0x0006), IY
-            0x22, 0x06, 0x0, 0x66, 0x66, 0x55, 0x55,
-        ])
-        .with_iy(0xcaf3)
-        .build();
+let mut cpu = CpuBuilder::new()
+    .with_memory(vec![
+        0xfd, // LD (0x0006), IY
+        0x22, 0x06, 0x0, 0x66, 0x66, 0x55, 0x55,
+    ])
+    .with_iy(0xcaf3)
+    .build();
 
-    cpu.ld_nni_iy();
+cpu.ld_nni_iy();
 
-    assert_eq!(cpu.memory[0x06], 0xf3);
-    assert_eq!(cpu.memory[0x07], 0xca);
-    assert_eq!(cpu.pc, 4);
+Assertor::new(cpu)
+    .memory_at_address_is(6, 0xf3)
+    .memory_at_address_is(7, 0xca)
+    .program_counter_is(4);
 }
 
 #[test]
 fn ld_sp_hl() {
-    let mut cpu = CpuBuilder::new()
-        .with_memory_size(16)
-        .with_hl(0xcaf3)
-        .with_sp(0x1234)
-        .build();
+let mut cpu = CpuBuilder::new()
+    .with_memory_size(16)
+    .with_hl(0xcaf3)
+    .with_sp(0x1234)
+    .build();
 
-    cpu.ld_sp_hl();
+cpu.ld_sp_hl();
 
-    assert_eq!(cpu.sp, 0xcaf3);
-    assert_eq!(cpu.pc, 1);
+
+Assertor::new(cpu)
+    .stack_pointer_is(0xcaf3)
+    .program_counter_is(1);
 }
 
 #[test]
 fn ld_sp_ix() {
-    let mut cpu = CpuBuilder::new()
-        .with_memory_size(16)
-        .with_ix(0xcaf3)
-        .with_sp(0x1234)
-        .build();
+let mut cpu = CpuBuilder::new()
+    .with_memory_size(16)
+    .with_ix(0xcaf3)
+    .with_sp(0x1234)
+    .build();
 
-    cpu.ld_sp_ix();
+cpu.ld_sp_ix();
 
-    assert_eq!(cpu.sp, 0xcaf3);
-    assert_eq!(cpu.pc, 2);
+Assertor::new(cpu)
+    .stack_pointer_is(0xcaf3)
+    .program_counter_is(2);
 }
 
 #[test]
 fn ld_sp_iy() {
-    let mut cpu = CpuBuilder::new()
-        .with_memory_size(16)
-        .with_iy(0xcaf3)
-        .with_sp(0x1234)
-        .build();
+let mut cpu = CpuBuilder::new()
+    .with_memory_size(16)
+    .with_iy(0xcaf3)
+    .with_sp(0x1234)
+    .build();
 
-    cpu.ld_sp_iy();
+cpu.ld_sp_iy();
 
-    assert_eq!(cpu.sp, 0xcaf3);
-    assert_eq!(cpu.pc, 2);
+Assertor::new(cpu)
+    .stack_pointer_is(0xcaf3)
+    .program_counter_is(2);
 }
 
 #[test]
 fn push_qq() {
-    let mut cpu = CpuBuilder::new()
-    .with_memory(
-        vec![
-            0b11_00_0101, // PUSH BC
-            0b11_10_0101, // PUSH HL
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-        ],
-    )
-    .with_sp(0x0008)
-    .with_b(0xca) // BC = 0xcaf3
-    .with_c(0xf3)
-    .with_h(0x12) // HL = 0x1234
-    .with_l(0x34)
-    .build();
+let mut cpu = CpuBuilder::new()
+.with_memory(
+    vec![
+        0b11_00_0101, // PUSH BC
+        0b11_10_0101, // PUSH HL
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+    ],
+)
+.with_sp(0x0008)
+.with_b(0xca) // BC = 0xcaf3
+.with_c(0xf3)
+.with_h(0x12) // HL = 0x1234
+.with_l(0x34)
+.build();
 
-    cpu.push_qq();
-    assert_eq!(cpu.memory[7], 0xca);
-    assert_eq!(cpu.memory[6], 0xf3);
-    assert_eq!(cpu.sp, 6);
-    assert_eq!(cpu.pc, 1);
+cpu.push_qq();
 
-    cpu.push_qq();
-    assert_eq!(cpu.memory[5], 0x12);
-    assert_eq!(cpu.memory[4], 0x34);
-    assert_eq!(cpu.sp, 4);
-    assert_eq!(cpu.pc, 2);
+Assertor::new(cpu)
+    .memory_at_address_is(7, 0xca)
+    .memory_at_address_is(6, 0xf3)
+    .stack_pointer_is(6)
+    .program_counter_is(1);
 }
 
 #[test]
 fn push_ix() {
-    let mut cpu = CpuBuilder::new()
-        .with_memory(vec![
-            0xdd, // PUSH IX
-            0xe5, 0, 0, 0, 0, 0, 0,
-        ])
-        .with_sp(0x0008)
-        .with_ix(0xcaf3)
-        .build();
+let mut cpu = CpuBuilder::new()
+    .with_memory(vec![
+        0xdd, // PUSH IX
+        0xe5, 0, 0, 0, 0, 0, 0,
+    ])
+    .with_sp(0x0008)
+    .with_ix(0xcaf3)
+    .build();
 
-    cpu.push_ix();
+cpu.push_ix();
 
-    assert_eq!(cpu.memory[7], 0xca);
-    assert_eq!(cpu.memory[6], 0xf3);
-    assert_eq!(cpu.sp, 6);
-    assert_eq!(cpu.pc, 2);
+
+Assertor::new(cpu)
+    .memory_at_address_is(7, 0xca)
+    .memory_at_address_is(6, 0xf3)
+    .stack_pointer_is(6)
+    .program_counter_is(2);
 }
 
 #[test]
 fn push_iy() {
-    let mut cpu = CpuBuilder::new()
-        .with_memory(vec![
-            0xfd, // PUSH IY
-            0xe5, 0, 0, 0, 0, 0, 0,
-        ])
-        .with_sp(0x0008)
-        .with_iy(0xcaf3)
-        .build();
+let mut cpu = CpuBuilder::new()
+    .with_memory(vec![
+        0xfd, // PUSH IY
+        0xe5, 0, 0, 0, 0, 0, 0,
+    ])
+    .with_sp(0x0008)
+    .with_iy(0xcaf3)
+    .build();
 
-    cpu.push_iy();
+cpu.push_iy();
 
-    assert_eq!(cpu.memory[7], 0xca);
-    assert_eq!(cpu.memory[6], 0xf3);
-    assert_eq!(cpu.sp, 6);
-    assert_eq!(cpu.pc, 2);
+Assertor::new(cpu)
+    .memory_at_address_is(7, 0xca)
+    .memory_at_address_is(6, 0xf3)
+    .stack_pointer_is(6)
+    .program_counter_is(2);
 }
 
 #[test]
 fn pop_qq() {
-    let mut cpu = CpuBuilder::new()
-        .with_memory(vec![
-            0b11_11_0001, // POP AF
-            0,
-            0,
-            0,
-            0,
-            0,
-            0xf3,
-            0xca,
-        ])
-        .with_sp(0x0006)
-        .build();
+let mut cpu = CpuBuilder::new()
+    .with_memory(vec![
+        0b11_11_0001, // POP AF
+        0,
+        0,
+        0,
+        0,
+        0,
+        0xf3,
+        0xca,
+    ])
+    .with_sp(0x0006)
+    .build();
 
-    cpu.pop_qq();
+cpu.pop_qq();
 
-    assert_eq!(cpu.a, 0xca);
-    assert_eq!(cpu.f, 0xf3);
-    assert_eq!(cpu.sp, 8);
-    assert_eq!(cpu.pc, 1);
+Assertor::new(cpu)
+    .register_a_is(0xca)
+    .register_f_is(0xf3)
+    .stack_pointer_is(8)
+    .program_counter_is(1);
 }
 
 #[test]
 fn pop_ix() {
-    let mut cpu = CpuBuilder::new()
-        .with_memory(vec![
-            0xdd, // POP IX
-            0xe1, 0, 0, 0, 0, 0xf3, 0xca,
-        ])
-        .with_sp(0x0006)
-        .build();
+let mut cpu = CpuBuilder::new()
+    .with_memory(vec![
+        0xdd, // POP IX
+        0xe1, 0, 0, 0, 0, 0xf3, 0xca,
+    ])
+    .with_sp(0x0006)
+    .build();
 
-    cpu.pop_ix();
+cpu.pop_ix();
 
-    assert_eq!(cpu.ix, 0xcaf3);
-    assert_eq!(cpu.sp, 8);
-    assert_eq!(cpu.pc, 2);
+Assertor::new(cpu)
+    .index_register_ix_is(0xcaf3)
+    .stack_pointer_is(8)
+    .program_counter_is(2);
 }
 
 #[test]
 fn pop_iy() {
-    let mut cpu = CpuBuilder::new()
-        .with_memory(vec![
-            0xfd, // POP IY
-            0xe1, 0, 0, 0, 0, 0xf3, 0xca,
-        ])
-        .with_sp(0x0006)
-        .build();
+let mut cpu = CpuBuilder::new()
+    .with_memory(vec![
+        0xfd, // POP IY
+        0xe1, 0, 0, 0, 0, 0xf3, 0xca,
+    ])
+    .with_sp(0x0006)
+    .build();
 
-    cpu.pop_iy();
+cpu.pop_iy();
 
-    assert_eq!(cpu.iy, 0xcaf3);
-    assert_eq!(cpu.sp, 8);
-    assert_eq!(cpu.pc, 2);
+Assertor::new(cpu)
+    .index_register_iy_is(0xcaf3)
+        .stack_pointer_is(8)
+        .program_counter_is(2);
 }
