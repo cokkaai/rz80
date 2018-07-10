@@ -2,6 +2,7 @@
 
 use cpu::bytes;
 use cpu::CpuBuilder;
+use cpu::Assertor;
 
 #[test]
 fn memory_at_pc() {
@@ -12,10 +13,11 @@ fn memory_at_pc() {
         ])
         .build();
 
-    assert_eq!(cpu.memory_at_pc(0), 0x01);
-    assert_eq!(cpu.memory_at_pc(1), 0x02);
-    assert_eq!(cpu.memory_at_pc(9), 0x1f);
-    assert_eq!(cpu.memory_at_pc(15), 0x77);
+    Assertor::new(cpu)
+        .memory_at_address_is(0, 0x01)
+        .memory_at_address_is(1, 0x02)
+        .memory_at_address_is(9, 0x1f)
+        .memory_at_address_is(15, 0x77);
 }
 
 #[test]
@@ -31,21 +33,8 @@ fn twocmp() {
 #[test]
 fn incr_pc() {
     let mut cpu = CpuBuilder::new().with_memory_size(16).build();
-
     cpu.incr_pc(2);
-    assert_eq!(cpu.pc, 2);
-
-    cpu.incr_pc(12);
-    assert_eq!(cpu.pc, 14);
-
-    cpu.incr_pc(2);
-    assert_eq!(cpu.pc, 0);
-
-    cpu.incr_pc(16);
-    assert_eq!(cpu.pc, 0);
-
-    cpu.incr_pc(17);
-    assert_eq!(cpu.pc, 1);
+    Assertor::new(cpu).program_counter_is(2);
 }
 
 #[test]
@@ -64,20 +53,18 @@ fn ld_r_r1() {
 
     // Load registers while pc = 0
     cpu.ld_r_r1();
-    assert_eq!(cpu.a, 0);
-    assert_eq!(cpu.b, 0);
-    assert_eq!(cpu.c, 0);
-    assert_eq!(cpu.f, 0);
-    assert_eq!(cpu.h, 26);
-    assert_eq!(cpu.l, 0);
-    assert_eq!(cpu.f, 0);
-    assert_eq!(cpu.i, 0);
-    assert_eq!(cpu.pc, 1);
 
-    // Load registers while pc = 1
-    cpu.ld_r_r1();
-    assert_eq!(cpu.c, 19);
-    assert_eq!(cpu.pc, 2);
+    Assertor::new(cpu)
+        .register_a_is(0)
+        .register_b_is(0)
+        .register_c_is(0)
+        .register_d_is(19)
+        .register_e_is(26)
+        .register_f_is(0)
+        .register_h_is(26)
+        .register_l_is(0)
+        .interrupt_vector_is(0)
+        .program_counter_is(1);
 }
 
 #[test]
@@ -98,20 +85,19 @@ fn ld_r_n() {
 
     // Load registers while pc = 0
     cpu.ld_r_n();
-    assert_eq!(cpu.a, 0);
-    assert_eq!(cpu.b, 0);
-    assert_eq!(cpu.c, 0);
-    assert_eq!(cpu.f, 0);
-    assert_eq!(cpu.h, 0xfa);
-    assert_eq!(cpu.l, 0);
-    assert_eq!(cpu.f, 0);
-    assert_eq!(cpu.i, 0);
-    assert_eq!(cpu.pc, 2);
 
-    // Load registers while pc = 2
-    cpu.ld_r_n();
-    assert_eq!(cpu.b, 0xfb);
-    assert_eq!(cpu.pc, 4);
+    Assertor::new(cpu)
+        .register_a_is(0)
+        .register_b_is(0)
+        .register_c_is(0)
+        .register_d_is(0)
+        .register_e_is(0)
+        .register_f_is(0)
+        .register_h_is(0xfa)
+        .register_l_is(0)
+        .interrupt_vector_is(0)
+        .program_counter_is(2);
+
 }
 
 #[test]
@@ -128,8 +114,9 @@ fn ld_r_hl() {
 
     cpu.ld_r_hl();
 
-    assert_eq!(cpu.b, 0xfb);
-    assert_eq!(cpu.pc, 1);
+    Assertor::new(cpu)
+        .register_b_is(0xfb)
+        .program_counter_is(1);
 }
 
 #[test]
@@ -141,8 +128,9 @@ fn ld_r_ixd() {
 
     cpu.ld_r_ixd();
 
-    assert_eq!(cpu.b, 0xfb);
-    assert_eq!(cpu.pc, 3);
+    Assertor::new(cpu)
+        .register_b_is(0xfb)
+        .program_counter_is(3);
 }
 
 #[test]
@@ -154,8 +142,9 @@ fn ld_r_iyd() {
 
     cpu.ld_r_iyd();
 
-    assert_eq!(cpu.b, 0xfb);
-    assert_eq!(cpu.pc, 3);
+    Assertor::new(cpu)
+        .register_b_is(0xfb)
+        .program_counter_is(3);
 }
 
 #[test]
@@ -173,8 +162,9 @@ fn ld_hl_r() {
 
     cpu.ld_hl_r();
 
-    assert_eq!(cpu.memory[2], 0xfa);
-    assert_eq!(cpu.pc, 1);
+    Assertor::new(cpu)
+        .memory_at_address_is(2, 0xfa)
+        .program_counter_is(1);
 }
 
 #[test]
@@ -195,9 +185,9 @@ fn ld_ixd_r() {
         .build();
 
     cpu.ld_ixd_r();
-
-    assert_eq!(cpu.memory[5], 0xfb);
-    assert_eq!(cpu.pc, 3);
+    Assertor::new(cpu)
+        .memory_at_address_is(5, 0xfb)
+        .program_counter_is(3);
 }
 
 #[test]
@@ -219,8 +209,9 @@ fn ld_iyd_r() {
 
     cpu.ld_iyd_r();
 
-    assert_eq!(cpu.memory[5], 0xfb);
-    assert_eq!(cpu.pc, 3);
+    Assertor::new(cpu)
+        .memory_at_address_is(5, 0xfb)
+        .program_counter_is(3);
 }
 
 #[test]
@@ -235,8 +226,9 @@ fn ld_hl_n() {
 
     cpu.ld_hl_n();
 
-    assert_eq!(cpu.memory[3], 0xfa);
-    assert_eq!(cpu.pc, 2);
+    Assertor::new(cpu)
+        .memory_at_address_is(3, 0xfa)
+        .program_counter_is(2);
 }
 
 #[test]
@@ -253,8 +245,9 @@ fn ld_ixd_n() {
 
     cpu.ld_ixd_n();
 
-    assert_eq!(cpu.memory[6], 0xfb);
-    assert_eq!(cpu.pc, 4);
+    Assertor::new(cpu)
+        .memory_at_address_is(6, 0xfb)
+        .program_counter_is(4);
 }
 
 #[test]
@@ -270,8 +263,10 @@ fn ld_iyd_n() {
         .build();
 
     cpu.ld_iyd_n();
-    assert_eq!(cpu.memory[6], 0xfb);
-    assert_eq!(cpu.pc, 4);
+
+    Assertor::new(cpu)
+        .memory_at_address_is(6, 0xfb)
+        .program_counter_is(4);
 }
 
 #[test]
@@ -286,8 +281,9 @@ fn ld_a_bc() {
 
     cpu.ld_a_bc();
 
-    assert_eq!(cpu.a, 0xf2);
-    assert_eq!(cpu.pc, 1);
+    Assertor::new(cpu)
+        .register_a_is(0xf2)
+        .program_counter_is(1);
 }
 
 #[test]
@@ -302,8 +298,9 @@ fn ld_a_de() {
 
     cpu.ld_a_de();
 
-    assert_eq!(cpu.a, 0xf2);
-    assert_eq!(cpu.pc, 1);
+    Assertor::new(cpu)
+        .register_a_is(0xf2)
+        .program_counter_is(1);
 }
 
 #[test]
@@ -317,8 +314,9 @@ fn ld_a_nn() {
 
     cpu.ld_a_nn();
 
-    assert_eq!(cpu.a, 0x13);
-    assert_eq!(cpu.pc, 3);
+    Assertor::new(cpu)
+        .register_a_is(0x13)
+        .program_counter_is(3);
 }
 
 #[test]
@@ -332,14 +330,15 @@ fn ld_a_i() {
 
     cpu.ld_a_i();
 
-    assert_eq!(cpu.a, 0x3b);
-    assert_eq!(cpu.pc, 2);
-    assert_eq!(cpu.get_s(), (cpu.i as i8) < 0);
-    assert_eq!(cpu.get_z(), cpu.i == 0);
-    assert_eq!(cpu.get_h(), false);
-    assert_eq!(cpu.get_pv(), cpu.iff2);
-    assert_eq!(cpu.get_n(), false);
-    assert_eq!(cpu.get_c(), true);
+    Assertor::new(cpu)
+        .register_a_is(0x3b)
+        .sign_flag_is_positive()
+        .half_carry_flag_is_reset()
+        .add_substract_flag_is_reset()
+        .carry_flag_is_set()
+        .zero_flag_is_reset()
+        .parity_overflow_flag_is_reset()
+        .program_counter_is(2);
 }
 
 #[test]
@@ -353,14 +352,15 @@ fn ld_a_r() {
 
     cpu.ld_a_r();
 
-    assert_eq!(cpu.r, 0x3b);
-    assert_eq!(cpu.pc, 2);
-    assert_eq!(cpu.get_s(), (cpu.r as i8) < 0);
-    assert_eq!(cpu.get_z(), cpu.r == 0);
-    assert_eq!(cpu.get_h(), false);
-    assert_eq!(cpu.get_pv(), cpu.iff2);
-    assert_eq!(cpu.get_n(), false);
-    assert_eq!(cpu.get_c(), true);
+    Assertor::new(cpu)
+        .register_a_is(0x3b)
+        .sign_flag_is_positive()
+        .half_carry_flag_is_reset()
+        .add_substract_flag_is_reset()
+        .carry_flag_is_set()
+        .zero_flag_is_reset()
+        .parity_overflow_flag_is_reset()
+        .program_counter_is(2);
 }
 
 #[test]
@@ -369,8 +369,9 @@ fn ld_i_a() {
 
     cpu.ld_i_a();
 
-    assert_eq!(cpu.i, 12);
-    assert_eq!(cpu.pc, 2);
+    Assertor::new(cpu)
+        .interrupt_vector_is(12)
+        .program_counter_is(2);
 }
 
 #[test]
@@ -379,6 +380,7 @@ fn ld_r_a() {
 
     cpu.ld_r_a();
 
-    assert_eq!(cpu.r, 12);
-    assert_eq!(cpu.pc, 2);
+    Assertor::new(cpu)
+        .memory_refresh_register_is(12)
+        .program_counter_is(2);
 }

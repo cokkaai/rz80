@@ -1,6 +1,7 @@
 // === Rotate and Shift Group ===
 
 use cpu::CpuBuilder;
+use cpu::Assertor;
 
 #[test]
 fn rlca() {
@@ -11,22 +12,24 @@ fn rlca() {
 
     cpu.rlca();
 
-    // S, Z, P/V are not affected.
-    assert_eq!(cpu.get_s(), false);
-    assert_eq!(cpu.get_z(), false);
-    assert_eq!(cpu.get_pv(), false);
+    Assertor::new(cpu)
 
-    // H, N are reset.
-    assert_eq!(cpu.get_h(), false);
-    assert_eq!(cpu.get_h(), false);
-
-    // C is data from bit 7 of Accumulator.
-    assert_eq!(cpu.get_c(), true);
+        // S, Z, P/V are not affected.
+        .sign_flag_is_positive()
+        .zero_flag_is_reset()
+        .parity_overflow_flag_is_reset()
+        
+        // H, N are reset.
+        .half_carry_flag_is_reset()
+        .add_substract_flag_is_reset()
+        
+        // C is data from bit 7 of Accumulator.
+        .carry_flag_is_set()
+   
+        // The contents of the Accumulator (Register A) are rotated left 1 bit position.
+        .register_a_is(0b0101_0101)
     
-    // The contents of the Accumulator (Register A) are rotated left 1 bit position.
-    assert_eq!(cpu.a, 0b0101_0101);
-
-    assert_eq!(cpu.pc, 1);
+        .program_counter_is(1);
 }
 
 #[test]
@@ -39,22 +42,24 @@ fn rla() {
 
     cpu.rla();
 
-    // S, Z, P/V are not affected.
-    assert_eq!(cpu.get_s(), false);
-    assert_eq!(cpu.get_z(), false);
-    assert_eq!(cpu.get_pv(), false);
-
-    // H, N are reset.
-    assert_eq!(cpu.get_h(), false);
-    assert_eq!(cpu.get_n(), false);
-
-    // C is data from bit 7 of Accumulator.
-    assert_eq!(cpu.get_c(), false);
+    Assertor::new(cpu)
     
-    // The contents of the Accumulator (Register A) are rotated left 1 bit position.
-    assert_eq!(cpu.a, 0b1110_1101);
+        // S, Z, P/V are not affected.
+        .sign_flag_is_positive()
+        .zero_flag_is_reset()
+        .parity_overflow_flag_is_reset()
+        
+        // H, N are reset.
+        .half_carry_flag_is_reset()
+        .add_substract_flag_is_reset()
+        
+        // C is data from bit 7 of Accumulator.
+        .carry_flag_is_reset()
 
-    assert_eq!(cpu.pc, 1);
+        // The contents of the Accumulator (Register A) are rotated left 1 bit position.
+        .register_a_is(0b1110_1101)
+
+        .program_counter_is(1);
 }
 
 #[test]
@@ -67,22 +72,24 @@ fn rrca() {
 
     cpu.rrca();
 
-    // S, Z, P/V are not affected.
-    assert_eq!(cpu.get_s(), false);
-    assert_eq!(cpu.get_z(), false);
-    assert_eq!(cpu.get_pv(), false);
-
-    // H, N are reset.
-    assert_eq!(cpu.get_h(), false);
-    assert_eq!(cpu.get_n(), false);
-
-    // C is data from bit 0 of Accumulator.
-    assert_eq!(cpu.get_c(), true);
+    Assertor::new(cpu)
     
-    // The contents of the Accumulator (Register A) are rotated right 1 bit position.
-    assert_eq!(cpu.a, 0b1000_1000);
-
-    assert_eq!(cpu.pc, 1);
+        // S, Z, P/V are not affected.
+        .sign_flag_is_positive()
+        .zero_flag_is_reset()
+        .parity_overflow_flag_is_reset()
+        
+        // H, N are reset.
+        .half_carry_flag_is_reset()
+        .add_substract_flag_is_reset()
+        
+        // C is data from bit 0 of Accumulator.
+        .carry_flag_is_set()
+    
+        // The contents of the Accumulator (Register A) are rotated right 1 bit position.
+        .register_a_is(0b1000_1000)
+        
+        .program_counter_is(1);
 }
 
 #[test]
@@ -95,24 +102,26 @@ fn rra() {
 
     cpu.rra();
 
-    // S, Z, P/V are not affected.
-    assert_eq!(cpu.get_s(), false);
-    assert_eq!(cpu.get_z(), false);
-    assert_eq!(cpu.get_pv(), false);
-
-    // H, N are reset.
-    assert_eq!(cpu.get_h(), false);
-    assert_eq!(cpu.get_n(), false);
-
-    // C is data from bit 0 of Accumulator.
-    assert_eq!(cpu.get_c(), true);
+    Assertor::new(cpu)
     
-    // The contents of the Accumulator (Register A) are rotated right 1 bit
-    // position through the Carry flag. The previous contents of the Carry
-    // flag are copied to bit 7.
-    assert_eq!(cpu.a, 0b0000_1000);
-
-    assert_eq!(cpu.pc, 1);
+        // S, Z, P/V are not affected.
+        .sign_flag_is_positive()
+        .zero_flag_is_reset()
+        .parity_overflow_flag_is_reset()
+        
+        // H, N are reset.
+        .half_carry_flag_is_reset()
+        .add_substract_flag_is_reset()
+        
+        // C is data from bit 0 of Accumulator.
+        .carry_flag_is_set()
+    
+        // The contents of the Accumulator (Register A) are rotated right 1 bit
+        // position through the Carry flag. The previous contents of the Carry
+        // flag are copied to bit 7.
+        .register_a_is(0b0000_1000)
+        
+        .program_counter_is(1);
 }
 
 #[test]
@@ -124,27 +133,19 @@ fn rlc_r() {
 
     cpu.rlc_r();
 
-    // S is set if result is negative; otherwise, it is reset.
-    assert_eq!(cpu.get_s(), false);
-
-    // Z is set if result is 0; otherwise, it is reset.
-    assert_eq!(cpu.get_z(), false);
+    Assertor::new(cpu)
+        .sign_flag_is_positive()
+        .zero_flag_is_reset()
+        .parity_overflow_flag_is_reset()
+        .half_carry_flag_is_reset()
+        .add_substract_flag_is_reset()
+        .carry_flag_is_set()
     
-    // P/V is set if parity even; otherwise, it is reset.
-    assert_eq!(cpu.get_pv(), false);
+        // The contents of register r are rotated left 1 bit position. The contents of bit 7 
+        // are copied to the Carry flag and also to bit 0.
+        .register_l_is(0b0101_0101)
 
-    // H, N are reset.
-    assert_eq!(cpu.get_h(), false);
-    assert_eq!(cpu.get_n(), false);
-
-    // C is data from bit 7 of source register.
-    assert_eq!(cpu.get_c(), true);
-    
-    // The contents of register r are rotated left 1 bit position. The contents of bit 7 
-    // are copied to the Carry flag and also to bit 0.
-    assert_eq!(cpu.l, 0b0101_0101);
-
-    assert_eq!(cpu.pc, 2);
+        .program_counter_is(2);
 }
 
 #[test]
@@ -158,25 +159,19 @@ fn rlc_hli() {
     // 0xba = 0b1011_1010
     cpu.rlc_hli();
 
-    // S is set if result is negative; otherwise, it is reset.
-    assert_eq!(cpu.get_s(), false);
 
-    // Z is set if result is 0; otherwise, it is reset.
-    assert_eq!(cpu.get_z(), false);
-    
-    // P/V is set if parity even; otherwise, it is reset.
-    assert_eq!(cpu.get_pv(), false);
+    Assertor::new(cpu)
+        .sign_flag_is_positive()
+        .zero_flag_is_reset()
 
-    // H, N are reset.
-    assert_eq!(cpu.get_h(), false);
-    assert_eq!(cpu.get_n(), false);
+        // P/V is set if parity even; otherwise, it is reset.
+        .parity_overflow_flag_is_reset()
 
-    // C is data from bit 7 of source register.
-    assert_eq!(cpu.get_c(), true);
-    
-    assert_eq!(cpu.memory[6], 0b0111_0101);
-
-    assert_eq!(cpu.pc, 2);
+        .half_carry_flag_is_reset()
+        .add_substract_flag_is_reset()
+        .carry_flag_is_set()
+        .memory_at_address_is(6, 0b0111_0101)
+        .program_counter_is(2);
 }
 
 #[test]
@@ -189,25 +184,18 @@ fn rlc_ixdi() {
 
     cpu.rlc_ixdi();
 
-    // S is set if result is negative; otherwise, it is reset.
-    assert_eq!(cpu.get_s(), false);
+    Assertor::new(cpu)
+        .sign_flag_is_positive()
+        .zero_flag_is_reset()
 
-    // Z is set if result is 0; otherwise, it is reset.
-    assert_eq!(cpu.get_z(), false);
-    
-    // P/V is set if parity even; otherwise, it is reset.
-    assert_eq!(cpu.get_pv(), false);
+        // P/V is set if parity even; otherwise, it is reset.
+        .parity_overflow_flag_is_reset()
 
-    // H, N are reset.
-    assert_eq!(cpu.get_h(), false);
-    assert_eq!(cpu.get_n(), false);
-
-    // C is data from bit 7 of source register.
-    assert_eq!(cpu.get_c(), true);
-    
-    assert_eq!(cpu.memory[6], 0b0001_0001);
-
-    assert_eq!(cpu.pc, 4);
+        .half_carry_flag_is_reset()
+        .add_substract_flag_is_reset()
+        .carry_flag_is_set()
+        .memory_at_address_is(6, 0b0001_0001)
+        .program_counter_is(4);
 }
 
 #[test]
@@ -220,25 +208,18 @@ fn rlc_iydi() {
 
     cpu.rlc_iydi();
 
-    // S is set if result is negative; otherwise, it is reset.
-    assert_eq!(cpu.get_s(), false);
+    Assertor::new(cpu)
+        .sign_flag_is_positive()
+        .zero_flag_is_reset()
 
-    // Z is set if result is 0; otherwise, it is reset.
-    assert_eq!(cpu.get_z(), false);
-    
-    // P/V is set if parity even; otherwise, it is reset.
-    assert_eq!(cpu.get_pv(), false);
+        // P/V is set if parity even; otherwise, it is reset.
+        .parity_overflow_flag_is_reset()
 
-    // H, N are reset.
-    assert_eq!(cpu.get_h(), false);
-    assert_eq!(cpu.get_n(), false);
-
-    // C is data from bit 7 of source register.
-    assert_eq!(cpu.get_c(), true);
-    
-    assert_eq!(cpu.memory[6], 0b0001_0001);
-
-    assert_eq!(cpu.pc, 4);
+        .half_carry_flag_is_reset()
+        .add_substract_flag_is_reset()
+        .carry_flag_is_set()
+        .memory_at_address_is(6, 0b0001_0001)
+        .program_counter_is(4);
 }
 
 #[test]
@@ -270,27 +251,15 @@ fn rrc_r() {
 
     cpu.rrc_r();
 
-    // S is set if result is negative; otherwise, it is reset.
-    assert_eq!(cpu.get_s(), false);
-
-    // Z is set if result is 0; otherwise, it is reset.
-    assert_eq!(cpu.get_z(), false);
-    
-    // P/V is set if parity even; otherwise, it is reset.
-    assert_eq!(cpu.get_pv(), false);
-
-    // H, N are reset.
-    assert_eq!(cpu.get_h(), false);
-    assert_eq!(cpu.get_n(), false);
-
-    // C is data from bit 0 of source register.
-    assert_eq!(cpu.get_c(), false);
-    
-    // The contents of register r are rotated left 1 bit position. The contents of bit 7 
-    // are copied to the Carry flag and also to bit 0.
-    assert_eq!(cpu.l, 0b0101_0101);
-
-    assert_eq!(cpu.pc, 2);
+    Assertor::new(cpu)
+        .sign_flag_is_positive()
+        .zero_flag_is_reset()
+        .parity_overflow_flag_is_reset()
+        .half_carry_flag_is_reset()
+        .add_substract_flag_is_reset()
+        .carry_flag_is_reset()
+        .register_l_is(0b0101_0101)
+        .program_counter_is(2);
 }
 
 #[test]
@@ -304,25 +273,15 @@ fn rrc_hli() {
     // 0xba = 0b1011_1010
     cpu.rrc_hli();
 
-    // S is set if result is negative; otherwise, it is reset.
-    assert_eq!(cpu.get_s(), false);
-
-    // Z is set if result is 0; otherwise, it is reset.
-    assert_eq!(cpu.get_z(), false);
-    
-    // P/V is set if parity even; otherwise, it is reset.
-    assert_eq!(cpu.get_pv(), false);
-
-    // H, N are reset.
-    assert_eq!(cpu.get_h(), false);
-    assert_eq!(cpu.get_n(), false);
-
-    // C is data from bit 0 of source register.
-    assert_eq!(cpu.get_c(), false);
-    
-    assert_eq!(cpu.memory[6], 0b0101_1101);
-
-    assert_eq!(cpu.pc, 2);
+    Assertor::new(cpu)
+        .sign_flag_is_positive()
+        .zero_flag_is_reset()
+        .parity_overflow_flag_is_reset()
+        .half_carry_flag_is_reset()
+        .add_substract_flag_is_reset()
+        .carry_flag_is_reset()
+        .memory_at_address_is(6, 0b0101_1101)
+        .program_counter_is(2);
 }
 
 #[test]
@@ -335,25 +294,15 @@ fn rrc_ixdi() {
 
     cpu.rrc_ixdi();
 
-    // S is set if result is negative; otherwise, it is reset.
-    assert_eq!(cpu.get_s(), false);
-
-    // Z is set if result is 0; otherwise, it is reset.
-    assert_eq!(cpu.get_z(), false);
-    
-    // P/V is set if parity even; otherwise, it is reset.
-    assert_eq!(cpu.get_pv(), true);
-
-    // H, N are reset.
-    assert_eq!(cpu.get_h(), false);
-    assert_eq!(cpu.get_n(), false);
-
-    // C is data from bit 0 of source register.
-    assert_eq!(cpu.get_c(), false);
-    
-    assert_eq!(cpu.memory[6], 0b0100_0100);
-
-    assert_eq!(cpu.pc, 4);
+    Assertor::new(cpu)
+        .sign_flag_is_positive()
+        .zero_flag_is_reset()
+        .parity_overflow_flag_is_set()
+        .half_carry_flag_is_reset()
+        .add_substract_flag_is_reset()
+        .carry_flag_is_reset()
+        .memory_at_address_is(6, 0b0100_0100)
+        .program_counter_is(4);
 }
 
 #[test]
@@ -366,25 +315,15 @@ fn rrc_iydi() {
 
     cpu.rrc_iydi();
 
-    // S is set if result is negative; otherwise, it is reset.
-    assert_eq!(cpu.get_s(), false);
-
-    // Z is set if result is 0; otherwise, it is reset.
-    assert_eq!(cpu.get_z(), false);
-    
-    // P/V is set if parity even; otherwise, it is reset.
-    assert_eq!(cpu.get_pv(), true);
-
-    // H, N are reset.
-    assert_eq!(cpu.get_h(), false);
-    assert_eq!(cpu.get_n(), false);
-
-    // C is data from bit 0 of source register.
-    assert_eq!(cpu.get_c(), false);
-    
-    assert_eq!(cpu.memory[6], 0b0100_0100);
-
-    assert_eq!(cpu.pc, 4);
+    Assertor::new(cpu)
+        .sign_flag_is_positive()
+        .zero_flag_is_reset()
+        .parity_overflow_flag_is_set()
+        .half_carry_flag_is_reset()
+        .add_substract_flag_is_reset()
+        .carry_flag_is_reset()
+        .memory_at_address_is(6, 0b0100_0100)
+        .program_counter_is(4);
 }
 
 #[test]
@@ -397,23 +336,14 @@ fn rr_r() {
 
     cpu.rr_r();
 
-    // S is set if result is negative; otherwise, it is reset.
-    assert_eq!(cpu.get_s(), false);
-
-    // Z is set if result is 0; otherwise, it is reset.
-    assert_eq!(cpu.get_z(), false);
-    
-    // P/V is set if parity even; otherwise, it is reset.
-    assert_eq!(cpu.get_pv(), true);
-
-    // H, N are reset.
-    assert_eq!(cpu.get_h(), false);
-    assert_eq!(cpu.get_n(), false);
-
-    // C is data from bit 0 of source register.
-    assert_eq!(cpu.get_c(), true);
-    
-    assert_eq!(cpu.pc, 2);
+    Assertor::new(cpu)
+        .sign_flag_is_positive()
+        .zero_flag_is_reset()
+        .parity_overflow_flag_is_set()
+        .half_carry_flag_is_reset()
+        .add_substract_flag_is_reset()
+        .carry_flag_is_set()
+        .program_counter_is(2);
 }
 
 #[test]

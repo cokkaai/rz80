@@ -398,6 +398,6 @@ cpu.pop_iy();
 
 Assertor::new(cpu)
     .index_register_iy_is(0xcaf3)
-        .stack_pointer_is(8)
-        .program_counter_is(2);
+    .stack_pointer_is(8)
+    .program_counter_is(2);
 }

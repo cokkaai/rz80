@@ -26,13 +26,13 @@ impl Assertor {
 
     /// Tests if the S flag is true
     pub fn sign_flag_is_positive(&self) -> &Assertor {
-        assert_eq!(self.cpu.get_s(), true);
+        assert_eq!(self.cpu.get_s(), false);
         self
     }
 
     /// Tests if the S flag is false
     pub fn sign_flag_is_negative(&self) -> &Assertor {
-        assert_eq!(self.cpu.get_s(), false);
+        assert_eq!(self.cpu.get_s(), true);
         self
     }
 
