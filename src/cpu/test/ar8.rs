@@ -222,8 +222,9 @@ fn cp_n() {
 
     // TODO: opcode description is not clear.
     // Investigate docs other than the manual.
-    assert_eq!(cpu.get_pv(), false);
-    assert_eq!(cpu.get_n(), false);
+    Assertor::new(cpu)
+        .parity_overflow_flag_is_reset()
+        .add_substract_flag_is_reset();
 }
 
 #[test]
@@ -238,8 +239,9 @@ fn cp_hli() {
 
     // TODO: opcode description is not clear.
     // Investigate docs other than the manual.
-    assert_eq!(cpu.get_pv(), false);
-    assert_eq!(cpu.get_n(), false);
+    Assertor::new(cpu)
+        .parity_overflow_flag_is_reset()
+        .add_substract_flag_is_reset();
 }
 
 #[test]
@@ -254,8 +256,9 @@ fn cp_ixdi() {
 
     // TODO: opcode description is not clear.
     // Investigate docs other than the manual.
-    assert_eq!(cpu.get_pv(), false);
-    assert_eq!(cpu.get_n(), false);
+    Assertor::new(cpu)
+        .parity_overflow_flag_is_reset()
+        .add_substract_flag_is_reset();
 }
 
 #[test]
@@ -270,44 +273,33 @@ fn cp_iydi() {
 
     // TODO: opcode description is not clear.
     // Investigate docs other than the manual.
-    assert_eq!(cpu.get_pv(), false);
-    assert_eq!(cpu.get_n(), false);
+    Assertor::new(cpu)
+        .parity_overflow_flag_is_reset()
+        .add_substract_flag_is_reset();
 }
 
-// INC r
 #[test]
 fn inc_r() {
     let mut cpu = CpuBuilder::new()
-        .with_memory(vec![0b00_010_100])
+        .with_memory(vec![0b00_010_100, 0, 0, 0])
         .with_d(0x28)
         .build();
 
     cpu.inc_r();
 
-    // If the D Register contains 28h , then upon the execution of an INC D
-    // instruction, the D Register contains 29h.
-    assert_eq!(cpu.d, 0x29);
-
-    // S is set if result is negative; otherwise, it is reset.
-    assert_eq!(cpu.get_s(), false);
-
-    // Z is set if result is 0; otherwise, it is reset.
-    assert_eq!(cpu.get_z(), false);
-
-    // H is set if carry from bit 3; otherwise, it is reset.
-    assert_eq!(cpu.get_h(), false);
-
-    // P/V is set if r was 7Fh before operation; otherwise, it is reset.
-    assert_eq!(cpu.get_pv(), false);
-
-    // N is reset.
-    assert_eq!(cpu.get_n(), false);
-
-    // C is not affected.
-    assert_eq!(cpu.get_c(), false);
+    Assertor::new(cpu)
+        // If the D Register contains 28h , then upon the execution of an INC D
+        // instruction, the D Register contains 29h.
+        .register_d_is(0x29)
+        .sign_flag_is_positive()
+        .zero_flag_is_reset()
+        .half_carry_flag_is_reset()
+        .parity_overflow_flag_is_reset()
+        .add_substract_flag_is_reset()
+        .carry_flag_is_reset()
+        .program_counter_is(1);
 }
 
-// INC (HL)
 #[test]
 fn inc_hli() {
     let mut cpu = CpuBuilder::new()
@@ -317,28 +309,16 @@ fn inc_hli() {
 
     cpu.inc_hli();
 
-    // (HL) ← (HL) + 1
-    assert_eq!(cpu.memory[0x02], 0x01);
-
-    // S is set if result is negative; otherwise, it is reset.
-    assert_eq!(cpu.get_s(), false);
-
-    // Z is set if result is 0; otherwise, it is reset.
-    assert_eq!(cpu.get_z(), false);
-
-    // H is set if carry from bit 3; otherwise, it is reset.
-    assert_eq!(cpu.get_h(), false);
-
-    // P/V is set if (HL) was 7Fh before operation; otherwise, it is reset.
-    assert_eq!(cpu.get_pv(), false);
-
-    // N is reset.
-    assert_eq!(cpu.get_n(), false);
-
-    // C is not affected.
-
-    // PC += 1
-    assert_eq!(cpu.pc, 1);
+    Assertor::new(cpu)
+        // (HL) ← (HL) + 1
+        .memory_at_address_is(2, 1)
+        .sign_flag_is_positive()
+        .zero_flag_is_reset()
+        .half_carry_flag_is_reset()
+        .parity_overflow_flag_is_reset()
+        .add_substract_flag_is_reset()
+        .carry_flag_is_reset()
+        .program_counter_is(1);
 }
 
 // INC (IX+d)
@@ -353,28 +333,16 @@ fn inc_ixdi() {
 
     cpu.inc_ixdi();
 
-    // (IX+d) ← (IX+d) + 1
-    assert_eq!(cpu.memory[9], 0x07);
-
-    // S is set if result is negative; otherwise, it is reset.
-    assert_eq!(cpu.get_s(), false);
-
-    // Z is set if result is 0; otherwise, it is reset.
-    assert_eq!(cpu.get_z(), false);
-
-    // H is set if carry from bit 3; otherwise, it is reset.
-    assert_eq!(cpu.get_h(), false);
-
-    // P/V is set if (IX+d) was 7Fh before operation; otherwise, it is reset.
-    assert_eq!(cpu.get_pv(), false);
-
-    // N is reset.
-    assert_eq!(cpu.get_n(), false);
-
-    // C is not affected.
-
-    // PC += 3
-    assert_eq!(cpu.pc, 3);
+    Assertor::new(cpu)
+        // (IX+d) ← (IX+d) + 1
+        .memory_at_address_is(9, 7)
+        .sign_flag_is_positive()
+        .zero_flag_is_reset()
+        .half_carry_flag_is_reset()
+        .parity_overflow_flag_is_reset()
+        .add_substract_flag_is_reset()
+        .carry_flag_is_reset()
+        .program_counter_is(3);
 }
 
 // INC (IY+d)
@@ -389,60 +357,38 @@ fn inc_iydi() {
 
     cpu.inc_iydi();
 
-    // (IY+d) ← (IY+d) + 1
-    assert_eq!(cpu.memory[9], 0x07);
-
-    // S is set if result is negative; otherwise, it is reset.
-    assert_eq!(cpu.get_s(), false);
-
-    // Z is set if result is 0; otherwise, it is reset.
-    assert_eq!(cpu.get_z(), false);
-
-    // H is set if carry from bit 3; otherwise, it is reset.
-    assert_eq!(cpu.get_h(), false);
-
-    // P/V is set if (IX+d) was 7Fh before operation; otherwise, it is reset.
-    assert_eq!(cpu.get_pv(), false);
-
-    // N is reset.
-    assert_eq!(cpu.get_n(), false);
-
-    // C is not affected.
-
-    // PC += 3
-    assert_eq!(cpu.pc, 3);
+    Assertor::new(cpu)
+        // (IY+d) ← (IY+d) + 1
+        .memory_at_address_is(9, 7)
+        .sign_flag_is_positive()
+        .zero_flag_is_reset()
+        .half_carry_flag_is_reset()
+        .parity_overflow_flag_is_reset()
+        .add_substract_flag_is_reset()
+        .carry_flag_is_reset()
+        .program_counter_is(3);
 }
 
 #[test]
 fn dec_r() {
     let mut cpu = CpuBuilder::new()
-        .with_memory(vec![0b00_010_101])
+        .with_memory(vec![0b00_010_101, 0, 0, 0])
         .with_d(0x2a)
         .build();
 
     cpu.dec_r();
 
-    // If the D Register contains byte 2Ah , then upon the execution
-    // of a DEC D instruction, the D Register contains 29h .
-    assert_eq!(cpu.d, 0x29);
-
-    // S is set if result is negative; otherwise, it is reset.
-    assert_eq!(cpu.get_s(), false);
-
-    // Z is set if result is 0; otherwise, it is reset.
-    assert_eq!(cpu.get_z(), false);
-
-    // H is set if borrow from bit 4, otherwise, it is reset.
-    assert_eq!(cpu.get_h(), false);
-
-    // P/V is set if r was 7Fh before operation; otherwise, it is reset.
-    assert_eq!(cpu.get_pv(), false);
-
-    // N is reset.
-    assert_eq!(cpu.get_n(), true);
-
-    // C is not affected.
-    assert_eq!(cpu.get_c(), false);
+    Assertor::new(cpu)
+        // If the D Register contains byte 2Ah , then upon the execution
+        // of a DEC D instruction, the D Register contains 29h .
+        .register_d_is(0x29)
+        .sign_flag_is_positive()
+        .zero_flag_is_reset()
+        .half_carry_flag_is_reset()
+        .parity_overflow_flag_is_reset()
+        .add_substract_flag_is_set()
+        .carry_flag_is_reset()
+        .program_counter_is(1);
 }
 
 #[test]
@@ -454,28 +400,16 @@ fn dec_hli() {
 
     cpu.dec_hli();
 
-    // (HL) ← (HL) - 1
-    assert_eq!(cpu.memory[0x02], 0x0d);
-
-    // S is set if result is negative; otherwise, it is reset.
-    assert_eq!(cpu.get_s(), false);
-
-    // Z is set if result is 0; otherwise, it is reset.
-    assert_eq!(cpu.get_z(), false);
-
-    // H is set if borrow from bit 4, otherwise, it is reset.
-    assert_eq!(cpu.get_h(), false);
-
-    // P/V is set if (HL) was 7Fh before operation; otherwise, it is reset.
-    assert_eq!(cpu.get_pv(), false);
-
-    // N is reset.
-    assert_eq!(cpu.get_n(), true);
-
-    // C is not affected.
-
-    // PC += 1
-    assert_eq!(cpu.pc, 1);
+    Assertor::new(cpu)
+        // (HL) ← (HL) - 1
+        .memory_at_address_is(2, 0x0d)
+        .sign_flag_is_positive()
+        .zero_flag_is_reset()
+        .half_carry_flag_is_reset()
+        .parity_overflow_flag_is_reset()
+        .add_substract_flag_is_set()
+        .carry_flag_is_reset()
+        .program_counter_is(1);
 }
 
 #[test]
@@ -489,28 +423,16 @@ fn dec_ixdi() {
 
     cpu.dec_ixdi();
 
-    // (IX+d) ← (IX+d) - 1
-    assert_eq!(cpu.memory[9], 0x05);
-
-    // S is set if result is negative; otherwise, it is reset.
-    assert_eq!(cpu.get_s(), false);
-
-    // Z is set if result is 0; otherwise, it is reset.
-    assert_eq!(cpu.get_z(), false);
-
-    // H is set if borrow from bit 4, otherwise, it is reset.
-    assert_eq!(cpu.get_h(), false);
-
-    // P/V is set if (HL) was 7Fh before operation; otherwise, it is reset.
-    assert_eq!(cpu.get_pv(), false);
-
-    // N is reset.
-    assert_eq!(cpu.get_n(), true);
-
-    // C is not affected.
-
-    // PC += 3
-    assert_eq!(cpu.pc, 3);
+    Assertor::new(cpu)
+        // (IX+d) ← (IX+d) - 1
+        .memory_at_address_is(9, 5)
+        .sign_flag_is_positive()
+        .zero_flag_is_reset()
+        .half_carry_flag_is_reset()
+        .parity_overflow_flag_is_reset()
+        .add_substract_flag_is_set()
+        .carry_flag_is_reset()
+        .program_counter_is(3);
 }
 
 #[test]
@@ -524,26 +446,14 @@ fn dec_iydi() {
 
     cpu.dec_iydi();
 
-    // (IY+d) ← (IY+d) - 1
-    assert_eq!(cpu.memory[9], 0x05);
-
-    // S is set if result is negative; otherwise, it is reset.
-    assert_eq!(cpu.get_s(), false);
-
-    // Z is set if result is 0; otherwise, it is reset.
-    assert_eq!(cpu.get_z(), false);
-
-    // H is set if borrow from bit 4, otherwise, it is reset.
-    assert_eq!(cpu.get_h(), false);
-
-    // P/V is set if (HL) was 7Fh before operation; otherwise, it is reset.
-    assert_eq!(cpu.get_pv(), false);
-
-    // N is reset.
-    assert_eq!(cpu.get_n(), true);
-
-    // C is not affected.
-
-    // PC += 3
-    assert_eq!(cpu.pc, 3);
+    Assertor::new(cpu)
+        // (IX+d) ← (IX+d) - 1
+        .memory_at_address_is(9, 5)
+        .sign_flag_is_positive()
+        .zero_flag_is_reset()
+        .half_carry_flag_is_reset()
+        .parity_overflow_flag_is_reset()
+        .add_substract_flag_is_set()
+        .carry_flag_is_reset()
+        .program_counter_is(3);
 }

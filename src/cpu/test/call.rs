@@ -12,10 +12,6 @@ fn call_nn() {
 
     cpu.call_nn();
 
-    assert_eq!(cpu.memory[7], 0x00);
-    assert_eq!(cpu.memory[6], 0x03);
-    assert_eq!(cpu.pc, 0x04);
-
     Assertor::new(cpu)
         .memory_at_address_is(7, 0)
         .memory_at_address_is(6, 3)
@@ -46,8 +42,6 @@ fn ret() {
 
     cpu.ret();
 
-    assert_eq!(cpu.pc, 0x04);
-    assert_eq!(cpu.sp, 0x08);
     Assertor::new(cpu)
         .stack_pointer_is(8)
         .program_counter_is(4);
