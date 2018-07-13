@@ -11,3 +11,6 @@ mod jump;
 mod ld16;
 mod ld8;
 mod rotate;
+mod and;
+mod or;
+mod xor;

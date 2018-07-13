@@ -90,4 +90,20 @@ impl Cpu {
             _ => panic!(),
         }
     }
+
+    /// Read memory at address: hl + offset
+    fn memory_at_hl(&self, offset_from_hl: u16) -> u8 {
+        let addr = (self.h, self.l).promote() + offset_from_hl;
+        self.memory[addr as usize]
+    }
+
+    /// Read memory at address: ix + offset
+    fn memory_at_ix(&self, offset_from_ix: u16) -> u8 {
+        self.memory[(self.ix + offset_from_ix) as usize]
+    }
+
+    /// Read memory at address: iy + offset
+    fn memory_at_iy(&self, offset_from_iy: u16) -> u8 {
+        self.memory[(self.iy + offset_from_iy) as usize]
+    }
 }

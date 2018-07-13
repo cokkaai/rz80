@@ -4,24 +4,22 @@ use cpu::Cpu;
 
 impl Cpu {
     fn _or_with_accumulator(&mut self, value: u8) {
+        // TODO: calculate H, C, PV
         self.a |= value;
         let a = self.a;
 
         self.set_s_from_byte(a);
         self.set_z_from_byte(a);
+        self.set_n(false);
+        self.set_c(false);
+        self.set_h(false);
 
-        // TODO: H is set if borrow from bit 4; otherwise, it is reset.
-        
         // TODO: P/V is reset if overflow; otherwise, it is reset.
-
-        self.set_n(true);
-
-        // TODO: C is set if borrow; otherwise, it is reset.
     }
 
     pub fn or_r(&mut self) {
         let opcode = self.memory_at_pc(0);
-        let operand = self.read(Self::select(opcode));
+        let operand = self.read(Self::select(opcode & 0b111));
         self._or_with_accumulator(operand);
         self.pc += 1;
     }

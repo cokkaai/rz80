@@ -48,11 +48,6 @@ impl Cpu {
         unimplemented!();
     }
 
-    // AND s
-    pub fn and_s(&mut self) {
-        unimplemented!();
-    }
-
     // OR s
     pub fn or_s(&mut self) {
         unimplemented!();

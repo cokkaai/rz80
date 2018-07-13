@@ -9,6 +9,9 @@ mod ld8;
 mod ld16;
 mod jump;
 mod rotate;
+mod and;
+mod or;
+mod xor;
 
 pub use self::ar8::*;
 pub use self::ar16::*;
@@ -21,5 +24,6 @@ pub use self::ld8::*;
 pub use self::ld16::*;
 pub use self::jump::*;
 pub use self::rotate::*;
-
-
+pub use self::and::*;
+pub use self::or::*;
+pub use self::xor::*;

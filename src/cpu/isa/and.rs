@@ -9,19 +9,16 @@ impl Cpu {
 
         self.set_s_from_byte(a);
         self.set_z_from_byte(a);
-
-        // TODO: H is set if borrow from bit 4; otherwise, it is reset.
+        self.set_n(false);
+        self.set_c(false);
+        self.set_h(true);
         
         // TODO: P/V is reset if overflow; otherwise, it is reset.
-
-        self.set_n(true);
-
-        // TODO: C is set if borrow; otherwise, it is reset.
     }
 
     pub fn and_r(&mut self) {
         let opcode = self.memory_at_pc(0);
-        let operand = self.read(Self::select(opcode));
+        let operand = self.read(Self::select(opcode & 0b111));
         self._and_with_accumulator(operand);
         self.pc += 1;
     }
