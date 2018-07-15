@@ -1,0 +1,45 @@
+====
+TODO
+====
+
+[DONE] Define a struct R8 for 8 bit registers, with all possible methods
+[DONE] Define a struct WideRegister implementing a 16 bit reg made of 2 8 bit regs. (all methods defined)
+[FAILED] Maybe Define a struct R16 for 16 bit registers, with all possible methods
+[FAILED] Define a trait for common operations on byte
+[DONE] Implement such trait for u8
+[DONE] Implement such trait for u16
+[DONE] How to implement such trait for words (u8+u8)?
+[DONE] Implement builder like class to check status flags
+[DONE] Complete test migration to Assertor
+
+[DOING] Complete ar8 tests and implementation
+
+[TODO] Complete rotate tests and implementation
+
+[TODO] Understand how to do math with carry and half carry
+
+[TODO] Complete ar16 tests and implementation
+
+[TODO] WTF DAA does?
+
+[TODO] Understand interrupts and implement support in the CPU
+
+[TODO] Complete argp tests and implementation
+
+[TODO] Understand I/O and implement it
+
+[TODO] Remove 16 bit registers operations from cpu/registers?
+
+[TODO] Understand and implement CPU cycles. Timing and cycle exact?
+
+[TODO] Provide some sort of emulator to run real tests on
+
+[TODO] Evaluate how difficult is to integrate an external emulator to run
+       side by side tests and compare cpu status and memory of the two emu.
+
+[TODO] Fuzzy testing ISA (RustFest Paris 2018: Building Reliable Infrastructure in Rust by Tyler Neely)
+
+[TODO] Write an emulator like these?
+       https://medium.com/@bokuweb17/writing-an-nes-emulator-with-rust-and-webassembly-d64de101c49d
+       https://blog.scottlogic.com/2017/12/13/chip8-emulator-webassembly-rust.html?utm_source=newsletter_mailer&utm_medium=email&utm_campaign=weekly
+

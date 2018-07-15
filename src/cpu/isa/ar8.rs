@@ -8,87 +8,32 @@ impl Cpu {
         Self::select((opcode & 0b0011_1000) >> 3)
     }
 
-    // ADD A, r
-    pub fn add_a_r(&mut self) {
+
+    pub fn sub_r(&mut self) {
         unimplemented!();
     }
 
-    // ADD A, n
-    pub fn add_d_n(&mut self) {
+    pub fn sub_n(&mut self) {
         unimplemented!();
     }
 
-    // ADD A, (HL)
-    pub fn add_a_hli(&mut self) {
+    pub fn sub_hli(&mut self) {
         unimplemented!();
     }
 
-    // ADD A, (IX + d)
-    pub fn add_a_ixd(&mut self) {
+    pub fn sub_ixdi(&mut self) {
         unimplemented!();
     }
 
-    // ADD A, (IY + d)
-    pub fn add_a_iyd(&mut self) {
+    pub fn sub_iydi(&mut self) {
         unimplemented!();
     }
 
-    // ADC A, s
     pub fn adc_a_s(&mut self) {
         unimplemented!();
     }
 
-    // SUB s
-    pub fn sub_s(&mut self) {
-        unimplemented!();
-    }
-
-    // SBC A, s
     pub fn sbc_a_s(&mut self) {
-        unimplemented!();
-    }
-
-    // OR s
-    pub fn or_s(&mut self) {
-        unimplemented!();
-    }
-
-    // XOR s
-    pub fn xor_s(&mut self) {
-        unimplemented!();
-    }
-
-    fn _eval_cp_flags(&mut self) {
-        unimplemented!();
-    }
-
-    // CP R
-    pub fn cp_r(&mut self) {
-        self._eval_cp_flags();
-        unimplemented!();
-    }
-
-    // CP N
-    pub fn cp_n(&mut self) {
-        self._eval_cp_flags();
-        unimplemented!();
-    }
-
-    // CP (HL)
-    pub fn cp_hli(&mut self) {
-        self._eval_cp_flags();
-        unimplemented!();
-    }
-
-    // CP (IX+d)
-    pub fn cp_ixdi(&mut self) {
-        self._eval_cp_flags();
-        unimplemented!();
-    }
-
-    // CP (IY+d)
-    pub fn cp_iydi(&mut self) {
-        self._eval_cp_flags();
         unimplemented!();
     }
 
