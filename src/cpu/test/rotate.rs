@@ -21,7 +21,7 @@ fn rlca() {
         
         // H, N are reset.
         .half_carry_flag_is_reset()
-        .add_substract_flag_is_reset()
+        .add_subtract_flag_is_reset()
         
         // C is data from bit 7 of Accumulator.
         .carry_flag_is_set()
@@ -51,7 +51,7 @@ fn rla() {
         
         // H, N are reset.
         .half_carry_flag_is_reset()
-        .add_substract_flag_is_reset()
+        .add_subtract_flag_is_reset()
         
         // C is data from bit 7 of Accumulator.
         .carry_flag_is_reset()
@@ -81,7 +81,7 @@ fn rrca() {
         
         // H, N are reset.
         .half_carry_flag_is_reset()
-        .add_substract_flag_is_reset()
+        .add_subtract_flag_is_reset()
         
         // C is data from bit 0 of Accumulator.
         .carry_flag_is_set()
@@ -111,7 +111,7 @@ fn rra() {
         
         // H, N are reset.
         .half_carry_flag_is_reset()
-        .add_substract_flag_is_reset()
+        .add_subtract_flag_is_reset()
         
         // C is data from bit 0 of Accumulator.
         .carry_flag_is_set()
@@ -138,7 +138,7 @@ fn rlc_r() {
         .zero_flag_is_reset()
         .parity_overflow_flag_is_reset()
         .half_carry_flag_is_reset()
-        .add_substract_flag_is_reset()
+        .add_subtract_flag_is_reset()
         .carry_flag_is_set()
     
         // The contents of register r are rotated left 1 bit position. The contents of bit 7 
@@ -168,7 +168,7 @@ fn rlc_hli() {
         .parity_overflow_flag_is_reset()
 
         .half_carry_flag_is_reset()
-        .add_substract_flag_is_reset()
+        .add_subtract_flag_is_reset()
         .carry_flag_is_set()
         .memory_at_address_is(6, 0b0111_0101)
         .program_counter_is(2);
@@ -192,7 +192,7 @@ fn rlc_ixdi() {
         .parity_overflow_flag_is_reset()
 
         .half_carry_flag_is_reset()
-        .add_substract_flag_is_reset()
+        .add_subtract_flag_is_reset()
         .carry_flag_is_set()
         .memory_at_address_is(6, 0b0001_0001)
         .program_counter_is(4);
@@ -216,7 +216,7 @@ fn rlc_iydi() {
         .parity_overflow_flag_is_reset()
 
         .half_carry_flag_is_reset()
-        .add_substract_flag_is_reset()
+        .add_subtract_flag_is_reset()
         .carry_flag_is_set()
         .memory_at_address_is(6, 0b0001_0001)
         .program_counter_is(4);
@@ -256,7 +256,7 @@ fn rrc_r() {
         .zero_flag_is_reset()
         .parity_overflow_flag_is_reset()
         .half_carry_flag_is_reset()
-        .add_substract_flag_is_reset()
+        .add_subtract_flag_is_reset()
         .carry_flag_is_reset()
         .register_l_is(0b0101_0101)
         .program_counter_is(2);
@@ -278,7 +278,7 @@ fn rrc_hli() {
         .zero_flag_is_reset()
         .parity_overflow_flag_is_reset()
         .half_carry_flag_is_reset()
-        .add_substract_flag_is_reset()
+        .add_subtract_flag_is_reset()
         .carry_flag_is_reset()
         .memory_at_address_is(6, 0b0101_1101)
         .program_counter_is(2);
@@ -299,7 +299,7 @@ fn rrc_ixdi() {
         .zero_flag_is_reset()
         .parity_overflow_flag_is_set()
         .half_carry_flag_is_reset()
-        .add_substract_flag_is_reset()
+        .add_subtract_flag_is_reset()
         .carry_flag_is_reset()
         .memory_at_address_is(6, 0b0100_0100)
         .program_counter_is(4);
@@ -320,7 +320,7 @@ fn rrc_iydi() {
         .zero_flag_is_reset()
         .parity_overflow_flag_is_set()
         .half_carry_flag_is_reset()
-        .add_substract_flag_is_reset()
+        .add_subtract_flag_is_reset()
         .carry_flag_is_reset()
         .memory_at_address_is(6, 0b0100_0100)
         .program_counter_is(4);
@@ -341,7 +341,7 @@ fn rr_r() {
         .zero_flag_is_reset()
         .parity_overflow_flag_is_set()
         .half_carry_flag_is_reset()
-        .add_substract_flag_is_reset()
+        .add_subtract_flag_is_reset()
         .carry_flag_is_set()
         .program_counter_is(2);
 }

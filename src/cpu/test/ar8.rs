@@ -97,7 +97,7 @@ mod test {
             .zero_flag_is_reset()
             .half_carry_flag_is_reset()
             .parity_overflow_flag_is_reset()
-            .add_substract_flag_is_reset()
+            .add_subtract_flag_is_reset()
             .carry_flag_is_reset()
             .program_counter_is(1);
     }
@@ -118,7 +118,7 @@ mod test {
             .zero_flag_is_reset()
             .half_carry_flag_is_reset()
             .parity_overflow_flag_is_reset()
-            .add_substract_flag_is_reset()
+            .add_subtract_flag_is_reset()
             .carry_flag_is_reset()
             .program_counter_is(1);
     }
@@ -142,7 +142,7 @@ mod test {
             .zero_flag_is_reset()
             .half_carry_flag_is_reset()
             .parity_overflow_flag_is_reset()
-            .add_substract_flag_is_reset()
+            .add_subtract_flag_is_reset()
             .carry_flag_is_reset()
             .program_counter_is(3);
     }
@@ -166,7 +166,7 @@ mod test {
             .zero_flag_is_reset()
             .half_carry_flag_is_reset()
             .parity_overflow_flag_is_reset()
-            .add_substract_flag_is_reset()
+            .add_subtract_flag_is_reset()
             .carry_flag_is_reset()
             .program_counter_is(3);
     }
@@ -188,7 +188,7 @@ mod test {
             .zero_flag_is_reset()
             .half_carry_flag_is_reset()
             .parity_overflow_flag_is_reset()
-            .add_substract_flag_is_set()
+            .add_subtract_flag_is_set()
             .carry_flag_is_reset()
             .program_counter_is(1);
     }
@@ -209,7 +209,7 @@ mod test {
             .zero_flag_is_reset()
             .half_carry_flag_is_reset()
             .parity_overflow_flag_is_reset()
-            .add_substract_flag_is_set()
+            .add_subtract_flag_is_set()
             .carry_flag_is_reset()
             .program_counter_is(1);
     }
@@ -232,7 +232,7 @@ mod test {
             .zero_flag_is_reset()
             .half_carry_flag_is_reset()
             .parity_overflow_flag_is_reset()
-            .add_substract_flag_is_set()
+            .add_subtract_flag_is_set()
             .carry_flag_is_reset()
             .program_counter_is(3);
     }
@@ -255,7 +255,7 @@ mod test {
             .zero_flag_is_reset()
             .half_carry_flag_is_reset()
             .parity_overflow_flag_is_reset()
-            .add_substract_flag_is_set()
+            .add_subtract_flag_is_set()
             .carry_flag_is_reset()
             .program_counter_is(3);
     }

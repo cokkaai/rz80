@@ -18,7 +18,7 @@ fn bit_b_r() {
     Assertor::new(cpu)
         .zero_flag_is_reset()
         .half_carry_flag_is_set()
-        .add_substract_flag_is_reset()
+        .add_subtract_flag_is_reset()
         .program_counter_is(2);
 }
 
@@ -36,7 +36,7 @@ fn bit_b_hli() {
     Assertor::new(cpu)
         .zero_flag_is_set()
         .half_carry_flag_is_set()
-        .add_substract_flag_is_reset()
+        .add_subtract_flag_is_reset()
         .program_counter_is(2);
 }
 
@@ -61,7 +61,7 @@ fn bit_b_ixdi() {
     Assertor::new(cpu)
         .zero_flag_is_set()
         .half_carry_flag_is_set()
-        .add_substract_flag_is_reset()
+        .add_subtract_flag_is_reset()
         .program_counter_is(4);
 }
 
@@ -86,7 +86,7 @@ fn bit_b_iydi() {
     Assertor::new(cpu)
         .zero_flag_is_set()
         .half_carry_flag_is_set()
-        .add_substract_flag_is_reset()
+        .add_subtract_flag_is_reset()
         .program_counter_is(4);
 }
 

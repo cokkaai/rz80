@@ -3,6 +3,7 @@ use cpu::Cpu;
 #[allow(dead_code)]
 
 impl Cpu {
+    #[inline]
     fn _and_with_accumulator(&mut self, value: u8) {
         self.a &= value;
         let a = self.a;

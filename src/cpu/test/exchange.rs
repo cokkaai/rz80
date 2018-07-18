@@ -252,7 +252,7 @@ fn cpi() {
         .sign_flag_is_negative()    // S is set if result is negative
         .carry_flag_is_reset()
         .half_carry_flag_is_reset()
-        .add_substract_flag_is_set()
+        .add_subtract_flag_is_set()
         .program_counter_is(2);
 }
 
@@ -275,7 +275,7 @@ fn cpir() {
         .sign_flag_is_positive()    // S is set if result is negative
         .carry_flag_is_reset()// C is not affected
         .half_carry_flag_is_reset()// H is set if borrow from bit 4
-        .add_substract_flag_is_set()
+        .add_subtract_flag_is_set()
         .program_counter_is(2);
 }
 

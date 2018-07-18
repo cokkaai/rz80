@@ -74,24 +74,34 @@ impl Assertor {
 
     /// Tests if the PV flag is true
     pub fn parity_overflow_flag_is_set(&self) -> &Assertor {
-        assert_eq!(self.cpu.get_pv(), true);
+        assert!(self.cpu.overflow_flag_is_set());
         self
     }
 
     /// Tests if the PV flag is false
     pub fn parity_overflow_flag_is_reset(&self) -> &Assertor {
-        assert_eq!(self.cpu.get_pv(), false);
+        assert!(!self.cpu.overflow_flag_is_set());
+        self
+    }
+
+    pub fn parity_is_odd(&self) -> &Assertor {
+        assert!(self.cpu.parity_is_odd());
+        self
+    }
+
+    pub fn parity_is_even(&self) -> &Assertor {
+        assert!(self.cpu.parity_is_even());
         self
     }
 
     /// Tests if the add/substract (N) flag is true
-    pub fn add_substract_flag_is_set(&self) -> &Assertor {
+    pub fn add_subtract_flag_is_set(&self) -> &Assertor {
         assert_eq!(self.cpu.get_n(), true);
         self
     }
 
     /// Tests if the add/substract (N) flag is false
-    pub fn add_substract_flag_is_reset(&self) -> &Assertor {
+    pub fn add_subtract_flag_is_reset(&self) -> &Assertor {
         assert_eq!(self.cpu.get_n(), false);
         self
     }

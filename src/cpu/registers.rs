@@ -159,6 +159,10 @@ impl Cpu {
         self.read_status_flag(PV_MASK)
     }
 
+    pub fn overflow_flag_is_set(&self) -> bool {
+        self.read_status_flag(PV_MASK)
+    }
+
     // ===== FLAG N - Add/Subtract =====
 
     /// Read the add/subtract flag.

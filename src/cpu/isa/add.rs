@@ -28,7 +28,7 @@ impl Cpu {
         self.pc += 1;
     }
 
-    pub fn add_d_n(&mut self) {
+    pub fn add_a_n(&mut self) {
         let operand = self.memory_at_pc(1);
         self._add_to_accumulator(operand);
         self.pc += 2;
@@ -40,14 +40,14 @@ impl Cpu {
         self.pc += 1;
     }
 
-    pub fn add_a_ixd(&mut self) {
+    pub fn add_a_ixdi(&mut self) {
         let offset = self.memory_at_pc(2);
         let operand = self.memory_at_ix(offset as u16);
         self._add_to_accumulator(operand);
         self.pc += 3;
     }
 
-    pub fn add_a_iyd(&mut self) {
+    pub fn add_a_iydi(&mut self) {
         let offset = self.memory_at_pc(2);
         let operand = self.memory_at_iy(offset as u16);
         self._add_to_accumulator(operand);

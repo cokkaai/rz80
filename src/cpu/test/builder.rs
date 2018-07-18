@@ -52,7 +52,7 @@ fn create_system() {
         .half_carry_flag_is_set()
         .carry_flag_is_set()
         .parity_overflow_flag_is_set()
-        .add_substract_flag_is_set()
+        .add_subtract_flag_is_set()
         .memory_size_is(16384);
 }
 

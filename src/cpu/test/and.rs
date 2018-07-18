@@ -22,7 +22,7 @@ mod test {
             .half_carry_flag_is_set()
             .carry_flag_is_reset()
             .parity_overflow_flag_is_reset()
-            .add_substract_flag_is_reset();
+            .add_subtract_flag_is_reset();
     }
 
     #[test]
@@ -41,7 +41,7 @@ mod test {
             .half_carry_flag_is_set()
             .carry_flag_is_reset()
             .parity_overflow_flag_is_reset()
-            .add_substract_flag_is_reset();
+            .add_subtract_flag_is_reset();
     }
 
     #[test]
@@ -61,7 +61,7 @@ mod test {
             .half_carry_flag_is_set()
             .carry_flag_is_reset()
             .parity_overflow_flag_is_reset()
-            .add_substract_flag_is_reset();
+            .add_subtract_flag_is_reset();
     }
 
     #[test]
@@ -81,7 +81,7 @@ mod test {
             .half_carry_flag_is_set()
             .carry_flag_is_reset()
             .parity_overflow_flag_is_reset()
-            .add_substract_flag_is_reset();
+            .add_subtract_flag_is_reset();
     }
 
     #[test]
@@ -101,6 +101,6 @@ mod test {
             .half_carry_flag_is_set()
             .carry_flag_is_reset()
             .parity_overflow_flag_is_reset()
-            .add_substract_flag_is_reset();
+            .add_subtract_flag_is_reset();
     }
 }
