@@ -56,7 +56,7 @@ mod test {
     }
 
     #[test]
-    fn add_a_ixd() {
+    fn add_a_ixdi() {
         let mut cpu = CpuBuilder::new()
             .with_memory(vec![0xdd, 0x86, 0x02, 0x04,])
             .with_a(7)
@@ -68,11 +68,11 @@ mod test {
         Assertor::new(cpu)
             .register_a_is(11)
             .zero_flag_is_reset()
-            .program_counter_is(1);
+            .program_counter_is(3);
     }
 
     #[test]
-    fn add_a_iyd() {
+    fn add_a_iydi() {
         let mut cpu = CpuBuilder::new()
             .with_memory(vec![0xdd, 0x86, 0x02, 0x04,])
             .with_a(7)
@@ -84,6 +84,6 @@ mod test {
         Assertor::new(cpu)
             .register_a_is(11)
             .zero_flag_is_reset()
-            .program_counter_is(1);
+            .program_counter_is(3);
     }
 }
