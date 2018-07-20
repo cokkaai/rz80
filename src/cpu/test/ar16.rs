@@ -1,3 +1,8 @@
+use cpu::Cpu;
+use cpu::CpuBuilder;
+use cpu::RegisterPromote;
+use cpu::assertor;
+
 // === 16-Bit Arithmetic Group ===
 
 // ADD HL, ss
@@ -30,38 +35,74 @@ fn add_iy_rr() {
     unimplemented!();
 }
 
-// INC ss
 #[test]
 fn inc_ss() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_hl(0x1000)
+        .with_memory(vec![0b0010_0011])
+        .build();
+
+    cpu.inc_ss();
+
+    assert_eq!((cpu.h, cpu.l).promote(), 0x1001);
 }
 
-// INC IX
 #[test]
 fn inc_ix() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_ix(0x2977)
+        .with_memory_size(16)
+        .build();
+
+    cpu.inc_ix();
+
+    assert_eq!(cpu.ix, 0x2978);
 }
 
-// INC IY
 #[test]
 fn inc_iy() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_iy(0x2977)
+        .with_memory_size(16)
+        .build();
+
+    cpu.inc_iy();
+
+    assert_eq!(cpu.iy, 0x2978);
 }
 
-// DEC ss
 #[test]
 fn dec_ss() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_hl(0x1001)
+        .with_memory(vec![0b0010_1011])
+        .build();
+
+    cpu.dec_ss();
+
+    assert_eq!((cpu.h, cpu.l).promote(), 0x1000);
 }
 
-// DEC IX
 #[test]
 fn dec_ix() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_ix(0x2006)
+        .with_memory_size(16)
+        .build();
+
+    cpu.dec_ix();
+
+    assert_eq!(cpu.ix, 0x2005);
 }
 
-// DEC IY
 #[test]
 fn dec_iy() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_iy(0x7649)
+        .with_memory_size(16)
+        .build();
+
+    cpu.dec_iy();
+
+    assert_eq!(cpu.iy, 0x7648);
 }
