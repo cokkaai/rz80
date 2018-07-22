@@ -1,50 +1,91 @@
-use cpu::Cpu;
 use cpu::CpuBuilder;
-use cpu::RegisterPromote;
-use cpu::assertor;
+use cpu::Assertor;
 
 // === 16-Bit Arithmetic Group ===
 
-// ADD HL, ss
 #[test]
 fn add_hl_ss() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_hl(0x1000)
+        .with_de(0x0001)
+        .with_memory(vec![0b0001_1001, 0, 0, 0])
+        .build();
+
+    cpu.add_hl_ss();
+
+    Assertor::new(cpu)
+        .register_hl_is(0x1001)
+        .add_subtract_flag_is_reset()
+        .program_counter_is(1);
 }
 
-// ADC HL, ss
 #[test]
 fn adc_hl_ss() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_hl(0x1000)
+        .with_de(0x0001)
+        .with_memory(vec![0xed, 0b0101_1001, 0, 0])
+        .build();
+
+    cpu.add_hl_ss();
+
+    Assertor::new(cpu)
+        .register_hl_is(0x1001)
+        .add_subtract_flag_is_reset()
+        .parity_overflow_flag_is_reset()
+        .program_counter_is(2);
 }
 
-// SBC HL, ss
 #[test]
 fn sbc_hl_ss() {
     unimplemented!();
 }
 
-// ADD IX, pp
 #[test]
 fn add_ix_pp() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_ix(0x1000)
+        .with_de(0x0001)
+        .with_memory(vec![0xdd, 0b0001_1001, 0, 0])
+        .build();
+
+    cpu.add_ix_pp();
+
+    Assertor::new(cpu)
+        .index_register_ix_is(0x1001)
+        .add_subtract_flag_is_reset()
+        .program_counter_is(2);
 }
 
-// ADD IY, rr
 #[test]
 fn add_iy_rr() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_iy(0x1000)
+        .with_de(0x0001)
+        .with_memory(vec![0xfd, 0b0001_1001, 0, 0])
+        .build();
+
+    cpu.add_iy_rr();
+
+    Assertor::new(cpu)
+        .index_register_iy_is(0x1001)
+        .add_subtract_flag_is_reset()
+        .program_counter_is(2);
 }
 
 #[test]
 fn inc_ss() {
     let mut cpu = CpuBuilder::new()
-        .with_hl(0x1000)
-        .with_memory(vec![0b0010_0011])
+        .with_hl(0x01000)
+        .with_memory(vec![0b0010_0011, 0, 0, 0])
         .build();
 
     cpu.inc_ss();
 
-    assert_eq!((cpu.h, cpu.l).promote(), 0x1001);
+    Assertor::new(cpu)
+        .register_hl_is(0x1001)
+        .parity_overflow_flag_is_reset()
+        .program_counter_is(1);
 }
 
 #[test]
@@ -56,7 +97,10 @@ fn inc_ix() {
 
     cpu.inc_ix();
 
-    assert_eq!(cpu.ix, 0x2978);
+    Assertor::new(cpu)
+        .index_register_ix_is(0x2978)
+        .parity_overflow_flag_is_reset()
+        .program_counter_is(2);
 }
 
 #[test]
@@ -68,19 +112,25 @@ fn inc_iy() {
 
     cpu.inc_iy();
 
-    assert_eq!(cpu.iy, 0x2978);
+    Assertor::new(cpu)
+        .index_register_iy_is(0x2978)
+        .parity_overflow_flag_is_reset()
+        .program_counter_is(2);
 }
 
 #[test]
 fn dec_ss() {
     let mut cpu = CpuBuilder::new()
         .with_hl(0x1001)
-        .with_memory(vec![0b0010_1011])
+        .with_memory(vec![0b0010_1011, 0, 0, 0])
         .build();
 
     cpu.dec_ss();
 
-    assert_eq!((cpu.h, cpu.l).promote(), 0x1000);
+    Assertor::new(cpu)
+        .register_hl_is(0x1000)
+        .parity_overflow_flag_is_reset()
+        .program_counter_is(1);
 }
 
 #[test]
@@ -92,7 +142,10 @@ fn dec_ix() {
 
     cpu.dec_ix();
 
-    assert_eq!(cpu.ix, 0x2005);
+    Assertor::new(cpu)
+        .index_register_ix_is(0x2005)
+        .parity_overflow_flag_is_reset()
+        .program_counter_is(2);
 }
 
 #[test]
@@ -104,5 +157,8 @@ fn dec_iy() {
 
     cpu.dec_iy();
 
-    assert_eq!(cpu.iy, 0x7648);
+    Assertor::new(cpu)
+        .index_register_iy_is(0x7648)
+        .parity_overflow_flag_is_reset()
+        .program_counter_is(2);
 }
