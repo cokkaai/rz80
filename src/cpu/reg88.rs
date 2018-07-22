@@ -2,7 +2,82 @@ use cpu::RegisterDemote;
 use cpu::RegisterOperations;
 use cpu::RegisterPromote;
 
-impl RegisterDemote<(u8, u8), u8> for (u8, u8) {
+impl <'a> RegisterDemote<u8> for (&'a u8, &'a u8) {
+    fn high(&self) -> u8 {
+        *self.0
+    }
+
+    fn low(&self) -> u8 {
+        *self.1
+    }
+}
+
+impl <'a> RegisterPromote<u16> for (&'a mut u8, &'a mut u8) {
+    fn promote(&self) -> u16 {
+        ((*self.0 as u16) << 8) + *self.1 as u16
+    }
+}
+
+impl <'a> RegisterOperations<u16> for (&'a mut u8, &'a mut u8) {
+    fn msb(&self) -> bool {
+        (*self.0 & 0x80) != 0
+    }
+
+    fn lsb(&self) -> bool {
+        (*self.1 & 0x01) != 0
+    }
+
+    fn incr(&mut self) -> (u16, bool) {
+        self.reg_add(1)
+    }
+
+    fn decr(&mut self) -> (u16, bool) {
+        self.reg_sub(1)
+    }
+
+    fn reg_add(&mut self, value: u16) -> (u16, bool) {
+        // let (result, overflow) = bytes::promote(self.0, self.1).overflowing_add(value);
+        // TODO: Check if compliant with z80 hw.
+        let (result, overflow) = self.promote().overflowing_add(value);
+        *self.0 = result.high();
+        *self.1 = result.low();
+        // TODO: non trasferisce il valore sui registri.        
+        (result, overflow)
+    }
+
+    fn reg_sub(&mut self, value: u16) -> (u16, bool) {
+        // let (result, overflow) = self.overflowing_sub(value);
+        let (result, overflow) = self.promote().overflowing_sub(value);
+
+        *self.0 = result.high();
+        *self.1 = result.low();
+        
+        (result, overflow)
+    }
+
+    fn is_zero(&self) -> bool {
+        // TODO: Check if testing u8 is correct
+        // or if i8 should be tested instead.
+        *self.0 == 0 && *self.1 == 0
+    }
+
+    fn set(&mut self, bitmask: u16) -> u16 {
+        *self.0 |= bitmask.high();
+        *self.1 |= bitmask.low();
+        self.promote()
+    }
+
+    /// Zero bits in the bitmask will be reset in the register.
+    fn reset(&mut self, bitmask: u16) -> u16 {
+        *self.0 &= bitmask.high();
+        *self.1 &= bitmask.low();
+        self.promote()
+    }
+}
+
+// ===========================================
+
+impl RegisterDemote<u8> for (u8, u8) {
     fn high(&self) -> u8 {
         self.0
     }
@@ -39,10 +114,9 @@ impl RegisterOperations<u16> for (u8, u8) {
         // let (result, overflow) = bytes::promote(self.0, self.1).overflowing_add(value);
         // TODO: Check if compliant with z80 hw.
         let (result, overflow) = self.promote().overflowing_add(value);
-
         self.0 = result.high();
         self.1 = result.low();
-        
+        // TODO: non trasferisce il valore sui registri.        
         (result, overflow)
     }
 

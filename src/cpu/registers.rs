@@ -47,9 +47,9 @@ pub trait RegisterOperations<T> {
 
 /// Conversion between different size registers.
 /// T is the bigger register, composed by two R-sized registers.
-pub trait RegisterDemote<T, R> {
-    fn high(&self) -> R;
-    fn low(&self) -> R;
+pub trait RegisterDemote<T> {
+    fn high(&self) -> T;
+    fn low(&self) -> T;
 }
 
 /// Defines register conversion to type T.

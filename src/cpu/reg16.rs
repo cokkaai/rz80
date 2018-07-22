@@ -1,7 +1,7 @@
 use cpu::RegisterDemote;
 use cpu::RegisterOperations;
 
-impl RegisterDemote<u16, u8> for u16 {
+impl RegisterDemote<u8> for u16 {
     fn high(&self) -> u8 {
         ((*self & 0xff00) >> 8) as u8
     }
