@@ -168,7 +168,7 @@ impl Cpu {
         self.set_pv(temp);
 
         // S is set if result is negative; otherwise, it is reset.
-        self.set_s_from_byte(diff);
+        self.set_s_from_msb(diff);
 
         // H is set if borrow from bit 4; otherwise, it is reset.
         self.set_h_from_byte(diff);

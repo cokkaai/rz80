@@ -9,7 +9,7 @@ impl Cpu {
     fn _cp_with_accumulator(&mut self, value: u8) {
         let result = self.a - value;
 
-        self.set_s_from_byte(result);
+        self.set_s_from_msb(result);
         self.set_z_from_byte(result);
         self.set_pv_from_byte(result);
         self.set_n(true);

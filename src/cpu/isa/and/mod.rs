@@ -1,7 +1,7 @@
-use cpu::Cpu;
-
 #[cfg(test)]
 mod tests;
+
+use cpu::Cpu;
 
 #[allow(dead_code)]
 
@@ -11,7 +11,7 @@ impl Cpu {
         self.a &= value;
         let a = self.a;
 
-        self.set_s_from_byte(a);
+        self.set_s_from_msb(a);
         self.set_z_from_byte(a);
         self.set_n(false);
         self.set_c(false);

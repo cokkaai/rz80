@@ -2,7 +2,6 @@
 mod tests;
 
 use cpu::Cpu;
-use cpu::bytes;
 
 #[allow(dead_code)]
 
@@ -27,7 +26,7 @@ impl Cpu {
         self.set_pv(a == 0x80);
         self.set_c(a != 0);
         
-        self.a = bytes::compl2(self.a);
+        self.a = Cpu::compl2(self.a);
 
         let a = self.a;
         self.set_z_from_byte(a);

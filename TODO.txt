@@ -12,19 +12,23 @@ TODO
 [DONE] Implement builder like class to check status flags
 [DONE] Complete test migration to Assertor
 
+[DOING] Understand how to do math with carry and half carry
+
+[DOING] Create a generalized cpu add method based on _add_to_accumulator (add module)
+        and _add_r (ar8 module). This method will be leveraged by all add/inc opcodes
+        implementations.
+
 [DOING] Complete ar8 tests and implementation
 
-[TODO] Complete rotate tests and implementation
+[TODO] Complete argp tests and implementation
 
-[TODO] Understand how to do math with carry and half carry
+[TODO] Complete rotate tests and implementation
 
 [TODO] Complete ar16 tests and implementation
 
 [TODO] WTF DAA does?
 
 [TODO] Understand interrupts and implement support in the CPU
-
-[TODO] Complete argp tests and implementation
 
 [TODO] Understand I/O and implement it
 

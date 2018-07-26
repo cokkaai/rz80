@@ -1,4 +1,3 @@
-mod bytes;
 mod registers;
 mod reg8;
 mod reg16;
@@ -7,8 +6,6 @@ mod builder;
 mod isa;
 #[cfg(test)]
 mod assertor;
-#[cfg(test)]
-mod test;
 
 pub use self::registers::*;
 pub use self::builder::CpuBuilder;
@@ -105,5 +102,10 @@ impl Cpu {
     /// Read memory at address: iy + offset
     fn memory_at_iy(&self, offset_from_iy: u16) -> u8 {
         self.memory[(self.iy + offset_from_iy) as usize]
+    }
+
+    /// Compute two's complement of data.
+    pub fn compl2(data: u8) -> u8 {
+        (!data).wrapping_add(1)
     }
 }

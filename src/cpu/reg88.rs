@@ -38,21 +38,21 @@ impl <'a> RegisterOperations<u16> for (&'a mut u8, &'a mut u8) {
     fn reg_add(&mut self, value: u16) -> (u16, bool) {
         // let (result, overflow) = bytes::promote(self.0, self.1).overflowing_add(value);
         // TODO: Check if compliant with z80 hw.
-        let (result, overflow) = self.promote().overflowing_add(value);
+        let (result, carry) = self.promote().overflowing_add(value);
         *self.0 = result.high();
         *self.1 = result.low();
         // TODO: non trasferisce il valore sui registri.        
-        (result, overflow)
+        (result, carry)
     }
 
     fn reg_sub(&mut self, value: u16) -> (u16, bool) {
         // let (result, overflow) = self.overflowing_sub(value);
-        let (result, overflow) = self.promote().overflowing_sub(value);
+        let (result, carry) = self.promote().overflowing_sub(value);
 
         *self.0 = result.high();
         *self.1 = result.low();
         
-        (result, overflow)
+        (result, carry)
     }
 
     fn is_zero(&self) -> bool {

@@ -1,7 +1,7 @@
-use cpu::Cpu;
-
 #[cfg(test)]
 mod tests;
+
+use cpu::Cpu;
 
 #[allow(dead_code)]
 
@@ -10,17 +10,28 @@ mod tests;
 impl Cpu {
     fn _add_to_accumulator(&mut self, value: u8) {
         let (result, carry) = self.a.overflowing_add(value);
-        let (_, overflow) = (result as i8).overflowing_add(value as i8);
+        let (_, overflow) = Cpu::compl2(result).overflowing_add(Cpu::compl2(value));
 
         self.a = result;
 
-        self.set_s_from_byte(result);
+        // S is set if result is negative (127<result<256).
+        self.set_s_from_msb(result);
+
+        // Z is set if result is 0 (result=0).
         self.set_z_from_byte(result);
+
+        // P/V is set if overflow (overflow in twos complement).
+        // TODO: Verify that implementation complies with Z80 arch.
         self.set_pv(overflow);
+
+        // N is reset (0).
         self.set_n(false);
+
+        // C is set if carry from bit 7 (result>255).
         self.set_c(carry);
 
-        // TODO: H is set if carry from bit 3; otherwise, it is reset.
+        // H is set if carry from bit 3 (1 if carry from bit 3 to bit 4 else 0)
+        // TODO: calculate flag H
         self.set_h(false);
     }
 
@@ -55,5 +66,9 @@ impl Cpu {
         let operand = self.memory_at_iy(offset as u16);
         self._add_to_accumulator(operand);
         self.pc += 3;
+    }
+
+    pub fn adc_a_s(&mut self) {
+        unimplemented!();
     }
 }

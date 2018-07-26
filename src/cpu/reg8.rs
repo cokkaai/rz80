@@ -18,21 +18,32 @@ impl RegisterOperations<u8> for u8 {
     }
 
     fn reg_add(&mut self, value: u8) -> (u8, bool) {
-        // TODO: Check if compliant with z80 hw.
-        let (result, overflow) = self.overflowing_add(value);
+        let (result, carry) = self.overflowing_add(value);
         *self = result;
-        (result, overflow)
+
+        // C or carry flag          1 if answer >255 else 0
+
+        // Z or zero flag           1 if answer = 0 else 0
+
+        // P flag                   1 if overflow in twos complement else 0
+
+        // S or sign flag           1 if 127<answer<256 else 0
+
+        // N flag                   0
+
+        // H or half carry flag     1 if carry from bit 3 to bit 4 else 0
+
+        (result, carry)
     }
 
     fn reg_sub(&mut self, value: u8) -> (u8, bool) {
-        let (result, overflow) = self.overflowing_sub(value);
+        let (result, carry) = self.overflowing_sub(value);
         *self = result;
-        (result, overflow)
+        (result, carry)
     }
 
+    #[inline]
     fn is_zero(&self) -> bool {
-        // TODO: Check if testing u8 is correct
-        // or if i8 should be tested instead.
         *self == 0
     }
 
@@ -82,11 +93,11 @@ mod test {
     fn add_10_to_u8_binding() {
         let mut data = 9u8;
 
-        let (result, overflow) = data.reg_add(10);
+        let (result, carry) = data.reg_add(10);
 
         assert_eq!(result, 19);
         assert_eq!(data, 19);
-        assert_eq!(overflow, false);
+        assert_eq!(carry, false);
     }
 
     #[test]
@@ -97,22 +108,22 @@ mod test {
 
         let mut container = Container { data: 9u8 };
 
-        let (result, overflow) = container.data.reg_add(10);
+        let (result, carry) = container.data.reg_add(10);
 
         assert_eq!(result, 19);
         assert_eq!(container.data, 19);
-        assert_eq!(overflow, false);
+        assert_eq!(carry, false);
     }
 
     #[test]
     fn overflow_u8() {
         let mut data = 1u8;
 
-        let (result, overflow) = data.reg_add(u8::max_value());
+        let (result, carry) = data.reg_add(u8::max_value());
 
         assert_eq!(result, 0);
         assert_eq!(data, 0);
-        assert_eq!(overflow, true);
+        assert_eq!(carry, true);
     }
 
     #[test]
