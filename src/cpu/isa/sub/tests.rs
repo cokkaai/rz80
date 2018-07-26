@@ -99,25 +99,99 @@ pub fn sub_iydi() {
 
 #[test]
 fn sbc_a_r() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![0b10010_010, 0x66, 0x66, 0x66])
+        .with_a(0x29)
+        .with_d(0x11)
+        .with_flag_c(true)
+        .build();
+
+    cpu.sbc_a_r();
+
+    Assertor::new(cpu)
+        .register_a_is(0x17)
+        .sign_flag_is_positive()
+        .zero_flag_is_reset()
+        //.parity_overflow_flag_is_reset()
+        .add_subtract_flag_is_set()
+        .program_counter_is(1);
 }
 
 #[test]
 fn sbc_a_n() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![0xd6, 0x11, 0x66, 0x66])
+        .with_a(0x29)
+        .with_flag_c(true)
+        .build();
+
+    cpu.sbc_a_n();
+
+    Assertor::new(cpu)
+        .register_a_is(0x17)
+        .sign_flag_is_positive()
+        .zero_flag_is_reset()
+        //.parity_overflow_flag_is_reset()
+        .add_subtract_flag_is_set()
+        .program_counter_is(2);
 }
 
 #[test]
 fn sbc_a_hli() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![0x96, 0x11, 0x66, 0x66])
+        .with_a(0x29)
+        .with_hl(0x1)
+        .with_flag_c(true)
+        .build();
+
+    cpu.sbc_a_hli();
+
+    Assertor::new(cpu)
+        .register_a_is(0x17)
+        .sign_flag_is_positive()
+        .zero_flag_is_reset()
+        //.parity_overflow_flag_is_reset()
+        .add_subtract_flag_is_set()
+        .program_counter_is(1);
 }
 
 #[test]
 fn sbc_a_ixdi() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![0xdd, 0x96, 0x02, 0x11])
+        .with_a(0x29)
+        .with_ix(0x01)
+        .with_flag_c(true)
+        .build();
+
+    cpu.sbc_a_ixdi();
+
+    Assertor::new(cpu)
+        .register_a_is(0x17)
+        .sign_flag_is_positive()
+        .zero_flag_is_reset()
+        //.parity_overflow_flag_is_reset()
+        .add_subtract_flag_is_set()
+        .program_counter_is(3);
 }
 
 #[test]
 fn sbc_a_iydi() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![0xdd, 0x96, 0x02, 0x11])
+        .with_a(0x29)
+        .with_iy(0x01)
+        .with_flag_c(true)
+        .build();
+
+    cpu.sbc_a_iydi();
+
+    Assertor::new(cpu)
+        .register_a_is(0x17)
+        .sign_flag_is_positive()
+        .zero_flag_is_reset()
+        //.parity_overflow_flag_is_reset()
+        .add_subtract_flag_is_set()
+        .program_counter_is(3);
 }

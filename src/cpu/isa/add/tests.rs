@@ -87,25 +87,87 @@ fn add_a_iydi() {
 
 #[test]
 fn adc_a_r() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![0b10000_001, 0x66, 0x66, 0x66])
+        .with_a(7)
+        .with_c(4)
+        .with_flag_c(true)
+        .build();
+
+    cpu.adc_a_r();
+
+    Assertor::new(cpu)
+        .register_a_is(12)
+        .sign_flag_is_positive()
+        .zero_flag_is_reset()
+        //.parity_overflow_flag_is_reset()
+        .add_subtract_flag_is_reset()
+        .program_counter_is(1);
 }
 
 #[test]
 fn adc_a_n() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![0xc6, 0x04, 0x66, 0x66])
+        .with_a(7)
+        .with_flag_c(true)
+        .build();
+
+    cpu.adc_a_n();
+
+    Assertor::new(cpu)
+        .register_a_is(12)
+        .zero_flag_is_reset()
+        .program_counter_is(2);
 }
 
 #[test]
 fn adc_a_hli() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![0x86, 0x66, 0x66, 0x04])
+        .with_a(7)
+        .with_hl(3)
+        .with_flag_c(true)
+        .build();
+
+    cpu.adc_a_hli();
+
+    Assertor::new(cpu)
+        .register_a_is(12)
+        .zero_flag_is_reset()
+        .program_counter_is(1);
 }
 
 #[test]
 fn adc_a_ixdi() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![0xdd, 0x86, 0x02, 0x04])
+        .with_a(7)
+        .with_ix(1)
+        .with_flag_c(true)
+        .build();
+
+    cpu.adc_a_ixdi();
+
+    Assertor::new(cpu)
+        .register_a_is(12)
+        .zero_flag_is_reset()
+        .program_counter_is(3);
 }
 
 #[test]
 fn adc_a_iydi() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_memory(vec![0xfd, 0x86, 0x02, 0x04])
+        .with_a(7)
+        .with_iy(1)
+        .with_flag_c(true)
+        .build();
+
+    cpu.adc_a_iydi();
+
+    Assertor::new(cpu)
+        .register_a_is(12)
+        .zero_flag_is_reset()
+        .program_counter_is(3);
 }

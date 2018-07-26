@@ -121,6 +121,15 @@ impl Cpu {
         self.set_status_flag(C_MASK, value);
     }
 
+    /// Convert carry flag to value.
+    pub fn get_c_value(&self) -> u8 {
+        if self.read_status_flag(C_MASK) {
+            1
+        } else {
+            0
+        }
+    }
+
     // ===== FLAG H - Half carry =====
 
     ///

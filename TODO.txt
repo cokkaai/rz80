@@ -11,14 +11,12 @@ TODO
 [DONE] How to implement such trait for words (u8+u8)?
 [DONE] Implement builder like class to check status flags
 [DONE] Complete test migration to Assertor
+[FAILED] Create a generalized cpu add method based on _add_to_accumulator (add module)
+       and _add_r (ar8 module). This method will be leveraged by all add/inc opcodes
+       implementations.
+[DONE] Complete ar8 tests and implementation
 
-[DOING] Understand how to do math with carry and half carry
-
-[DOING] Create a generalized cpu add method based on _add_to_accumulator (add module)
-        and _add_r (ar8 module). This method will be leveraged by all add/inc opcodes
-        implementations.
-
-[DOING] Complete ar8 tests and implementation
+[DOING] Understand how to do math with half carry
 
 [TODO] Complete argp tests and implementation
 
