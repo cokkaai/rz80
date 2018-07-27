@@ -14,7 +14,7 @@ impl <'a> RegisterDemote<u8> for (&'a u8, &'a u8) {
 
 impl <'a> RegisterPromote<u16> for (&'a mut u8, &'a mut u8) {
     fn promote(&self) -> u16 {
-        ((*self.0 as u16) << 8) + *self.1 as u16
+        (u16::from(*self.0) << 8) + u16::from(*self.1)
     }
 }
 
@@ -89,7 +89,7 @@ impl RegisterDemote<u8> for (u8, u8) {
 
 impl RegisterPromote<u16> for (u8, u8) {
     fn promote(&self) -> u16 {
-        ((self.0 as u16) << 8) + self.1 as u16
+        (u16::from(self.0) << 8) + u16::from(self.1)
     }
 }
 

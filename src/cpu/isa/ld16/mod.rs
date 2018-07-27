@@ -62,7 +62,7 @@ impl Cpu {
     pub fn ld_dd_nni(&mut self) {
         let opcode = self.memory_at_pc(1);
         let addr = self.memory_at_pc(2) as usize + ((self.memory_at_pc(3) as usize) << 8);
-        let value = self.memory[addr] as u16 + ((self.memory[addr + 1] as u16) << 8);
+        let value = u16::from(self.memory[addr]) + (u16::from(self.memory[addr + 1]) << 8);
 
         match Cpu::select_reg16(opcode) {
             Register16::bc => self.write_bc(value),

@@ -48,7 +48,7 @@ pub struct CpuBuilder {
 #[allow(dead_code)]
 impl CpuBuilder {
     pub fn new() -> CpuBuilder {
-        return CpuBuilder {
+        CpuBuilder {
             pc: 0,
             sp: 0,
             ix: 0,
@@ -80,7 +80,7 @@ impl CpuBuilder {
             flag_n: false,
             flag_pv: false,
             memory: None,
-        };
+        }
     }
 
     pub fn with_pc(mut self, value: u16) -> CpuBuilder {

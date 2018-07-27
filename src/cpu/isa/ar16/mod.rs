@@ -10,21 +10,21 @@ use cpu::RegisterOperations;
 
 impl Cpu {
     fn match_ss(&self, opcode: u8) -> Register16 {
-        match opcode & 0b0011_0000 {
-            0b00_00_0000 => Register16::bc,
-            0b00_01_0000 => Register16::de,
-            0b00_10_0000 => Register16::hl,
-            0b00_11_0000 => Register16::sp,
+        match opcode & 0x30 {
+            0x00 => Register16::bc,
+            0x10 => Register16::de,
+            0x20 => Register16::hl,
+            0x30 => Register16::sp,
             _ => panic!(),
         }
     }
 
     fn read_ss(&self, opcode: u8) -> u16 {
-        match opcode & 0b00110000{
-            0b00_00_0000 => (self.b, self.c).promote(),
-            0b00_01_0000 => (self.d, self.e).promote(),
-            0b00_10_0000 => (self.h, self.l).promote(),
-            0b00_11_0000 => self.sp,
+        match opcode & 0x30{
+            0x00 => (self.b, self.c).promote(),
+            0x10 => (self.d, self.e).promote(),
+            0x20 => (self.h, self.l).promote(),
+            0x30 => self.sp,
             _ => panic!(),
         }
     }
@@ -71,10 +71,10 @@ impl Cpu {
 
     pub fn add_ix_pp(&mut self) {
         let operand = match self.memory_at_pc(1) & 0x30 {
-            0b00_00_0000 => (self.b, self.c).promote(),
-            0b00_01_0000 => (self.d, self.e).promote(),
-            0b00_10_0000 => self.ix,
-            0b00_11_0000 => self.sp,
+            0x00 => (self.b, self.c).promote(),
+            0x10 => (self.d, self.e).promote(),
+            0x20 => self.ix,
+            0x30 => self.sp,
             _ => panic!(),
         };
 
@@ -89,10 +89,10 @@ impl Cpu {
 
     pub fn add_iy_rr(&mut self) {
         let operand = match self.memory_at_pc(1) & 0x30 {
-            0b00_00_0000 => (self.b, self.c).promote(),
-            0b00_01_0000 => (self.d, self.e).promote(),
-            0b00_10_0000 => self.iy,
-            0b00_11_0000 => self.sp,
+            0x00 => (self.b, self.c).promote(),
+            0x10 => (self.d, self.e).promote(),
+            0x20 => self.iy,
+            0x30 => self.sp,
             _ => panic!(),
         };
 

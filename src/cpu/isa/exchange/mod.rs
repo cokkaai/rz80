@@ -5,39 +5,34 @@ use cpu::Cpu;
 use cpu::Register16;
 use cpu::RegisterDemote;
 use cpu::RegisterPromote;
+use std::mem;
 
 #[allow(dead_code)]
 
 // === Exchange, Block Transfer, and Search Group ===
 
 impl Cpu {
-    fn exchange(a: &mut u8, b: &mut u8) {
-        let t = *a;
-        *a = *b;
-        *b = t;
-    }
-
     pub fn ex_de_hl(&mut self) {
-        Self::exchange(&mut self.d, &mut self.h);
-        Self::exchange(&mut self.e, &mut self.l);
+        mem::swap(&mut self.d, &mut self.h);
+        mem::swap(&mut self.e, &mut self.l);
         self.incr_pc(1);
     }
 
     pub fn ex_af_af1(&mut self) {
-        Self::exchange(&mut self.a, &mut self.a1);
-        Self::exchange(&mut self.f, &mut self.f1);
+        mem::swap(&mut self.a, &mut self.a1);
+        mem::swap(&mut self.f, &mut self.f1);
         self.incr_pc(1);
     }
 
     pub fn exx(&mut self) {
-        Self::exchange(&mut self.b, &mut self.b1);
-        Self::exchange(&mut self.c, &mut self.c1);
+        mem::swap(&mut self.b, &mut self.b1);
+        mem::swap(&mut self.c, &mut self.c1);
         
-        Self::exchange(&mut self.d, &mut self.d1);
-        Self::exchange(&mut self.e, &mut self.e1);
+        mem::swap(&mut self.d, &mut self.d1);
+        mem::swap(&mut self.e, &mut self.e1);
 
-        Self::exchange(&mut self.h, &mut self.h1);
-        Self::exchange(&mut self.l, &mut self.l1);
+        mem::swap(&mut self.h, &mut self.h1);
+        mem::swap(&mut self.l, &mut self.l1);
         
         self.incr_pc(1);
     }

@@ -38,7 +38,7 @@ impl Cpu {
 
     fn jump_on(&mut self, cnd: bool) {
         if cnd {
-            let offset = self.memory_at_pc(1) as i32;
+            let offset = i32::from(self.memory_at_pc(1));
             self.pc_offset(offset);
         } else {
             self.pc += 2;
@@ -92,7 +92,7 @@ impl Cpu {
         if self.b == 0 {
             self.incr_pc(2);
         } else {
-            let offset = self.memory_at_pc(1) as i32;
+            let offset = i32::from(self.memory_at_pc(1));
             self.pc_offset(offset);
         }
     }

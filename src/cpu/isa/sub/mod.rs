@@ -63,14 +63,14 @@ impl Cpu {
 
     pub fn sub_ixdi(&mut self) {
         let offset = self.memory_at_pc(2);
-        let operand = self.memory_at_ix(offset as u16);
+        let operand = self.memory_at_ix(u16::from(offset));
         self._sub_from_accumulator(operand, 0);
         self.pc += 3;
     }
 
     pub fn sub_iydi(&mut self) {
         let offset = self.memory_at_pc(2);
-        let operand = self.memory_at_iy(offset as u16);
+        let operand = self.memory_at_iy(u16::from(offset));
         self._sub_from_accumulator(operand, 0);
         self.pc += 3;
     }
@@ -99,7 +99,7 @@ impl Cpu {
 
     fn sbc_a_ixdi(&mut self) {
         let offset = self.memory_at_pc(2);
-        let operand = self.memory_at_ix(offset as u16);
+        let operand = self.memory_at_ix(u16::from(offset));
         let c_value = self.get_c_value();
         self._sub_from_accumulator(operand, c_value);
         self.pc += 3;
@@ -107,7 +107,7 @@ impl Cpu {
 
     fn sbc_a_iydi(&mut self) {
         let offset = self.memory_at_pc(2);
-        let operand = self.memory_at_iy(offset as u16);
+        let operand = self.memory_at_iy(u16::from(offset));
         let c_value = self.get_c_value();
         self._sub_from_accumulator(operand, c_value);
         self.pc += 3;

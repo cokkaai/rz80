@@ -63,14 +63,14 @@ impl Cpu {
 
     pub fn add_a_ixdi(&mut self) {
         let offset = self.memory_at_pc(2);
-        let operand = self.memory_at_ix(offset as u16);
+        let operand = self.memory_at_ix(u16::from(offset));
         self._add_to_accumulator(operand, 0);
         self.pc += 3;
     }
 
     pub fn add_a_iydi(&mut self) {
         let offset = self.memory_at_pc(2);
-        let operand = self.memory_at_iy(offset as u16);
+        let operand = self.memory_at_iy(u16::from(offset));
         self._add_to_accumulator(operand, 0);
         self.pc += 3;
     }
@@ -99,7 +99,7 @@ impl Cpu {
 
     fn adc_a_ixdi(&mut self) {
         let offset = self.memory_at_pc(2);
-        let operand = self.memory_at_ix(offset as u16);
+        let operand = self.memory_at_ix(u16::from(offset));
         let c_value = self.get_c_value();
         self._add_to_accumulator(operand, c_value);
         self.pc += 3;
@@ -107,7 +107,7 @@ impl Cpu {
 
     fn adc_a_iydi(&mut self) {
         let offset = self.memory_at_pc(2);
-        let operand = self.memory_at_iy(offset as u16);
+        let operand = self.memory_at_iy(u16::from(offset));
         let c_value = self.get_c_value();
         self._add_to_accumulator(operand, c_value);
         self.pc += 3;

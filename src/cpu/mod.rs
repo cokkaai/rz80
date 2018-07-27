@@ -66,7 +66,7 @@ impl Cpu {
         let mut next = self.pc as usize + offset as usize;
 
         if next >= msz {
-            next = next % msz;
+            next %= msz;
         }
 
         self.pc = next as u16;

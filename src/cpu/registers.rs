@@ -192,9 +192,9 @@ impl Cpu {
 
     fn set_status_flag(&mut self, bitmask: u8, value: bool) {
         if value {
-            self.f = self.f | bitmask;
+            self.f |= bitmask;
         } else {
-            self.f = self.f & !bitmask;
+            self.f &= !bitmask;
         }
     }
 

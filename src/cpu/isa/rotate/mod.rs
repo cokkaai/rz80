@@ -21,10 +21,7 @@ impl Cpu {
     }
 
     pub fn rla(&mut self) {
-        let lsb = match self.get_c() {
-            true => 1,
-            false => 0,
-        };
+        let lsb = if self.get_c() { 1 } else { 0 };
 
         let carry = self.a.msb();
         self.set_c(carry);
@@ -50,10 +47,7 @@ impl Cpu {
     }
 
     fn rr_reg(&mut self, reg: Register) -> u8 {
-        let msb = match self.get_c() {
-            true => 0b1000_0000,
-            false => 0,
-        };
+        let msb = if self.get_c() { 0x80 } else { 0 };
 
         let (result, carry) = match reg {
             Register::a => {
