@@ -46,7 +46,6 @@ fn inc_hli() {
         .program_counter_is(1);
 }
 
-// INC (IX+d)
 #[test]
 fn inc_ixdi() {
     let mut cpu = CpuBuilder::new()
@@ -70,7 +69,6 @@ fn inc_ixdi() {
         .program_counter_is(3);
 }
 
-// INC (IY+d)
 #[test]
 fn inc_iydi() {
     let mut cpu = CpuBuilder::new()

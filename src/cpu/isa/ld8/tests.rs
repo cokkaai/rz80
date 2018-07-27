@@ -1,7 +1,7 @@
 // === 8-Bit Load Group ===
 
-use cpu::Cpu;
 use cpu::CpuBuilder;
+use cpu::RegisterOperations;
 use cpu::Assertor;
 
 #[test]
@@ -22,12 +22,12 @@ fn memory_at_pc() {
 
 #[test]
 fn twocmp() {
-    assert_eq!(Cpu::compl2(0), 0);
-    assert_eq!(Cpu::compl2(0b0000_0001), 0b1111_1111);
-    assert_eq!(Cpu::compl2(0b0000_0010), 0b1111_1110);
-    assert_eq!(Cpu::compl2(0b0111_1110), 0b1000_0010);
-    assert_eq!(Cpu::compl2(0b0111_1111), 0b1000_0001);
-    assert_eq!(Cpu::compl2(0b1111_1111), 0b0000_0001);
+    assert_eq!(0u8.two_compl(), 0);
+    assert_eq!(0b0000_0001u8.two_compl(), 0b1111_1111);
+    assert_eq!(0b0000_0010u8.two_compl(), 0b1111_1110);
+    assert_eq!(0b0111_1110u8.two_compl(), 0b1000_0010);
+    assert_eq!(0b0111_1111u8.two_compl(), 0b1000_0001);
+    assert_eq!(0b1111_1111u8.two_compl(), 0b0000_0001);
 }
 
 #[test]

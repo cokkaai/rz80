@@ -40,33 +40,41 @@ impl Cpu {
     pub fn add_hl_ss(&mut self) {
         let opcode = self.memory_at_pc(0);
         let operand = self.read_ss(opcode);
-        (&mut self.h, &mut self.l).reg_add(operand);
+        let (_result, carry) = (&mut self.h, &mut self.l).reg_add(operand);
 
         // TODO: H is set if carry from bit 11
-        // TODO: C is set if carry from bit 15
 
+        self.set_c(carry);
         self.set_n(false);
         self.incr_pc(1);
     }
 
     pub fn adc_hl_ss(&mut self) {
         let operand = self.read_ss(self.memory_at_pc(1)) + self.carry_to_u16();
-        let (_result, overflow) = (&mut self.h, &mut self.l).reg_add(operand);
+        let (result, carry) = (&mut self.h, &mut self.l).reg_add(operand);
 
-        // TODO: S is set if result is negative
-        // TODO: Z is set if result is 0
+        self.set_s_from_msbw(result);
+        self.set_z_from_word(result);
         // TODO: H is set if carry from bit 11
-        // TODO: C is set if carry from bit 15
-
-        self.set_pv(overflow);
+        self.set_c(carry);
+        //self.set_pv(overflow);
         self.set_n(false);
+
         self.incr_pc(2);
     }
 
     pub fn sbc_hl_ss(&mut self) {
-        // TODO: same as adc_hl_ss but with a negative operand.
-        // Operand must allow negative values.
-        unimplemented!();
+        let operand = self.read_ss(self.memory_at_pc(1)) + self.carry_to_u16();
+        let (result, carry) = (&mut self.h, &mut self.l).reg_sub(operand);
+
+        self.set_s_from_msbw(result);
+        self.set_z_from_word(result);
+        // TODO: H is set if carry from bit 11
+        self.set_c(carry);
+        //self.set_pv(overflow);
+        self.set_n(true);
+
+        self.incr_pc(2);
     }
 
     pub fn add_ix_pp(&mut self) {
@@ -78,12 +86,12 @@ impl Cpu {
             _ => panic!(),
         };
 
-        let (_result, _overflow) = self.ix.reg_add(operand);
+        let (_result, carry) = self.ix.reg_add(operand);
 
         // TODO: H is set if carry from bit 11
-        // TODO: C is set if carry from bit 15
-
+        self.set_c(carry);
         self.set_n(false);
+
         self.incr_pc(2);
     }
 
@@ -96,17 +104,17 @@ impl Cpu {
             _ => panic!(),
         };
 
-        let (_result, _overflow) = self.iy.reg_add(operand);
+        let (_result, carry) = self.iy.reg_add(operand);
 
         // TODO: H is set if carry from bit 11
-        // TODO: C is set if carry from bit 15
-
+        self.set_c(carry);
         self.set_n(false);
+
         self.incr_pc(2);
     }
 
     pub fn inc_ss(&mut self) {
-        let (_result, overflow) = match self.match_ss(self.memory_at_pc(0)) {
+        match self.match_ss(self.memory_at_pc(0)) {
             Register16::bc => (&mut self.b, &mut self.c).incr(),
             Register16::de => (&mut self.d, &mut self.e).incr(),
             Register16::hl => (&mut self.h, &mut self.l).incr(),
@@ -114,29 +122,21 @@ impl Cpu {
             _ => panic!(),
         };
 
-        // TODO: Set flags
-        self.set_pv(overflow);
         self.incr_pc(1);
     }
 
     pub fn inc_ix(&mut self) {
-        let (_result, overflow) = self.ix.incr();
-
-        // TODO: Set flags
-        self.set_pv(overflow);
+        self.ix.incr();
         self.incr_pc(2);
     }
 
     pub fn inc_iy(&mut self) {
-        let (_result, overflow) = self.iy.incr();
-
-        // TODO: Set flags
-        self.set_pv(overflow);
+        self.iy.incr();
         self.incr_pc(2);
     }
 
     pub fn dec_ss(&mut self) {
-        let (_result, overflow) = match self.match_ss(self.memory_at_pc(0)) {
+        match self.match_ss(self.memory_at_pc(0)) {
             Register16::bc => (&mut self.b, &mut self.c).decr(),
             Register16::de => (&mut self.d, &mut self.e).decr(),
             Register16::hl => (&mut self.h, &mut self.l).decr(),
@@ -144,24 +144,16 @@ impl Cpu {
             _ => panic!(),
         };
 
-        // TODO: Set flags
-        self.set_pv(overflow);
         self.incr_pc(1);
     }
 
     pub fn dec_ix(&mut self) {
-        let (_result, overflow) = self.ix.decr();
-
-        // TODO: Set flags
-        self.set_pv(overflow);
+        self.ix.decr();
         self.incr_pc(2);
     }
 
     pub fn dec_iy(&mut self) {
-        let (_result, overflow) = self.iy.decr();
-
-        // TODO: Set flags
-        self.set_pv(overflow);
+        self.iy.decr();
         self.incr_pc(2);
     }
 }

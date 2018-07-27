@@ -1,5 +1,6 @@
 use cpu::Cpu;
 use cpu::Register16;
+use cpu::registers::RegisterOperations;
 
 #[cfg(test)]
 mod tests;
@@ -38,7 +39,7 @@ impl Cpu {
     pub fn ld_r_ixd(&mut self) {
         // memory_at_pc(0) is always 0xdd
         let opcode = self.memory_at_pc(1);
-        let addr = self.ix as usize + Cpu::compl2(self.memory_at_pc(2)) as usize;
+        let addr = self.ix as usize + self.memory_at_pc(2).two_compl() as usize;
         let dest = Cpu::select_dest(opcode);
         let value = self.memory[addr];
         self.write(dest, value);
@@ -48,7 +49,7 @@ impl Cpu {
     pub fn ld_r_iyd(&mut self) {
         // memory_at_pc(0) is always 0xfd
         let opcode = self.memory_at_pc(1);
-        let addr = self.iy as usize + Cpu::compl2(self.memory_at_pc(2)) as usize;
+        let addr = self.iy as usize + self.memory_at_pc(2).two_compl() as usize;
         let dest = Cpu::select_dest(opcode);
         let value = self.memory[addr];
         self.write(dest, value);
@@ -67,7 +68,7 @@ impl Cpu {
         // memory_at_pc(0) is always 0xdd
         let opcode = self.memory_at_pc(1);
         let src = Cpu::select_src(opcode);
-        let addr = self.ix as usize + Cpu::compl2(self.memory_at_pc(2)) as usize;
+        let addr = self.ix as usize + self.memory_at_pc(2).two_compl() as usize;
         self.memory[addr] = self.read(src);
         self.incr_pc(3);
     }
@@ -76,7 +77,7 @@ impl Cpu {
         // memory_at_pc(0) is always 0xfd
         let opcode = self.memory_at_pc(1);
         let src = Cpu::select_src(opcode);
-        let addr = self.iy as usize + Cpu::compl2(self.memory_at_pc(2)) as usize;
+        let addr = self.iy as usize + self.memory_at_pc(2).two_compl() as usize;
         self.memory[addr] = self.read(src);
         self.incr_pc(3);
     }

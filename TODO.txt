@@ -15,10 +15,9 @@ TODO
        and _add_r (ar8 module). This method will be leveraged by all add/inc opcodes
        implementations.
 [DONE] Complete ar8 tests and implementation
+[DONE] Complete ar16 tests and implementation
 
-[TODO] Complete argp tests and implementation
-
-[TODO] Complete ar16 tests and implementation
+[DOING] Complete argp tests and implementation
 
 [TODO] Complete rotate tests and implementation
 
@@ -26,7 +25,7 @@ TODO
 
 [TODO] WTF DAA does?
 
-[TODO] Understand interrupts and implement support in the CPU
+[TODO] Understand interrupts and implement support in the CPU (interrupt module)
 
 [TODO] Understand I/O and implement it
 

@@ -58,6 +58,9 @@ impl RegisterOperations<u16> for u16 {
         *self
     }
 
+    fn two_compl(&mut self) -> u16 {
+        (!*self).wrapping_add(1)        
+    }
 }
 
 #[cfg(test)]

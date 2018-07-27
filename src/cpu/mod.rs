@@ -103,9 +103,4 @@ impl Cpu {
     fn memory_at_iy(&self, offset_from_iy: u16) -> u8 {
         self.memory[(self.iy + offset_from_iy) as usize]
     }
-
-    /// Compute two's complement of data.
-    pub fn compl2(data: u8) -> u8 {
-        (!data).wrapping_add(1)
-    }
 }

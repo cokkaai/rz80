@@ -22,23 +22,35 @@ fn add_hl_ss() {
 #[test]
 fn adc_hl_ss() {
     let mut cpu = CpuBuilder::new()
-        .with_hl(0x1000)
+        .with_hl(0x0100)
         .with_de(0x0001)
-        .with_memory(vec![0xed, 0b0101_1001, 0, 0])
+        .with_flag_c(true)
+        .with_memory(vec![0xed, 0b0101_1010, 0, 0])
         .build();
 
-    cpu.add_hl_ss();
+    cpu.adc_hl_ss();
 
     Assertor::new(cpu)
-        .register_hl_is(0x1001)
+        .register_hl_is(0x0102)
         .add_subtract_flag_is_reset()
-        .parity_overflow_flag_is_reset()
         .program_counter_is(2);
 }
 
 #[test]
 fn sbc_hl_ss() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_hl(0x0100)
+        .with_de(0x0001)
+        .with_flag_c(true)
+        .with_memory(vec![0xed, 0b0101_0010, 0, 0])
+        .build();
+
+    cpu.sbc_hl_ss();
+
+    Assertor::new(cpu)
+        .register_hl_is(0x00fe)
+        .add_subtract_flag_is_set()
+        .program_counter_is(2);
 }
 
 #[test]

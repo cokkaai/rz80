@@ -266,6 +266,7 @@ impl Assertor {
 
     /// Tests the HL register value
     pub fn register_hl_is(&self, value: u16) -> &Assertor {
+        println!("{:?}", self.cpu);
         assert_eq!((self.cpu.h, self.cpu.l).promote(), value);
         self
     }

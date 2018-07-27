@@ -43,6 +43,7 @@ pub trait RegisterOperations<T> {
     fn is_zero(&self) -> bool;
     fn set(&mut self, bitmask: T) -> T;
     fn reset(&mut self, bitmask: T) -> T;
+    fn two_compl(&mut self) ->T;
 }
 
 /// Conversion between different size registers.
@@ -73,7 +74,6 @@ impl Cpu {
     }
 
     pub fn set_s_from_msb(&mut self, byte: u8) {
-        //self.set_s((byte & 0b1000_0000) != 0);
         self.set_s(byte.msb());
     }
 
@@ -107,6 +107,11 @@ impl Cpu {
     pub fn set_z_from_byte(&mut self, byte: u8) {
         // TODO: Verify that complies with Z80 impl
         self.set_z(byte == 0);
+    }
+
+    pub fn set_z_from_word(&mut self, word: u16) {
+        // TODO: Verify that complies with Z80 impl
+        self.set_z(word == 0);
     }
 
     // ===== FLAG C - Carry =====

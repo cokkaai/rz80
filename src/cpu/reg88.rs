@@ -36,7 +36,6 @@ impl <'a> RegisterOperations<u16> for (&'a mut u8, &'a mut u8) {
     }
 
     fn reg_add(&mut self, value: u16) -> (u16, bool) {
-        // let (result, overflow) = bytes::promote(self.0, self.1).overflowing_add(value);
         // TODO: Check if compliant with z80 hw.
         let (result, carry) = self.promote().overflowing_add(value);
         *self.0 = result.high();
@@ -46,7 +45,6 @@ impl <'a> RegisterOperations<u16> for (&'a mut u8, &'a mut u8) {
     }
 
     fn reg_sub(&mut self, value: u16) -> (u16, bool) {
-        // let (result, overflow) = self.overflowing_sub(value);
         let (result, carry) = self.promote().overflowing_sub(value);
 
         *self.0 = result.high();
@@ -72,6 +70,15 @@ impl <'a> RegisterOperations<u16> for (&'a mut u8, &'a mut u8) {
         *self.0 &= bitmask.high();
         *self.1 &= bitmask.low();
         self.promote()
+    }
+
+    fn two_compl(&mut self) -> u16 {
+        let result= (!self.promote()).wrapping_add(1);
+
+        *self.0 = result.high();
+        *self.1 = result.low();
+
+        result    
     }
 }
 
@@ -147,6 +154,15 @@ impl RegisterOperations<u16> for (u8, u8) {
         self.0 &= bitmask.high();
         self.1 &= bitmask.low();
         self.promote()
+    }
+
+    fn two_compl(&mut self) -> u16 {
+        let result= (!self.promote()).wrapping_add(1);
+
+        self.0 = result.high();
+        self.1 = result.low();
+
+        result    
     }
 }
 

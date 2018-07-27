@@ -53,9 +53,13 @@ impl RegisterOperations<u8> for u8 {
     }
 
     /// Zero bits in the bitmask will be reset in the register.
-    fn reset(&mut self, bitmask: u8) -> u8{
+    fn reset(&mut self, bitmask: u8) -> u8 {
         *self &= bitmask;
         *self
+    }
+
+    fn two_compl(&mut self) -> u8 {
+        (!*self).wrapping_add(1)
     }
 }
 
