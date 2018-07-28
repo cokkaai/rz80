@@ -247,7 +247,7 @@ fn cpi() {
         .register_hl_is(5)          // HL ← HL+1
         .zero_flag_is_set()         // Z is set if A is (HL)
         .parity_overflow_flag_is_reset()  // P/V is set if BC-1 != 0
-        .sign_flag_is_negative()    // S is set if result is negative
+        .sign_flag_is_positive()
         .carry_flag_is_reset()
         .half_carry_flag_is_reset()
         .add_subtract_flag_is_set()

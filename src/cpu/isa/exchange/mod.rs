@@ -117,7 +117,6 @@ impl Cpu {
         loop {
             self.ldi();
 
-            // while (BC ≠ 0)
             if self.read_bc() == 0 {
                 break;
             } else {
@@ -135,7 +134,6 @@ impl Cpu {
         loop {
             self.ldd();
 
-            // while (BC ≠ 0)
             if self.read_bc() == 0 {
                 break;
             } else {
@@ -165,8 +163,8 @@ impl Cpu {
         // S is set if result is negative; otherwise, it is reset.
         self.set_s_from_msb(diff);
 
-        // H is set if borrow from bit 4; otherwise, it is reset.
-        self.set_h_from_byte(diff);
+        // TODO: H is set if borrow from bit 4; otherwise, it is reset.
+        // self.set_h_from_byte(diff);
     
         // N is set.
         self.set_n(true);
