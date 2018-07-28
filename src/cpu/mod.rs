@@ -51,10 +51,13 @@ pub struct Cpu {
 impl Cpu {
     /// Read memory at address: pc + offset
     fn memory_at_pc(&self, offset_from_pc: u16) -> u8 {
-        self.memory[(self.pc + offset_from_pc) as usize]
+        //self.memory[(self.pc + offset_from_pc) as usize]
+        self.memory[usize::from(self.pc + offset_from_pc)]
     }
 
+    /// Returns the memory address dtored in the memory location at pc.
     fn addr_at_pc(&self, offset_from_pc: u16) -> usize {
+        
         self.memory_at_pc(offset_from_pc) as usize
             + ((self.memory_at_pc(offset_from_pc + 1) as usize) << 8)
     }
@@ -70,6 +73,20 @@ impl Cpu {
         }
 
         self.pc = next as u16;
+    }
+
+    /// Adds signed offset to PC register.
+    /// TODO: Check if compliant with z80 hw.
+    fn offset_pc(&mut self, offset: i16) {
+        // Calculate the new pc 
+        let mut ipc = i32::from(self.pc) + i32::from(offset);
+
+        // Reduce ipc into u16 range. Z80 does this?
+        if ipc < 0 && ipc > i32::from(u16::max_value()) {
+            ipc = ipc % i32::from(u16::max_value());
+        }
+
+        self.pc = ipc as u16;
     }
 
     fn condition_at_pc(&self, offset_from_pc: u16) -> bool {
