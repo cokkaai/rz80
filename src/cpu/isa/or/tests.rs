@@ -17,7 +17,7 @@ mod test {
 
         Assertor::new(cpu)
             .register_a_is(0b1111_1011)
-            .sign_flag_is_negative()
+            .sign_is_negative()
             .zero_flag_is_reset()
             .half_carry_flag_is_reset()
             .carry_flag_is_reset()
@@ -36,7 +36,7 @@ mod test {
 
         Assertor::new(cpu)
             .register_a_is(0b1111_1011)
-            .sign_flag_is_negative()
+            .sign_is_negative()
             .zero_flag_is_reset()
             .half_carry_flag_is_reset()
             .carry_flag_is_reset()
@@ -56,7 +56,7 @@ mod test {
 
         Assertor::new(cpu)
             .register_a_is(0b1111_1011)
-            .sign_flag_is_negative()
+            .sign_is_negative()
             .zero_flag_is_reset()
             .half_carry_flag_is_reset()
             .carry_flag_is_reset()
@@ -76,7 +76,7 @@ mod test {
 
         Assertor::new(cpu)
             .register_a_is(0b1111_1011)
-            .sign_flag_is_negative()
+            .sign_is_negative()
             .zero_flag_is_reset()
             .half_carry_flag_is_reset()
             .carry_flag_is_reset()
@@ -96,7 +96,7 @@ mod test {
 
         Assertor::new(cpu)
             .register_a_is(0b1111_1011)
-            .sign_flag_is_negative()
+            .sign_is_negative()
             .zero_flag_is_reset()
             .half_carry_flag_is_reset()
             .carry_flag_is_reset()

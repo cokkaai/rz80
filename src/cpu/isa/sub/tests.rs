@@ -15,7 +15,7 @@ pub fn sub_r() {
 
     Assertor::new(cpu)
         .register_a_is(0x18)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         //.parity_overflow_flag_is_reset()
         .add_subtract_flag_is_set()
@@ -33,7 +33,7 @@ pub fn sub_n() {
 
     Assertor::new(cpu)
         .register_a_is(0x18)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         //.parity_overflow_flag_is_reset()
         .add_subtract_flag_is_set()
@@ -52,7 +52,7 @@ pub fn sub_hli() {
 
     Assertor::new(cpu)
         .register_a_is(0x18)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         //.parity_overflow_flag_is_reset()
         .add_subtract_flag_is_set()
@@ -71,7 +71,7 @@ pub fn sub_ixdi() {
 
     Assertor::new(cpu)
         .register_a_is(0x18)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         //.parity_overflow_flag_is_reset()
         .add_subtract_flag_is_set()
@@ -90,7 +90,7 @@ pub fn sub_iydi() {
 
     Assertor::new(cpu)
         .register_a_is(0x18)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         //.parity_overflow_flag_is_reset()
         .add_subtract_flag_is_set()
@@ -110,7 +110,7 @@ fn sbc_a_r() {
 
     Assertor::new(cpu)
         .register_a_is(0x17)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         //.parity_overflow_flag_is_reset()
         .add_subtract_flag_is_set()
@@ -129,7 +129,7 @@ fn sbc_a_n() {
 
     Assertor::new(cpu)
         .register_a_is(0x17)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         //.parity_overflow_flag_is_reset()
         .add_subtract_flag_is_set()
@@ -149,7 +149,7 @@ fn sbc_a_hli() {
 
     Assertor::new(cpu)
         .register_a_is(0x17)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         //.parity_overflow_flag_is_reset()
         .add_subtract_flag_is_set()
@@ -169,7 +169,7 @@ fn sbc_a_ixdi() {
 
     Assertor::new(cpu)
         .register_a_is(0x17)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         //.parity_overflow_flag_is_reset()
         .add_subtract_flag_is_set()
@@ -189,7 +189,7 @@ fn sbc_a_iydi() {
 
     Assertor::new(cpu)
         .register_a_is(0x17)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         //.parity_overflow_flag_is_reset()
         .add_subtract_flag_is_set()

@@ -15,7 +15,7 @@ fn add_a_r() {
 
     Assertor::new(cpu)
         .register_a_is(11)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         //.parity_overflow_flag_is_reset()
         .add_subtract_flag_is_reset()
@@ -98,7 +98,7 @@ fn adc_a_r() {
 
     Assertor::new(cpu)
         .register_a_is(12)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         //.parity_overflow_flag_is_reset()
         .add_subtract_flag_is_reset()

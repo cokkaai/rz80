@@ -15,7 +15,7 @@ fn rlca() {
     Assertor::new(cpu)
 
         // S, Z, P/V are not affected.
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         .parity_overflow_flag_is_reset()
         
@@ -45,7 +45,7 @@ fn rla() {
     Assertor::new(cpu)
     
         // S, Z, P/V are not affected.
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         .parity_overflow_flag_is_reset()
         
@@ -75,7 +75,7 @@ fn rrca() {
     Assertor::new(cpu)
     
         // S, Z, P/V are not affected.
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         .parity_overflow_flag_is_reset()
         
@@ -105,7 +105,7 @@ fn rra() {
     Assertor::new(cpu)
     
         // S, Z, P/V are not affected.
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         .parity_overflow_flag_is_reset()
         
@@ -134,7 +134,7 @@ fn rlc_r() {
     cpu.rlc_r();
 
     Assertor::new(cpu)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         .parity_overflow_flag_is_reset()
         .half_carry_flag_is_reset()
@@ -161,7 +161,7 @@ fn rlc_hli() {
 
 
     Assertor::new(cpu)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
 
         // P/V is set if parity even; otherwise, it is reset.
@@ -185,7 +185,7 @@ fn rlc_ixdi() {
     cpu.rlc_ixdi();
 
     Assertor::new(cpu)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
 
         // P/V is set if parity even; otherwise, it is reset.
@@ -209,7 +209,7 @@ fn rlc_iydi() {
     cpu.rlc_iydi();
 
     Assertor::new(cpu)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
 
         // P/V is set if parity even; otherwise, it is reset.
@@ -252,7 +252,7 @@ fn rrc_r() {
     cpu.rrc_r();
 
     Assertor::new(cpu)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         .parity_overflow_flag_is_reset()
         .half_carry_flag_is_reset()
@@ -274,7 +274,7 @@ fn rrc_hli() {
     cpu.rrc_hli();
 
     Assertor::new(cpu)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         .parity_overflow_flag_is_reset()
         .half_carry_flag_is_reset()
@@ -295,7 +295,7 @@ fn rrc_ixdi() {
     cpu.rrc_ixdi();
 
     Assertor::new(cpu)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         .parity_overflow_flag_is_set()
         .half_carry_flag_is_reset()
@@ -316,7 +316,7 @@ fn rrc_iydi() {
     cpu.rrc_iydi();
 
     Assertor::new(cpu)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         .parity_overflow_flag_is_set()
         .half_carry_flag_is_reset()
@@ -337,7 +337,7 @@ fn rr_r() {
     cpu.rr_r();
 
     Assertor::new(cpu)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         .parity_overflow_flag_is_set()
         .half_carry_flag_is_reset()

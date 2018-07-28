@@ -16,12 +16,15 @@ TODO
        implementations.
 [DONE] Complete ar8 tests and implementation
 [DONE] Complete ar16 tests and implementation
-
-[DOING] Complete argp tests and implementation
+[DONE] Complete argp tests and implementation
 
 [TODO] Complete rotate tests and implementation
 
-[DOING] Understand how to do math with half carry
+[TODO] Complete shift tests and implementation
+
+[TODO] Verify compare implementations
+
+[TODO] Understand how to do math with half carry
 
 [TODO] WTF DAA does?
 

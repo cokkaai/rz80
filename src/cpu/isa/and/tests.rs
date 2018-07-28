@@ -15,7 +15,7 @@ fn and_r() {
 
     Assertor::new(cpu)
         .register_a_is(0b0100_0011)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         .half_carry_flag_is_set()
         .carry_flag_is_reset()
@@ -34,7 +34,7 @@ fn and_n() {
 
     Assertor::new(cpu)
         .register_a_is(0b0100_0011)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         .half_carry_flag_is_set()
         .carry_flag_is_reset()
@@ -54,7 +54,7 @@ fn and_hli() {
 
     Assertor::new(cpu)
         .register_a_is(0b0100_0011)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         .half_carry_flag_is_set()
         .carry_flag_is_reset()
@@ -74,7 +74,7 @@ fn and_ixdi() {
 
     Assertor::new(cpu)
         .register_a_is(0b0100_0011)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         .half_carry_flag_is_set()
         .carry_flag_is_reset()
@@ -94,7 +94,7 @@ fn and_iydi() {
 
     Assertor::new(cpu)
         .register_a_is(0b0100_0011)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         .half_carry_flag_is_set()
         .carry_flag_is_reset()

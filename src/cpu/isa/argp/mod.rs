@@ -20,16 +20,13 @@ impl Cpu {
     }
 
     pub fn neg(&mut self) {
-
-println!("{:?}", self.a);
-
         let a = self.a;
         self.set_pv(a == 0x80);
         self.set_c(a != 0);
         self.set_n(true);
         
         let a = self.a.two_compl();
-println!("{:?}", self.a);
+
         self.set_s_from_msb(a);
         self.set_z_from_byte(a);
 

@@ -14,8 +14,7 @@ impl Cpu {
         self.set_h(false);
         self.set_n(false);
 
-        let result = self.a.rotate_left(1);
-        self.a = result;
+        self.a = self.a.rotate_left(1);
 
         self.incr_pc(1);
     }
@@ -28,8 +27,7 @@ impl Cpu {
         self.set_h(false);
         self.set_n(false);
 
-        let result = self.a << 1;
-        self.a = result | lsb;
+        self.a = self.a << 1 | lsb;
 
         self.incr_pc(1);
     }
@@ -40,8 +38,7 @@ impl Cpu {
         self.set_h(false);
         self.set_n(false);
 
-        let result = self.a.rotate_right(1);
-        self.a = result;
+        self.a = self.a.rotate_right(1);
 
         self.incr_pc(1);
     }

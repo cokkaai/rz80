@@ -132,7 +132,7 @@ impl Cpu {
 
     pub fn dec_r(&mut self) {
         let opcode = self.memory_at_pc(0);
-        let result = self._add_r(Self::select_reg(opcode), 1);  // -1
+        let result = self._add_r(Self::select_reg(opcode), 1.two_compl());
         self._evaluate_flags_after_dec(result.0, result.1);
         self.incr_pc(1);
     }

@@ -16,7 +16,7 @@ fn inc_r() {
         // If the D Register contains 28h , then upon the execution of an INC D
         // instruction, the D Register contains 29h.
         .register_d_is(0x29)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         .half_carry_flag_is_reset()
         .parity_overflow_flag_is_reset()
@@ -37,7 +37,7 @@ fn inc_hli() {
     Assertor::new(cpu)
         // (HL) ← (HL) + 1
         .memory_at_address_is(2, 1)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         .half_carry_flag_is_reset()
         .parity_overflow_flag_is_reset()
@@ -60,7 +60,7 @@ fn inc_ixdi() {
     Assertor::new(cpu)
         // (IX+d) ← (IX+d) + 1
         .memory_at_address_is(9, 7)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         .half_carry_flag_is_reset()
         .parity_overflow_flag_is_reset()
@@ -83,7 +83,7 @@ fn inc_iydi() {
     Assertor::new(cpu)
         // (IY+d) ← (IY+d) + 1
         .memory_at_address_is(9, 7)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         .half_carry_flag_is_reset()
         .parity_overflow_flag_is_reset()
@@ -105,7 +105,7 @@ fn dec_r() {
         // If the D Register contains byte 2Ah , then upon the execution
         // of a DEC D instruction, the D Register contains 29h .
         .register_d_is(0x29)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         .half_carry_flag_is_reset()
         .parity_overflow_flag_is_reset()
@@ -126,7 +126,7 @@ fn dec_hli() {
     Assertor::new(cpu)
         // (HL) ← (HL) - 1
         .memory_at_address_is(2, 0x0d)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         .half_carry_flag_is_reset()
         .parity_overflow_flag_is_reset()
@@ -149,7 +149,7 @@ fn dec_ixdi() {
     Assertor::new(cpu)
         // (IX+d) ← (IX+d) - 1
         .memory_at_address_is(9, 5)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         .half_carry_flag_is_reset()
         .parity_overflow_flag_is_reset()
@@ -172,7 +172,7 @@ fn dec_iydi() {
     Assertor::new(cpu)
         // (IX+d) ← (IX+d) - 1
         .memory_at_address_is(9, 5)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         .half_carry_flag_is_reset()
         .parity_overflow_flag_is_reset()

@@ -332,7 +332,7 @@ fn ld_a_i() {
 
     Assertor::new(cpu)
         .register_a_is(0x3b)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .half_carry_flag_is_reset()
         .add_subtract_flag_is_reset()
         .carry_flag_is_set()
@@ -354,7 +354,7 @@ fn ld_a_r() {
 
     Assertor::new(cpu)
         .register_a_is(0x3b)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .half_carry_flag_is_reset()
         .add_subtract_flag_is_reset()
         .carry_flag_is_set()

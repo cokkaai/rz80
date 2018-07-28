@@ -24,16 +24,28 @@ impl Assertor {
     //     self
     // }
 
-    /// Tests if the S flag is true
-    pub fn sign_flag_is_positive(&self) -> &Assertor {
+    /// Tests if the S flag is false
+    #[inline]
+    pub fn sign_flag_is_reset(&self) -> &Assertor {
         assert_eq!(self.cpu.get_s(), false);
         self
     }
 
-    /// Tests if the S flag is false
-    pub fn sign_flag_is_negative(&self) -> &Assertor {
+    #[inline]
+    pub fn sign_is_positive(&self) -> &Assertor {
+        self.sign_flag_is_reset()
+    }
+
+    /// Tests if the S flag is true
+    #[inline]
+    pub fn sign_flag_is_set(&self) -> &Assertor {
         assert_eq!(self.cpu.get_s(), true);
         self
+    }
+
+    #[inline]
+    pub fn sign_is_negative(&self) -> &Assertor {
+        self.sign_flag_is_set()
     }
 
     /// Tests if the Z flag is true

@@ -247,7 +247,7 @@ fn cpi() {
         .register_hl_is(5)          // HL ← HL+1
         .zero_flag_is_set()         // Z is set if A is (HL)
         .parity_overflow_flag_is_reset()  // P/V is set if BC-1 != 0
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .carry_flag_is_reset()
         .half_carry_flag_is_reset()
         .add_subtract_flag_is_set()
@@ -270,7 +270,7 @@ fn cpir() {
         .register_hl_is(6)  // HL ← HL+1
         .zero_flag_is_reset()// Z is set if A is (HL)
         .parity_overflow_flag_is_set()  // P/V is set if BC-1 != 0
-        .sign_flag_is_positive()    // S is set if result is negative
+        .sign_is_positive()    // S is set if result is negative
         .carry_flag_is_reset()// C is not affected
         .half_carry_flag_is_reset()// H is set if borrow from bit 4
         .add_subtract_flag_is_set()

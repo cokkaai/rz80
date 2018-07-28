@@ -15,7 +15,7 @@ fn xor_r() {
 
     Assertor::new(cpu)
         .register_a_is(0b1011_1000)
-        .sign_flag_is_negative()
+        .sign_is_negative()
         .zero_flag_is_reset()
         .half_carry_flag_is_reset()
         .carry_flag_is_reset()
@@ -34,7 +34,7 @@ fn xor_n() {
 
     Assertor::new(cpu)
         .register_a_is(0b1011_1000)
-        .sign_flag_is_negative()
+        .sign_is_negative()
         .zero_flag_is_reset()
         .half_carry_flag_is_reset()
         .carry_flag_is_reset()
@@ -54,7 +54,7 @@ fn xor_hli() {
 
     Assertor::new(cpu)
         .register_a_is(0b1011_1000)
-        .sign_flag_is_negative()
+        .sign_is_negative()
         .zero_flag_is_reset()
         .half_carry_flag_is_reset()
         .carry_flag_is_reset()
@@ -74,7 +74,7 @@ fn xor_ixdi() {
 
     Assertor::new(cpu)
         .register_a_is(0b1011_1000)
-        .sign_flag_is_negative()
+        .sign_is_negative()
         .zero_flag_is_reset()
         .half_carry_flag_is_reset()
         .carry_flag_is_reset()
@@ -94,7 +94,7 @@ fn xor_iydi() {
 
     Assertor::new(cpu)
         .register_a_is(0b1011_1000)
-        .sign_flag_is_negative()
+        .sign_is_negative()
         .zero_flag_is_reset()
         .half_carry_flag_is_reset()
         .carry_flag_is_reset()

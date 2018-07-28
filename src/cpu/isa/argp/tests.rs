@@ -35,7 +35,7 @@ fn neg() {
 
     Assertor::new(cpu)
         .register_a_is(0b0110_1000)
-        .sign_flag_is_positive()
+        .sign_is_positive()
         .zero_flag_is_reset()
         .half_carry_flag_is_reset()
         .parity_overflow_flag_is_reset()
@@ -54,7 +54,7 @@ fn ccf() {
     cpu.ccf();
 
     Assertor::new(cpu)
-        .sign_flag_is_negative()
+        .sign_flag_is_reset()
         .zero_flag_is_reset()
         .parity_overflow_flag_is_reset()
         .half_carry_flag_is_set()

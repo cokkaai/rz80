@@ -164,6 +164,7 @@ impl Cpu {
         self.set_status_flag(PV_MASK, value);
     }
 
+    // TODO: probably this fn is WRONG
     pub fn set_pv_from_byte(&mut self, byte: u8) {
         // TODO: Verify that complies with Z80 impl
         self.set_pv((byte & 0b0000_0001) == 0);

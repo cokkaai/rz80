@@ -15,11 +15,11 @@ fn cp_r() {
 
     Assertor::new(cpu)
         .register_a_is(0b1100_0011)
-        .sign_flag_is_negative()
-        .zero_flag_is_reset()
+        .sign_flag_is_reset()
+        .zero_flag_is_set()
         .half_carry_flag_is_reset()
         .carry_flag_is_reset()
-        .parity_is_odd()
+        // .parity_is_odd()
         .add_subtract_flag_is_set();
 }
 
@@ -33,12 +33,12 @@ fn cp_n() {
     cpu.cp_n();
 
     Assertor::new(cpu)
-        .register_a_is(0b1011_1000)
-        .sign_flag_is_negative()
-        .zero_flag_is_reset()
+        .register_a_is(0b1100_0011)
+        .sign_flag_is_reset()
+        .zero_flag_is_set()
         .half_carry_flag_is_reset()
         .carry_flag_is_reset()
-        .parity_is_odd()
+        // .parity_is_odd()
         .add_subtract_flag_is_set();
 }
 
@@ -53,12 +53,12 @@ fn cp_hli() {
     cpu.cp_hli();
 
     Assertor::new(cpu)
-        .register_a_is(0b1011_1000)
-        .sign_flag_is_negative()
-        .zero_flag_is_reset()
+        .register_a_is(0b1100_0011)
+        .sign_flag_is_reset()
+        .zero_flag_is_set()
         .half_carry_flag_is_reset()
         .carry_flag_is_reset()
-        .parity_is_odd()
+        // .parity_is_odd()
         .add_subtract_flag_is_set();
 }
 
@@ -73,12 +73,12 @@ fn cp_ixdi() {
     cpu.cp_ixdi();
 
     Assertor::new(cpu)
-        .register_a_is(0b1011_1000)
-        .sign_flag_is_negative()
-        .zero_flag_is_reset()
+        .register_a_is(0b1100_0011)
+        .sign_flag_is_reset()
+        .zero_flag_is_set()
         .half_carry_flag_is_reset()
         .carry_flag_is_reset()
-        .parity_is_odd()
+        // .parity_is_odd()
         .add_subtract_flag_is_set();
 }
 
@@ -93,11 +93,11 @@ fn cp_iydi() {
     cpu.cp_iydi();
 
     Assertor::new(cpu)
-        .register_a_is(0b1011_1000)
-        .sign_flag_is_negative()
-        .zero_flag_is_reset()
+        .register_a_is(0b1100_0011)
+        .sign_flag_is_reset()
+        .zero_flag_is_set()
         .half_carry_flag_is_reset()
         .carry_flag_is_reset()
-        .parity_is_odd()
+        // .parity_is_odd()
         .add_subtract_flag_is_set();
 }
