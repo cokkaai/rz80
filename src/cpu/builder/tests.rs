@@ -46,7 +46,7 @@ fn create_system() {
         .program_counter_is(12)
         .stack_pointer_is(14)
         .memory_refresh_register_is(13)
-        .sign_flag_is_positive()
+        .sign_flag_is_negative()
         .zero_flag_is_set()
         .half_carry_flag_is_set()
         .carry_flag_is_set()
