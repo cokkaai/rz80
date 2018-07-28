@@ -59,7 +59,8 @@ impl RegisterOperations<u8> for u8 {
     }
 
     fn two_compl(&mut self) -> u8 {
-        (!*self).wrapping_add(1)
+        *self = (!*self).wrapping_add(1);
+        *self
     }
 }
 
