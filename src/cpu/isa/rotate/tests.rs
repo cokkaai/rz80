@@ -159,7 +159,6 @@ fn rlc_hli() {
     // 0xba = 0b1011_1010
     cpu.rlc_hli();
 
-
     Assertor::new(cpu)
         .sign_is_positive()
         .zero_flag_is_reset()

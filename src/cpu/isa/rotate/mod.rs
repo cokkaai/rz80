@@ -3,45 +3,14 @@ mod tests;
 
 use cpu::Cpu;
 use cpu::Register;
+use cpu::RegisterPromote;
 use cpu::RegisterOperations;
 
 #[allow(dead_code)]
 
 impl Cpu {
-    pub fn rlca(&mut self) {
-        let carry = self.a.msb();
-        self.set_c(carry);
-        self.set_h(false);
-        self.set_n(false);
 
-        self.a = self.a.rotate_left(1);
-
-        self.incr_pc(1);
-    }
-
-    pub fn rla(&mut self) {
-        let lsb = if self.get_c() { 1 } else { 0 };
-
-        let carry = self.a.msb();
-        self.set_c(carry);
-        self.set_h(false);
-        self.set_n(false);
-
-        self.a = self.a << 1 | lsb;
-
-        self.incr_pc(1);
-    }
-
-    pub fn rrca(&mut self) {
-        let carry = self.a.lsb();
-        self.set_c(carry);
-        self.set_h(false);
-        self.set_n(false);
-
-        self.a = self.a.rotate_right(1);
-
-        self.incr_pc(1);
-    }
+    // === Rotate registers right through the carry flag ===
 
     fn rr_reg(&mut self, reg: Register) -> u8 {
         let msb = if self.get_c() { 0x80 } else { 0 };
@@ -84,11 +53,25 @@ impl Cpu {
             },
         };
 
-        self.set_c(carry);
         self.set_h(false);
         self.set_n(false);
+        self.set_c(carry);
 
         result
+    }
+
+    fn rr_mem(&mut self, addr: usize) {
+        let msb = if self.get_c() { 0x80 } else { 0 };
+        let carry = self.memory[addr].lsb();
+        let result = (self.memory[addr] >> 1) | msb;
+        self.memory[addr] = result;
+
+        self.set_h(false);
+        self.set_n(false);
+        self.set_c(carry);
+        self.set_s_from_msb(result);
+        self.set_z_from_byte(result);
+        self.set_pv(!result.lsb());
     }
 
     pub fn rra(&mut self) {
@@ -96,113 +79,134 @@ impl Cpu {
         self.incr_pc(1);
     }
 
-    fn _rlc_memory_location(&mut self, addr: usize) {
-        self.memory[addr] = self.memory[addr].rotate_left(1);
-        let result = self.memory[addr];
-        self._set_rlc_flags_from_result(result);
-    }
-
-    fn _rrc_memory_location(&mut self, addr: usize) {
-        self.memory[addr] = self.memory[addr].rotate_right(1);
-        let result = self.memory[addr];
-        self._set_rrc_flags_from_result(result);
-    }
-
-    fn _set_rlc_flags_from_result(&mut self, result: u8) {
-        self.set_c((result & 0b0000_0001) != 0);
+    pub fn rr_r(&mut self) {
+        let reg = Self::select_src(self.memory_at_pc(1));
+        let result = self.rr_reg(reg);
+        
         self.set_s_from_msb(result);
         self.set_z_from_byte(result);
-        self.set_pv_from_byte(result);
-        self.set_h(false);
-        self.set_n(false);
+        self.set_pv(!result.lsb());
+
+        self.incr_pc(2);
     }
 
-    fn _set_rrc_flags_from_result(&mut self, result: u8) {
-        self.set_c((result & 0b1000_0000) != 0);
-        self.set_s_from_msb(result);
-        self.set_z_from_byte(result);
-        self.set_pv_from_byte(result);
-        self.set_h(false);
-        self.set_n(false);
+    pub fn rr_hli(&mut self) {
+        let addr = (self.h, self.l).promote() as usize 
+            + self.memory_at_pc(2).two_compl() as usize;
+        self.rr_mem(addr);
     }
 
-    pub fn rlc_r(&mut self) {
-        let opcode = self.memory_at_pc(1);
+    pub fn rr_ixdi(&mut self) {
+        let addr = self.ix as usize + self.memory_at_pc(2).two_compl() as usize;
+        self.rr_mem(addr);
+    }
 
-        let result = match Self::select_src(opcode) {
+    pub fn rr_iydi(&mut self) {
+        let addr = self.iy as usize + self.memory_at_pc(2).two_compl() as usize;
+        self.rr_mem(addr);
+    }
+
+
+    // === Rotate registers left through the carry flag ===
+
+    fn rl_reg(&mut self, reg: Register) -> u8 {
+        let lsb = if self.get_c() { 1 } else { 0 };
+
+        let (result, carry) = match reg {
             Register::a => {
-                self.a = self.a.rotate_left(1);
-                self.a
+                let carry = self.a.msb();
+                self.a = (self.a << 1) | lsb;
+                (self.a, carry)
             },
             Register::b => {
-                self.b = self.b.rotate_left(1);
-                self.b
+                let carry = self.b.msb();
+                self.b = (self.b << 1) | lsb;
+                (self.b, carry)
             },
             Register::c => {
-                self.c = self.c.rotate_left(1);
-                self.c
+                let carry = self.c.msb();
+                self.c = (self.c << 1) | lsb;
+                (self.c, carry)
             },
             Register::d => {
-                self.d = self.d.rotate_left(1);
-                self.d
+                let carry = self.d.msb();
+                self.d = (self.d << 1) | lsb;
+                (self.d, carry)
             },
             Register::e => {
-                self.e = self.e.rotate_left(1);
-                self.e
+                let carry = self.e.msb();
+                self.e = (self.e << 1) | lsb;
+                (self.e, carry)
             },
             Register::h => {
-                self.h = self.h.rotate_left(1);
-                self.h
+                let carry = self.h.msb();
+                self.h = (self.h << 1) | lsb;
+                (self.h, carry)
             },
             Register::l => {
-                self.l = self.l.rotate_left(1);
-                self.l
+                let carry = self.l.msb();
+                self.l = (self.l << 1) | lsb;
+                (self.l, carry)
             },
         };
 
-        self._set_rlc_flags_from_result(result);
+        self.set_h(false);
+        self.set_n(false);
+        self.set_c(carry);
 
-        self.incr_pc(2);
+        result
     }
 
-    pub fn rlc_hli(&mut self) {
-        let addr = self.read_hl() as usize;
-        self._rlc_memory_location(addr);
-        self.incr_pc(2);
+    fn rl_mem(&mut self, addr: usize) {
+        let lsb = if self.get_c() { 1 } else { 0 };
+        let carry = self.memory[addr].msb();
+        let result = (self.memory[addr] << 1) | lsb;
+        self.memory[addr] = result;
+
+        self.set_h(false);
+        self.set_n(false);
+        self.set_c(carry);
+        self.set_s_from_msb(result);
+        self.set_z_from_byte(result);
+        self.set_pv(!result.lsb());
     }
 
-    pub fn rlc_ixdi(&mut self) {
-        let addr = self.ix as usize + self.memory_at_pc(2) as usize;
-        self._rlc_memory_location(addr);
-        self.incr_pc(4);
-    }
-
-    pub fn rlc_iydi(&mut self) {
-        let addr = self.iy as usize + self.memory_at_pc(2) as usize;
-        self._rlc_memory_location(addr);
-        self.incr_pc(4);
+    pub fn rla(&mut self) {
+        self.rl_reg(Register::a);
+        self.incr_pc(1);
     }
 
     pub fn rl_r(&mut self) {
-        unimplemented!();
+        let reg = Self::select_src(self.memory_at_pc(1));
+        let result = self.rl_reg(reg);
+        
+        self.set_s_from_msb(result);
+        self.set_z_from_byte(result);
+        self.set_pv(result.lsb());
+
+        self.incr_pc(2);
     }
 
     pub fn rl_hli(&mut self) {
-        unimplemented!();
+        let addr = (self.h, self.l).promote() as usize;
+        self.rl_mem(addr);
     }
 
     pub fn rl_ixdi(&mut self) {
-        unimplemented!();
+        let addr = self.ix as usize + self.memory_at_pc(2) as usize;
+        self.rl_mem(addr);
     }
 
     pub fn rl_iydi(&mut self) {
-        unimplemented!();
+        let addr = self.iy as usize + self.memory_at_pc(2) as usize;
+        self.rl_mem(addr);
     }
 
-    pub fn rrc_r(&mut self) {
-        let opcode = self.memory_at_pc(1);
 
-        let result = match Self::select_src(opcode) {
+    // === Rotate registers right ===
+
+    fn rrc_reg(&mut self, reg: Register) -> u8 {
+        let result = match reg {
             Register::a => {
                 self.a = self.a.rotate_right(1);
                 self.a
@@ -233,46 +237,147 @@ impl Cpu {
             },
         };
 
-        self._set_rrc_flags_from_result(result);
+        self.set_h(false);
+        self.set_n(false);
+        self.set_c(result.msb());
+
+        result
+    }
+
+    pub fn rrc_r(&mut self) {
+        let opcode = self.memory_at_pc(1);
+        let result = self.rrc_reg(Self::select_src(opcode));
+        
+        self.set_s_from_msb(result);
+        self.set_z_from_byte(result);
+        self.set_pv(!result.lsb());
 
         self.incr_pc(2);
     }
 
+    pub fn rrca(&mut self) {
+        self.rrc_reg(Register::a);
+        self.incr_pc(1);
+    }
+
+    // === Rotate registers left ===
+
+    fn rlc_reg(&mut self, reg: Register) -> u8 {
+        let result = match reg {
+            Register::a => {
+                self.a = self.a.rotate_left(1);
+                self.a
+            },
+            Register::b => {
+                self.b = self.b.rotate_left(1);
+                self.b
+            },
+            Register::c => {
+                self.c = self.c.rotate_left(1);
+                self.c
+            },
+            Register::d => {
+                self.d = self.d.rotate_left(1);
+                self.d
+            },
+            Register::e => {
+                self.e = self.e.rotate_left(1);
+                self.e
+            },
+            Register::h => {
+                self.h = self.h.rotate_left(1);
+                self.h
+            },
+            Register::l => {
+                self.l = self.l.rotate_left(1);
+                self.l
+            },
+        };
+
+        self.set_h(false);
+        self.set_n(false);
+        self.set_c(result.lsb());
+
+        result
+    }
+
+    pub fn rlc_r(&mut self) {
+        let opcode = self.memory_at_pc(1);
+        let result = self.rlc_reg(Self::select_src(opcode));
+
+        self.set_s_from_msb(result);
+        self.set_z_from_byte(result);
+        self.set_pv(!result.lsb());
+
+        self.incr_pc(2);
+    }
+
+    pub fn rlca(&mut self) {
+        self.rlc_reg(Register::a);
+        self.incr_pc(1);
+    }
+
+
+    // === Rotate memory location left ===
+    
+    fn rlc_memory_location(&mut self, addr: usize) {
+        self.memory[addr] = self.memory[addr].rotate_left(1);
+        let result = self.memory[addr];
+        self.set_c(result.lsb());
+        self.set_s_from_msb(result);
+        self.set_z_from_byte(result);
+        self.set_pv_from_byte(result);
+        self.set_h(false);
+        self.set_n(false);
+    }
+
+    pub fn rlc_hli(&mut self) {
+        let addr = (self.h, self.l).promote() as usize;
+        self.rlc_memory_location(addr);
+        self.incr_pc(2);
+    }
+
+    pub fn rlc_ixdi(&mut self) {
+        let addr = self.ix as usize + self.memory_at_pc(2) as usize;
+        self.rlc_memory_location(addr);
+        self.incr_pc(4);
+    }
+
+    pub fn rlc_iydi(&mut self) {
+        let addr = self.iy as usize + self.memory_at_pc(2) as usize;
+        self.rlc_memory_location(addr);
+        self.incr_pc(4);
+    }
+
+    // === Rotate memory location right ===
+    
+    fn rrc_memory_location(&mut self, addr: usize) {
+        self.memory[addr] = self.memory[addr].rotate_right(1);
+        let result = self.memory[addr];
+        self.set_c(result.msb());
+        self.set_s_from_msb(result);
+        self.set_z_from_byte(result);
+        self.set_pv_from_byte(result);
+        self.set_h(false);
+        self.set_n(false);
+    }
+
     pub fn rrc_hli(&mut self) {
-        let addr = self.read_hl() as usize;
-        self._rrc_memory_location(addr);
+        let addr = (self.h, self.l).promote() as usize;
+        self.rrc_memory_location(addr);
         self.incr_pc(2);
     }
 
     pub fn rrc_ixdi(&mut self) {
         let addr = self.ix as usize + self.memory_at_pc(2) as usize;
-        self._rrc_memory_location(addr);
+        self.rrc_memory_location(addr);
         self.incr_pc(4);
     }
 
     pub fn rrc_iydi(&mut self) {
         let addr = self.iy as usize + self.memory_at_pc(2) as usize;
-        self._rrc_memory_location(addr);
+        self.rrc_memory_location(addr);
         self.incr_pc(4);
-    }
-
-    pub fn rr_r(&mut self) {
-        let reg = Self::select_src(self.memory_at_pc(1));
-        let result = self.rr_reg(reg);
-        self.set_pv_from_byte(result);
-        self.incr_pc(2);
-    }
-
-    pub fn rr_hli(&mut self) {
-        unimplemented!();
-    }
-
-    pub fn rr_ixdi(&mut self) {
-        unimplemented!();
-    }
-
-    pub fn rr_iydi(&mut self) {
-        unimplemented!();
     }
 
     pub fn rld(&mut self) {
