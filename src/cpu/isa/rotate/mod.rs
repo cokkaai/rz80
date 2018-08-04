@@ -91,19 +91,23 @@ impl Cpu {
     }
 
     pub fn rr_hli(&mut self) {
-        let addr = (self.h, self.l).promote() as usize 
-            + self.memory_at_pc(2).two_compl() as usize;
+        let addr = (self.h, self.l).promote() as usize;
         self.rr_mem(addr);
+        self.incr_pc(2);
     }
 
     pub fn rr_ixdi(&mut self) {
-        let addr = self.ix as usize + self.memory_at_pc(2).two_compl() as usize;
+        // TODO: manage offset sign
+        let addr = self.ix as usize + self.memory_at_pc(2) as usize;
         self.rr_mem(addr);
+        self.incr_pc(4);
     }
 
     pub fn rr_iydi(&mut self) {
-        let addr = self.iy as usize + self.memory_at_pc(2).two_compl() as usize;
+        // TODO: manage offset sign
+        let addr = self.iy as usize + self.memory_at_pc(2) as usize;
         self.rr_mem(addr);
+        self.incr_pc(4);
     }
 
 
@@ -182,7 +186,7 @@ impl Cpu {
         
         self.set_s_from_msb(result);
         self.set_z_from_byte(result);
-        self.set_pv(result.lsb());
+        self.set_pv(!result.lsb());
 
         self.incr_pc(2);
     }
@@ -190,16 +194,19 @@ impl Cpu {
     pub fn rl_hli(&mut self) {
         let addr = (self.h, self.l).promote() as usize;
         self.rl_mem(addr);
+        self.incr_pc(2);
     }
 
     pub fn rl_ixdi(&mut self) {
         let addr = self.ix as usize + self.memory_at_pc(2) as usize;
         self.rl_mem(addr);
+        self.incr_pc(4);
     }
 
     pub fn rl_iydi(&mut self) {
         let addr = self.iy as usize + self.memory_at_pc(2) as usize;
         self.rl_mem(addr);
+        self.incr_pc(4);
     }
 
 
@@ -380,11 +387,39 @@ impl Cpu {
         self.incr_pc(4);
     }
 
+    fn low_nibble(value: u8) -> u8 {
+        value & 0x0f
+    }
+
+    fn high_nibble(value: u8) -> u8 {
+        value & 0xf0
+    }
+
     pub fn rld(&mut self) {
-        unimplemented!();
+        let addr = (self.h, self.l).promote() as usize;
+        let a_low_nibble = self.a & 0x0f;
+        self.a = (self.a & 0xf0) | (self.memory[addr] >> 4);
+        self.memory[addr] = (self.memory[addr] << 4) | a_low_nibble;
+
+        let result = self.a;
+        self.set_s_from_msb(result);
+        self.set_z_from_byte(result);
+        self.set_pv(!result.lsb());
+        self.set_n(false);
+        self.set_h(false);
     }
 
     pub fn rrd(&mut self) {
-        unimplemented!();
+        let addr = (self.h, self.l).promote() as usize;
+        let a_low_nibble = self.a & 0x0f;
+        self.a = (self.a & 0xf0) | (self.memory[addr] & 0x0f);
+        self.memory[addr] = (a_low_nibble << 4) | (self.memory[addr] >> 4);
+
+        let result = self.a;
+        self.set_s_from_msb(result);
+        self.set_z_from_byte(result);
+        self.set_pv(!result.lsb());
+        self.set_n(false);
+        self.set_h(false);
     }
 }

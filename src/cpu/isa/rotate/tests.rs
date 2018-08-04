@@ -223,22 +223,94 @@ fn rlc_iydi() {
 
 #[test]
 fn rl_r() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_l(0b1000_1111)
+        .with_memory(vec!(0xcb, 0b0001_0101, 0, 0))
+        .build();
+
+    cpu.rl_r();
+
+    Assertor::new(cpu)
+        .sign_is_positive()
+        .zero_flag_is_reset()
+        .parity_overflow_flag_is_set()
+        .half_carry_flag_is_reset()
+        .add_subtract_flag_is_reset()
+        .carry_flag_is_set()
+    
+        // The contents of register r are rotated left 1 bit position. The contents of bit 7 
+        // are copied to the Carry flag and also to bit 0.
+        .register_l_is(0b0001_1110)
+
+        .program_counter_is(2);
 }
 
 #[test]
 fn rl_hli() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_hl(0x03)
+        .with_memory(vec!(0xcb, 0x16, 0, 0b1000_1111))
+        .build();
+
+    cpu.rl_hli();
+
+    Assertor::new(cpu)
+        .sign_is_positive()
+        .zero_flag_is_reset()
+        .parity_overflow_flag_is_set()
+        .half_carry_flag_is_reset()
+        .add_subtract_flag_is_reset()
+        .carry_flag_is_set()
+        .memory_at_address_is(0x03, 0b0001_1110)
+        .program_counter_is(2);
 }
 
 #[test]
 fn rl_ixdi() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_ix(0x04)
+        .with_memory(vec!(0xdd, 0xcb, 0x01, 0x16, 0, 0b1000_1111))
+        .build();
+
+    cpu.rl_ixdi();
+
+    Assertor::new(cpu)
+        .sign_is_positive()
+        .zero_flag_is_reset()
+        .parity_overflow_flag_is_set()
+        .half_carry_flag_is_reset()
+        .add_subtract_flag_is_reset()
+        .carry_flag_is_set()
+    
+        // The contents of register r are rotated left 1 bit position. The contents of bit 7 
+        // are copied to the Carry flag and also to bit 0.
+        .memory_at_address_is(0x05, 0b0001_1110)
+
+        .program_counter_is(4);
 }
 
 #[test]
 fn rl_iydi() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_iy(0x04)
+        .with_memory(vec!(0xdd, 0xcb, 0x01, 0x16, 0, 0b1000_1111))
+        .build();
+
+    cpu.rl_iydi();
+
+    Assertor::new(cpu)
+        .sign_is_positive()
+        .zero_flag_is_reset()
+        .parity_overflow_flag_is_set()
+        .half_carry_flag_is_reset()
+        .add_subtract_flag_is_reset()
+        .carry_flag_is_set()
+    
+        // The contents of register r are rotated left 1 bit position. The contents of bit 7 
+        // are copied to the Carry flag and also to bit 0.
+        .memory_at_address_is(0x05, 0b0001_1110)
+
+        .program_counter_is(4);
 }
 
 #[test]
@@ -347,17 +419,62 @@ fn rr_r() {
 
 #[test]
 fn rr_hli() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_hl(0x05)
+        .with_memory(vec!(0xcb, 0x1e, 0, 0, 0, 0b1101_1101))
+        .build();
+
+    cpu.rr_hli();
+
+    Assertor::new(cpu)
+        .sign_is_positive()
+        .zero_flag_is_reset()
+        .parity_overflow_flag_is_set()
+        .half_carry_flag_is_reset()
+        .add_subtract_flag_is_reset()
+        .carry_flag_is_set()
+        .memory_at_address_is(0x05, 0b0110_1110)
+        .program_counter_is(2);
 }
 
 #[test]
 fn rr_ixdi() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_ix(0x04)
+        .with_memory(vec!(0xdd, 0xcb, 0x01, 0x1e, 0, 0b1101_1101))
+        .build();
+
+    cpu.rr_ixdi();
+
+    Assertor::new(cpu)
+        .sign_is_positive()
+        .zero_flag_is_reset()
+        .parity_overflow_flag_is_set()
+        .half_carry_flag_is_reset()
+        .add_subtract_flag_is_reset()
+        .carry_flag_is_set()
+        .memory_at_address_is(0x05, 0b0110_1110)
+        .program_counter_is(4);
 }
 
 #[test]
 fn rr_iydi() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_iy(0x04)
+        .with_memory(vec!(0xdd, 0xcb, 0x01, 0x1e, 0, 0b1101_1101))
+        .build();
+
+    cpu.rr_iydi();
+
+    Assertor::new(cpu)
+        .sign_is_positive()
+        .zero_flag_is_reset()
+        .parity_overflow_flag_is_set()
+        .half_carry_flag_is_reset()
+        .add_subtract_flag_is_reset()
+        .carry_flag_is_set()
+        .memory_at_address_is(0x05, 0b0110_1110)
+        .program_counter_is(4);
 }
 
 #[test]
