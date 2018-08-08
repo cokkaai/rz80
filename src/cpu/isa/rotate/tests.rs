@@ -480,40 +480,44 @@ fn rr_iydi() {
 fn rld() {
     let mut cpu = CpuBuilder::new()
         .with_flag_c(false)
-        .with_iy(0x06)
-        .with_memory(vec!(0xed, 0x6f))
+        .with_a(0xab)
+        .with_hl(0x03)
+        .with_memory(vec!(0xed, 0x6f, 0x00, 0xcd))
         .build();
 
     cpu.rld();
 
-    // Assertor::new(cpu)
-    //     .memory_at_address_is(0x07, 0b0110_1110)
-    //     .sign_is_positive()
-    //     .zero_flag_is_reset()
-    //     .parity_overflow_flag_is_set()
-    //     .half_carry_flag_is_reset()
-    //     .add_subtract_flag_is_reset()
-    //     .carry_flag_is_set()
-    //     .program_counter_is(4);
+    Assertor::new(cpu)
+        .memory_at_address_is(0x03, 0xdb)
+        .register_a_is(0xac)
+        .sign_is_negative()
+        .zero_flag_is_reset()
+        .parity_overflow_flag_is_set()
+        .half_carry_flag_is_reset()
+        .add_subtract_flag_is_reset()
+        .carry_flag_is_reset()
+        .program_counter_is(2);
 }
 
 #[test]
 fn rrd() {
     let mut cpu = CpuBuilder::new()
         .with_flag_c(false)
-        .with_iy(0x06)
-        .with_memory(vec!(0xfd, 0xcb, 0x01, 0x1e, 0xba, 0xbe, 0x00, 0b1101_1101))
+        .with_a(0xab)
+        .with_hl(0x03)
+        .with_memory(vec!(0xed, 0x67, 0x00, 0xcd))
         .build();
 
     cpu.rrd();
 
-    // Assertor::new(cpu)
-    //     .memory_at_address_is(0x07, 0b0110_1110)
-    //     .sign_is_positive()
-    //     .zero_flag_is_reset()
-    //     .parity_overflow_flag_is_set()
-    //     .half_carry_flag_is_reset()
-    //     .add_subtract_flag_is_reset()
-    //     .carry_flag_is_set()
-    //     .program_counter_is(4);
+    Assertor::new(cpu)
+        .memory_at_address_is(0x03, 0xbc)
+        .register_a_is(0xad)
+        .sign_is_negative()
+        .zero_flag_is_reset()
+        .parity_overflow_flag_is_reset()
+        .half_carry_flag_is_reset()
+        .add_subtract_flag_is_reset()
+        .carry_flag_is_reset()
+        .program_counter_is(2);
 }
