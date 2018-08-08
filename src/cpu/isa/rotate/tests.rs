@@ -13,6 +13,7 @@ fn rlca() {
     cpu.rlca();
 
     Assertor::new(cpu)
+        .register_a_is(0b0101_0101)
 
         // S, Z, P/V are not affected.
         .sign_is_positive()
@@ -73,6 +74,7 @@ fn rrca() {
     cpu.rrca();
 
     Assertor::new(cpu)
+        .register_a_is(0b1000_1000)
     
         // S, Z, P/V are not affected.
         .sign_is_positive()
@@ -103,7 +105,8 @@ fn rra() {
     cpu.rra();
 
     Assertor::new(cpu)
-    
+        .register_a_is(0b0000_1000)
+
         // S, Z, P/V are not affected.
         .sign_is_positive()
         .zero_flag_is_reset()
@@ -160,6 +163,7 @@ fn rlc_hli() {
     cpu.rlc_hli();
 
     Assertor::new(cpu)
+        .memory_at_address_is(0x06, 0b0111_0101)
         .sign_is_positive()
         .zero_flag_is_reset()
 
@@ -169,7 +173,6 @@ fn rlc_hli() {
         .half_carry_flag_is_reset()
         .add_subtract_flag_is_reset()
         .carry_flag_is_set()
-        .memory_at_address_is(6, 0b0111_0101)
         .program_counter_is(2);
 }
 
@@ -193,7 +196,7 @@ fn rlc_ixdi() {
         .half_carry_flag_is_reset()
         .add_subtract_flag_is_reset()
         .carry_flag_is_set()
-        .memory_at_address_is(6, 0b0001_0001)
+        .memory_at_address_is(0x06, 0b0001_0001)
         .program_counter_is(4);
 }
 
@@ -217,28 +220,92 @@ fn rlc_iydi() {
         .half_carry_flag_is_reset()
         .add_subtract_flag_is_reset()
         .carry_flag_is_set()
-        .memory_at_address_is(6, 0b0001_0001)
+        .memory_at_address_is(0x06, 0b0001_0001)
         .program_counter_is(4);
 }
 
 #[test]
 fn rl_r() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_flag_c(false)
+        .with_a(0b1101_1101)
+        .with_memory(vec!(0xcb, 0b0000_1111, 0xba, 0xbe))
+        .build();
+
+    cpu.rl_r();
+
+    Assertor::new(cpu)
+        .register_a_is(0b1011_1010)
+        .sign_is_negative()
+        .zero_flag_is_reset()
+        .parity_overflow_flag_is_set()
+        .half_carry_flag_is_reset()
+        .add_subtract_flag_is_reset()
+        .carry_flag_is_set()
+        .program_counter_is(2);
 }
 
 #[test]
 fn rl_hli() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_flag_c(false)
+        .with_hl(0x06)
+        .with_memory(vec!(0xcb, 0x16, 0xba, 0xbe, 0x00, 0x00, 0b1101_1101))
+        .build();
+
+    cpu.rl_hli();
+
+    Assertor::new(cpu)
+        .memory_at_address_is(0x06, 0b1011_1010)
+        .sign_is_negative()
+        .zero_flag_is_reset()
+        .parity_overflow_flag_is_set()
+        .half_carry_flag_is_reset()
+        .add_subtract_flag_is_reset()
+        .carry_flag_is_set()
+        .program_counter_is(2);
 }
 
 #[test]
 fn rl_ixdi() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_flag_c(false)
+        .with_ix(0x05)
+        .with_memory(vec!(0xdd, 0xcb, 0x01, 0x16, 0x00, 0x00, 0b1101_1101))
+        .build();
+
+    cpu.rl_ixdi();
+
+    Assertor::new(cpu)
+        .memory_at_address_is(0x06, 0b1011_1010)
+        .sign_is_negative()
+        .zero_flag_is_reset()
+        .parity_overflow_flag_is_set()
+        .half_carry_flag_is_reset()
+        .add_subtract_flag_is_reset()
+        .carry_flag_is_set()
+        .program_counter_is(4);
 }
 
 #[test]
 fn rl_iydi() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_flag_c(false)
+        .with_iy(0x05)
+        .with_memory(vec!(0xfd, 0xcb, 0x01, 0x16, 0x00, 0x00, 0b1101_1101))
+        .build();
+
+    cpu.rl_iydi();
+
+    Assertor::new(cpu)
+        .memory_at_address_is(0x06, 0b1011_1010)
+        .sign_is_negative()
+        .zero_flag_is_reset()
+        .parity_overflow_flag_is_set()
+        .half_carry_flag_is_reset()
+        .add_subtract_flag_is_reset()
+        .carry_flag_is_set()
+        .program_counter_is(4);
 }
 
 #[test]
@@ -279,7 +346,7 @@ fn rrc_hli() {
         .half_carry_flag_is_reset()
         .add_subtract_flag_is_reset()
         .carry_flag_is_reset()
-        .memory_at_address_is(6, 0b0101_1101)
+        .memory_at_address_is(0x06, 0b0101_1101)
         .program_counter_is(2);
 }
 
@@ -300,7 +367,7 @@ fn rrc_ixdi() {
         .half_carry_flag_is_reset()
         .add_subtract_flag_is_reset()
         .carry_flag_is_reset()
-        .memory_at_address_is(6, 0b0100_0100)
+        .memory_at_address_is(0x06, 0b0100_0100)
         .program_counter_is(4);
 }
 
@@ -321,7 +388,7 @@ fn rrc_iydi() {
         .half_carry_flag_is_reset()
         .add_subtract_flag_is_reset()
         .carry_flag_is_reset()
-        .memory_at_address_is(6, 0b0100_0100)
+        .memory_at_address_is(0x06, 0b0100_0100)
         .program_counter_is(4);
 }
 
@@ -336,6 +403,7 @@ fn rr_r() {
     cpu.rr_r();
 
     Assertor::new(cpu)
+        .register_a_is(0b0110_1110)
         .sign_is_positive()
         .zero_flag_is_reset()
         .parity_overflow_flag_is_set()
@@ -347,25 +415,105 @@ fn rr_r() {
 
 #[test]
 fn rr_hli() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_flag_c(false)
+        .with_hl(0x03)
+        .with_memory(vec!(0xcb, 0x1e, 0xba, 0b1101_1101))
+        .build();
+
+    cpu.rr_hli();
+
+    Assertor::new(cpu)
+        .memory_at_address_is(0x03, 0b0110_1110)
+        .sign_is_positive()
+        .zero_flag_is_reset()
+        .parity_overflow_flag_is_set()
+        .half_carry_flag_is_reset()
+        .add_subtract_flag_is_reset()
+        .carry_flag_is_set()
+        .program_counter_is(2);
 }
 
 #[test]
 fn rr_ixdi() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_flag_c(false)
+        .with_ix(0x06)
+        .with_memory(vec!(0xdd, 0xcb, 0x01, 0x1e, 0xba, 0xbe, 0x00, 0b1101_1101))
+        .build();
+
+    cpu.rr_ixdi();
+
+    Assertor::new(cpu)
+        .memory_at_address_is(0x07, 0b0110_1110)
+        .sign_is_positive()
+        .zero_flag_is_reset()
+        .parity_overflow_flag_is_set()
+        .half_carry_flag_is_reset()
+        .add_subtract_flag_is_reset()
+        .carry_flag_is_set()
+        .program_counter_is(4);
 }
 
 #[test]
 fn rr_iydi() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_flag_c(false)
+        .with_iy(0x06)
+        .with_memory(vec!(0xfd, 0xcb, 0x01, 0x1e, 0xba, 0xbe, 0x00, 0b1101_1101))
+        .build();
+
+    cpu.rr_iydi();
+
+    Assertor::new(cpu)
+        .memory_at_address_is(0x07, 0b0110_1110)
+        .sign_is_positive()
+        .zero_flag_is_reset()
+        .parity_overflow_flag_is_set()
+        .half_carry_flag_is_reset()
+        .add_subtract_flag_is_reset()
+        .carry_flag_is_set()
+        .program_counter_is(4);
 }
 
 #[test]
 fn rld() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_flag_c(false)
+        .with_iy(0x06)
+        .with_memory(vec!(0xed, 0x6f)
+        .build();
+
+    cpu.rld();
+
+    // Assertor::new(cpu)
+    //     .memory_at_address_is(0x07, 0b0110_1110)
+    //     .sign_is_positive()
+    //     .zero_flag_is_reset()
+    //     .parity_overflow_flag_is_set()
+    //     .half_carry_flag_is_reset()
+    //     .add_subtract_flag_is_reset()
+    //     .carry_flag_is_set()
+    //     .program_counter_is(4);
 }
 
 #[test]
 fn rrd() {
-    unimplemented!();
+    let mut cpu = CpuBuilder::new()
+        .with_flag_c(false)
+        .with_iy(0x06)
+        .with_memory(vec!(0xfd, 0xcb, 0x01, 0x1e, 0xba, 0xbe, 0x00, 0b1101_1101))
+        .build();
+
+    cpu.rrd();
+
+    // Assertor::new(cpu)
+    //     .memory_at_address_is(0x07, 0b0110_1110)
+    //     .sign_is_positive()
+    //     .zero_flag_is_reset()
+    //     .parity_overflow_flag_is_set()
+    //     .half_carry_flag_is_reset()
+    //     .add_subtract_flag_is_reset()
+    //     .carry_flag_is_set()
+    //     .program_counter_is(4);
 }

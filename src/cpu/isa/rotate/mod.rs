@@ -91,19 +91,23 @@ impl Cpu {
     }
 
     pub fn rr_hli(&mut self) {
-        let addr = (self.h, self.l).promote() as usize 
-            + self.memory_at_pc(2).two_compl() as usize;
+        let addr = (self.h, self.l).promote() as usize;
         self.rr_mem(addr);
+        self.incr_pc(2);
     }
 
     pub fn rr_ixdi(&mut self) {
-        let addr = self.ix as usize + self.memory_at_pc(2).two_compl() as usize;
+        // TODO: Manage negative offset
+        let addr = self.ix as usize + self.memory_at_pc(2) as usize;
         self.rr_mem(addr);
+        self.incr_pc(4);
     }
 
     pub fn rr_iydi(&mut self) {
-        let addr = self.iy as usize + self.memory_at_pc(2).two_compl() as usize;
+        // TODO: Manage negative offset
+        let addr = self.iy as usize + self.memory_at_pc(2) as usize;
         self.rr_mem(addr);
+        self.incr_pc(4);
     }
 
 
@@ -179,10 +183,10 @@ impl Cpu {
     pub fn rl_r(&mut self) {
         let reg = Self::select_src(self.memory_at_pc(1));
         let result = self.rl_reg(reg);
-        
+
         self.set_s_from_msb(result);
         self.set_z_from_byte(result);
-        self.set_pv(result.lsb());
+        self.set_pv(!result.lsb());
 
         self.incr_pc(2);
     }
@@ -190,16 +194,19 @@ impl Cpu {
     pub fn rl_hli(&mut self) {
         let addr = (self.h, self.l).promote() as usize;
         self.rl_mem(addr);
+        self.incr_pc(2);
     }
 
     pub fn rl_ixdi(&mut self) {
         let addr = self.ix as usize + self.memory_at_pc(2) as usize;
         self.rl_mem(addr);
+        self.incr_pc(4);
     }
 
     pub fn rl_iydi(&mut self) {
         let addr = self.iy as usize + self.memory_at_pc(2) as usize;
         self.rl_mem(addr);
+        self.incr_pc(4);
     }
 
 

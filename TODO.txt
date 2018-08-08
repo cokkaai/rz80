@@ -23,8 +23,6 @@ TODO
 
 [TODO] Complete shift tests and implementation
 
-[TODO] Verify compare implementations
-
 [TODO] Understand how to do math with half carry
 
 [TODO] WTF DAA does?
