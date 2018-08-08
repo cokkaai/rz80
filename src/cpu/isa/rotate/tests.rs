@@ -481,7 +481,7 @@ fn rld() {
     let mut cpu = CpuBuilder::new()
         .with_flag_c(false)
         .with_iy(0x06)
-        .with_memory(vec!(0xed, 0x6f)
+        .with_memory(vec!(0xed, 0x6f))
         .build();
 
     cpu.rld();
