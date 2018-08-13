@@ -74,8 +74,6 @@ fn rrca() {
     cpu.rrca();
 
     Assertor::new(cpu)
-        .register_a_is(0b1000_1000)
-    
         // S, Z, P/V are not affected.
         .sign_is_positive()
         .zero_flag_is_reset()
@@ -105,8 +103,6 @@ fn rra() {
     cpu.rra();
 
     Assertor::new(cpu)
-        .register_a_is(0b0000_1000)
-
         // S, Z, P/V are not affected.
         .sign_is_positive()
         .zero_flag_is_reset()

@@ -18,9 +18,8 @@ TODO
 [DONE] Complete ar16 tests and implementation
 [DONE] Complete argp tests and implementation
 [DONE] Complete rotate implementation
-[DOEN] Complete rotate tests
-
-[TODO] Complete shift tests and implementation
+[DONE] Complete rotate tests
+[DONE] Complete shift tests and implementation
 
 [TODO] Understand how to do math with half carry
 
