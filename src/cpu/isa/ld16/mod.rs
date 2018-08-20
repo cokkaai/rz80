@@ -2,6 +2,7 @@ use cpu::Cpu;
 use cpu::Register16;
 use cpu::RegisterDemote;
 use cpu::RegisterPromote;
+use cpu::RegisterOperations;
 
 #[cfg(test)]
 mod tests;
@@ -35,19 +36,19 @@ impl Cpu {
             _ => panic!(),
         }
 
-        self.incr_pc(3);
+        self.pc.reg_add(3);
     }
 
     pub fn ld_ix_nn(&mut self) {
         let value = (self.memory_at_pc(3), self.memory_at_pc(2)).promote();
         self.ix = value;
-        self.incr_pc(4);
+        self.pc.reg_add(4);
     }
 
     pub fn ld_iy_nn(&mut self) {
         let value = (self.memory_at_pc(3), self.memory_at_pc(2)).promote();
         self.iy = value;
-        self.incr_pc(4);
+        self.pc.reg_add(4);
     }
 
     pub fn ld_hl_nni(&mut self) {
@@ -56,7 +57,7 @@ impl Cpu {
         let addr = (h, l).promote() as usize;
         self.l = self.memory[addr];
         self.h = self.memory[addr + 1];
-        self.incr_pc(3);
+        self.pc.reg_add(3);
     }
 
     pub fn ld_dd_nni(&mut self) {
@@ -72,26 +73,26 @@ impl Cpu {
             _ => panic!(),
         }
 
-        self.incr_pc(4);
+        self.pc.reg_add(4);
     }
 
     pub fn ld_ix_nni(&mut self) {
         let addr = (self.memory_at_pc(3), self.memory_at_pc(2)).promote() as usize;
         self.ix = (self.memory[addr + 1], self.memory[addr]).promote();
-        self.incr_pc(4);
+        self.pc.reg_add(4);
     }
 
     pub fn ld_iy_nni(&mut self) {
         let addr = (self.memory_at_pc(3), self.memory_at_pc(2)).promote() as usize;
         self.iy = (self.memory[addr + 1], self.memory[addr]).promote();
-        self.incr_pc(4);
+        self.pc.reg_add(4);
     }
 
     pub fn ld_nni_hl(&mut self) {
         let addr = (self.memory_at_pc(2), self.memory_at_pc(1)).promote() as usize;
         self.memory[addr] = self.l;
         self.memory[addr + 1] = self.h;
-        self.incr_pc(3);
+        self.pc.reg_add(3);
     }
 
     pub fn ld_nni_dd(&mut self) {
@@ -116,35 +117,35 @@ impl Cpu {
             },
             _ => panic!(),
         }
-        self.incr_pc(4);
+        self.pc.reg_add(4);
     }
 
     pub fn ld_nni_ix(&mut self) {
         let addr = (self.memory_at_pc(3), self.memory_at_pc(2)).promote() as usize;
         self.memory[addr] = self.ix.low();
         self.memory[addr + 1] = self.ix.high();
-        self.incr_pc(4);
+        self.pc.reg_add(4);
     }
 
     pub fn ld_nni_iy(&mut self) {
         let addr = (self.memory_at_pc(3), self.memory_at_pc(2)).promote() as usize;
         self.memory[addr] = self.iy.low();
         self.memory[addr + 1] = self.iy.high();
-        self.incr_pc(4);
+        self.pc.reg_add(4);
     }
 
     pub fn ld_sp_hl(&mut self) {
         self.sp = self.read16(Register16::hl);
-        self.incr_pc(1);
+        self.pc.reg_add(1);
     }
 
     pub fn ld_sp_ix(&mut self) {
         self.sp = self.ix;
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn ld_sp_iy(&mut self) {
         self.sp = self.iy;
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 }

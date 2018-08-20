@@ -21,6 +21,14 @@ TODO
 [DONE] Complete rotate tests
 [DONE] Complete shift tests and implementation
 
+[TODO] Updating a composed 16 register could be done in one
+       instruction like below provided the reg_add fn accepts i16.
+        // (self.h, self.l).reg_add(delta);
+       Possibly replace add_* with RegisterOperations fn reg_add. 
+
+[TODO] Evaluate if it is possible to remove more register fns
+       from registers.rs
+
 [TODO] Understand how to do math with half carry
 
 [TODO] WTF DAA does?

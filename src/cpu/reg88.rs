@@ -36,11 +36,11 @@ impl <'a> RegisterOperations<u16> for (&'a mut u8, &'a mut u8) {
     }
 
     fn reg_add(&mut self, value: u16) -> (u16, bool) {
-        // TODO: Check if compliant with z80 hw.
         let (result, carry) = self.promote().overflowing_add(value);
+
         *self.0 = result.high();
         *self.1 = result.low();
-        // TODO: non trasferisce il valore sui registri.        
+        
         (result, carry)
     }
 
@@ -54,8 +54,6 @@ impl <'a> RegisterOperations<u16> for (&'a mut u8, &'a mut u8) {
     }
 
     fn is_zero(&self) -> bool {
-        // TODO: Check if testing u8 is correct
-        // or if i8 should be tested instead.
         *self.0 == 0 && *self.1 == 0
     }
 
@@ -118,7 +116,6 @@ impl RegisterOperations<u16> for (u8, u8) {
     }
 
     fn reg_add(&mut self, value: u16) -> (u16, bool) {
-        // let (result, overflow) = bytes::promote(self.0, self.1).overflowing_add(value);
         // TODO: Check if compliant with z80 hw.
         let (result, overflow) = self.promote().overflowing_add(value);
         self.0 = result.high();
@@ -138,8 +135,6 @@ impl RegisterOperations<u16> for (u8, u8) {
     }
 
     fn is_zero(&self) -> bool {
-        // TODO: Check if testing u8 is correct
-        // or if i8 should be tested instead.
         self.0 == 0 && self.1 == 0
     }
 

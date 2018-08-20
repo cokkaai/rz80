@@ -5,6 +5,7 @@ use cpu::Cpu;
 use cpu::Register16;
 use cpu::RegisterDemote;
 use cpu::RegisterPromote;
+use cpu::RegisterOperations;
 use std::mem;
 
 #[allow(dead_code)]
@@ -15,13 +16,13 @@ impl Cpu {
     pub fn ex_de_hl(&mut self) {
         mem::swap(&mut self.d, &mut self.h);
         mem::swap(&mut self.e, &mut self.l);
-        self.incr_pc(1);
+        self.pc.reg_add(1);
     }
 
     pub fn ex_af_af1(&mut self) {
         mem::swap(&mut self.a, &mut self.a1);
         mem::swap(&mut self.f, &mut self.f1);
-        self.incr_pc(1);
+        self.pc.reg_add(1);
     }
 
     pub fn exx(&mut self) {
@@ -34,7 +35,7 @@ impl Cpu {
         mem::swap(&mut self.h, &mut self.h1);
         mem::swap(&mut self.l, &mut self.l1);
         
-        self.incr_pc(1);
+        self.pc.reg_add(1);
     }
 
     pub fn ex_spi_hl(&mut self) {
@@ -50,7 +51,7 @@ impl Cpu {
         self.memory[addrh] = h;
         self.memory[addrl] = l;
 
-        self.incr_pc(1);
+        self.pc.reg_add(1);
     }
 
     pub fn ex_spi_ix(&mut self) {
@@ -64,7 +65,7 @@ impl Cpu {
         self.memory[addrh] = h;
         self.memory[addrl] = l;
 
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn ex_spi_iy(&mut self) {
@@ -78,7 +79,7 @@ impl Cpu {
         self.memory[addrh] = h;
         self.memory[addrl] = l;
 
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     fn _lddiff(&mut self, delta: i16) {
@@ -106,7 +107,7 @@ impl Cpu {
         let value = self.read16(Register16::bc) != 0;
         self.set_pv(value);
 
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn ldi(&mut self) {
@@ -143,7 +144,7 @@ impl Cpu {
         }
     }
 
-    pub fn _cpi(&mut self, step: i16) {
+    pub fn _cpi(&mut self, step: i8) {
         let addr = self.read_hl() as usize;
         let diff = self.a - self.memory[addr];
 
@@ -169,7 +170,7 @@ impl Cpu {
         // N is set.
         self.set_n(true);
 
-        self.pc += 2;
+        self.pc.reg_add(2);
     }
 
     pub fn cpi(&mut self) {

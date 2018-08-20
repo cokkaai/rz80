@@ -61,7 +61,7 @@ impl Cpu {
         self.set_z_from_byte(result);
         self.set_pv(!result.lsb());
 
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     fn sl_mem(&mut self, addr: usize) {
@@ -80,21 +80,21 @@ impl Cpu {
     pub fn sla_hli(&mut self) {
         let addr = (self.h, self.l).promote() as usize;
         self.sl_mem(addr);
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn sla_ixdi(&mut self) {
-        // TODO: Manage negative offset
-        let addr = self.ix as usize + self.memory_at_pc(2) as usize;
+        let offset = self.memory_at_pc(2);
+        let addr = self.ix_addr(offset);
         self.sl_mem(addr);
-        self.incr_pc(4);
+        self.pc.reg_add(4);
     }
 
     pub fn sla_iydi(&mut self) {
-        // TODO: Manage negative offset
-        let addr = self.iy as usize + self.memory_at_pc(2) as usize;
+        let offset = self.memory_at_pc(2);
+        let addr = self.iy_addr(offset);
         self.sl_mem(addr);
-        self.incr_pc(4);
+        self.pc.reg_add(4);
     }
 
     // === Shift registers right through the carry flag keeping msb ===
@@ -154,7 +154,7 @@ impl Cpu {
         self.set_pv(!result.lsb());
         self.set_n(false);
 
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     fn sra_mem(&mut self, addr: usize) {
@@ -175,21 +175,21 @@ impl Cpu {
     pub fn sra_hli(&mut self) {
         let addr = (self.h, self.l).promote() as usize;
         self.sra_mem(addr);
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn sra_ixdi(&mut self) {
         // TODO: Manage negative offset
         let addr = self.ix as usize + self.memory_at_pc(2) as usize;
         self.sra_mem(addr);
-        self.incr_pc(4);
+        self.pc.reg_add(4);
     }
 
     pub fn sra_iydi(&mut self) {
         // TODO: Manage negative offset
         let addr = self.iy as usize + self.memory_at_pc(2) as usize;
         self.sra_mem(addr);
-        self.incr_pc(4);
+        self.pc.reg_add(4);
     }
 
     // === Shift registers right through the carry flag ===
@@ -242,7 +242,7 @@ impl Cpu {
         self.set_pv(!result.lsb());
         self.set_n(false);
 
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     fn srl_mem(&mut self, addr: usize) {
@@ -262,20 +262,20 @@ impl Cpu {
     pub fn srl_hli(&mut self) {
         let addr = (self.h, self.l).promote() as usize;
         self.srl_mem(addr);
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn srl_ixdi(&mut self) {
         // TODO: Manage negative offset
         let addr = self.ix as usize + self.memory_at_pc(2) as usize;
         self.srl_mem(addr);
-        self.incr_pc(4);
+        self.pc.reg_add(4);
     }
 
     pub fn srl_iydi(&mut self) {
         // TODO: Manage negative offset
         let addr = self.iy as usize + self.memory_at_pc(2) as usize;
         self.srl_mem(addr);
-        self.incr_pc(4);
+        self.pc.reg_add(4);
     }
 }

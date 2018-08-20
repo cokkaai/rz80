@@ -46,7 +46,7 @@ impl Cpu {
 
         self.set_c(carry);
         self.set_n(false);
-        self.incr_pc(1);
+        self.pc.reg_add(1);
     }
 
     pub fn adc_hl_ss(&mut self) {
@@ -60,7 +60,7 @@ impl Cpu {
         //self.set_pv(overflow);
         self.set_n(false);
 
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn sbc_hl_ss(&mut self) {
@@ -74,7 +74,7 @@ impl Cpu {
         //self.set_pv(overflow);
         self.set_n(true);
 
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn add_ix_pp(&mut self) {
@@ -92,7 +92,7 @@ impl Cpu {
         self.set_c(carry);
         self.set_n(false);
 
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn add_iy_rr(&mut self) {
@@ -110,7 +110,7 @@ impl Cpu {
         self.set_c(carry);
         self.set_n(false);
 
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn inc_ss(&mut self) {
@@ -122,17 +122,17 @@ impl Cpu {
             _ => panic!(),
         };
 
-        self.incr_pc(1);
+        self.pc.reg_add(1);
     }
 
     pub fn inc_ix(&mut self) {
         self.ix.incr();
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn inc_iy(&mut self) {
         self.iy.incr();
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn dec_ss(&mut self) {
@@ -144,16 +144,16 @@ impl Cpu {
             _ => panic!(),
         };
 
-        self.incr_pc(1);
+        self.pc.reg_add(1);
     }
 
     pub fn dec_ix(&mut self) {
         self.ix.decr();
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn dec_iy(&mut self) {
         self.iy.decr();
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 }

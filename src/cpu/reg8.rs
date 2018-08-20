@@ -1,10 +1,25 @@
+use cpu::RegisterDemote;
 use cpu::RegisterOperations;
 
+impl RegisterDemote<u8> for u8 {
+    /// Returns the upper nibble of the byte.
+    fn high(&self) -> u8 {
+        *self & 0xf0
+    }
+
+    /// Returns the lower nibble of the byte.
+    fn low(&self) -> u8 {
+        *self & 0xf
+    }
+}
+
 impl RegisterOperations<u8> for u8 {
+    #[inline]
     fn msb(&self) -> bool {
         (*self & 0x80) != 0
     }
 
+    #[inline]
     fn lsb(&self) -> bool {
         (*self & 0x01) != 0
     }

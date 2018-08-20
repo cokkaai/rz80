@@ -1,5 +1,6 @@
 use cpu::Cpu;
 use cpu::RegisterPromote;
+use cpu::RegisterOperations;
 
 #[cfg(test)]
 mod tests;
@@ -18,20 +19,20 @@ impl Cpu {
         if self.condition_at_pc(0) {
             self.pc = (self.memory_at_pc(2), self.memory_at_pc(1)).promote();
         } else {
-            self.incr_pc(3);
+            self.pc.reg_add(3);
         }
     }
 
     pub fn jr_e(&mut self) {
-        let offset = i16::from(self.memory_at_pc(1));
-        self.offset_pc(offset);
+        let offset = self.memory_at_pc(1);
+        self.pc.reg_add(u16::from(offset));
     }
 
     fn jump_on(&mut self, cnd: bool) {
         if cnd {
             self.jr_e();
         } else {
-            self.pc += 2;
+            self.pc.reg_add(2);
         }
     }
 
@@ -72,10 +73,10 @@ impl Cpu {
         self.b -= 1;
 
         if self.b == 0 {
-            self.incr_pc(2);
+            self.pc.reg_add(2);
         } else {
-            let offset = i16::from(self.memory_at_pc(1));
-            self.offset_pc(offset);
+            let offset = self.memory_at_pc(1);
+            self.pc.reg_add(u16::from(offset));
         }
     }
 }

@@ -34,21 +34,21 @@ impl Cpu {
     }
 
     pub fn and_hli(&mut self) {
-        let operand = self.memory_at_hl(0);
+        let operand = self.memory_at_hl();
         self._and_with_accumulator(operand);
         self.pc += 1;
     }
 
     pub fn and_ixdi(&mut self) {
         let offset = self.memory_at_pc(2);
-        let operand = self.memory_at_ix(u16::from(offset));
+        let operand = self.memory_at_ix(offset);
         self._and_with_accumulator(operand);
         self.pc += 3;
     }
 
     pub fn and_iydi(&mut self) {
         let offset = self.memory_at_pc(2);
-        let operand = self.memory_at_iy(u16::from(offset));
+        let operand = self.memory_at_iy(offset);
         self._and_with_accumulator(operand);
         self.pc += 3;
     }

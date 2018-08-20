@@ -106,55 +106,55 @@ impl Cpu {
         let opcode = self.memory_at_pc(0);
         let result = self._add_r(Self::select_reg(opcode), 1);
         self._evaluate_flags_after_inc(result.0, result.1);
-        self.incr_pc(1);
+        self.pc.reg_add(1);
     }
 
     pub fn inc_hli(&mut self) {
         let addr = self.read_hl() as usize;
         let result = self._add_addr(addr, 1);
         self._evaluate_flags_after_inc(result.0, result.1);
-        self.incr_pc(1);
+        self.pc.reg_add(1);
     }
 
     pub fn inc_ixdi(&mut self) {
         let addr = self.ix as usize + self.memory_at_pc(2) as usize;
         let result = self._add_addr(addr, 1);
         self._evaluate_flags_after_inc(result.0, result.1);
-        self.incr_pc(3);
+        self.pc.reg_add(3);
     }
 
     pub fn inc_iydi(&mut self) {
         let addr = self.iy as usize + self.memory_at_pc(2) as usize;
         let result = self._add_addr(addr, 1);
         self._evaluate_flags_after_inc(result.0, result.1);
-        self.incr_pc(3);
+        self.pc.reg_add(3);
     }
 
     pub fn dec_r(&mut self) {
         let opcode = self.memory_at_pc(0);
         let result = self._add_r(Self::select_reg(opcode), 1.two_compl());
         self._evaluate_flags_after_dec(result.0, result.1);
-        self.incr_pc(1);
+        self.pc.reg_add(1);
     }
 
     pub fn dec_hli(&mut self) {
         let addr = self.read_hl() as usize;
         let result = self._add_addr(addr, -1);
         self._evaluate_flags_after_dec(result.0, result.1);
-        self.incr_pc(1);
+        self.pc.reg_add(1);
     }
 
     pub fn dec_ixdi(&mut self) {
         let addr = self.ix as usize + self.memory_at_pc(2) as usize;
         let result = self._add_addr(addr, -1);
         self._evaluate_flags_after_dec(result.0, result.1);
-        self.incr_pc(3);
+        self.pc.reg_add(3);
     }
 
     pub fn dec_iydi(&mut self) {
         let addr = self.iy as usize + self.memory_at_pc(2) as usize;
         let result = self._add_addr(addr, -1);
         self._evaluate_flags_after_dec(result.0, result.1);
-        self.incr_pc(3);
+        self.pc.reg_add(3);
     }
 }

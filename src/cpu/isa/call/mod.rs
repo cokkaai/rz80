@@ -1,6 +1,7 @@
 use cpu::Cpu;
 use cpu::RegisterDemote;
 use cpu::RegisterPromote;
+use cpu::RegisterOperations;
 
 #[cfg(test)]
 mod tests;
@@ -23,7 +24,7 @@ impl Cpu {
     fn _call(&mut self) {
         let addr = (self.memory_at_pc(2), self.memory_at_pc(1)).promote();
 
-        self.incr_pc(3);
+        self.pc.reg_add(3);
         self._push_pc();
         
         // PC ← nn
@@ -38,7 +39,7 @@ impl Cpu {
         if self.condition_at_pc(0) {
             self._call();
         } else {
-            self.incr_pc(3);
+            self.pc.reg_add(3);
         }
     }
 
@@ -62,7 +63,7 @@ impl Cpu {
         if self.condition_at_pc(0) {
             self._pop_pc();
         } else {
-            self.incr_pc(1);
+            self.pc.reg_add(1);
         }
     }
 

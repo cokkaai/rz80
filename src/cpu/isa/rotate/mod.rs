@@ -76,7 +76,7 @@ impl Cpu {
 
     pub fn rra(&mut self) {
         self.rr_reg(Register::a);
-        self.incr_pc(1);
+        self.pc.reg_add(1);
     }
 
     pub fn rr_r(&mut self) {
@@ -87,27 +87,27 @@ impl Cpu {
         self.set_z_from_byte(result);
         self.set_pv(!result.lsb());
 
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn rr_hli(&mut self) {
         let addr = (self.h, self.l).promote() as usize;
         self.rr_mem(addr);
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn rr_ixdi(&mut self) {
         // TODO: Manage negative offset
         let addr = self.ix as usize + self.memory_at_pc(2) as usize;
         self.rr_mem(addr);
-        self.incr_pc(4);
+        self.pc.reg_add(4);
     }
 
     pub fn rr_iydi(&mut self) {
         // TODO: Manage negative offset
         let addr = self.iy as usize + self.memory_at_pc(2) as usize;
         self.rr_mem(addr);
-        self.incr_pc(4);
+        self.pc.reg_add(4);
     }
 
 
@@ -177,7 +177,7 @@ impl Cpu {
 
     pub fn rla(&mut self) {
         self.rl_reg(Register::a);
-        self.incr_pc(1);
+        self.pc.reg_add(1);
     }
 
     pub fn rl_r(&mut self) {
@@ -188,27 +188,27 @@ impl Cpu {
         self.set_z_from_byte(result);
         self.set_pv(!result.lsb());
 
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn rl_hli(&mut self) {
         let addr = (self.h, self.l).promote() as usize;
         self.rl_mem(addr);
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn rl_ixdi(&mut self) {
         // TODO: Manage negative offset
         let addr = self.ix as usize + self.memory_at_pc(2) as usize;
         self.rl_mem(addr);
-        self.incr_pc(4);
+        self.pc.reg_add(4);
     }
 
     pub fn rl_iydi(&mut self) {
         // TODO: Manage negative offset
         let addr = self.iy as usize + self.memory_at_pc(2) as usize;
         self.rl_mem(addr);
-        self.incr_pc(4);
+        self.pc.reg_add(4);
     }
 
 
@@ -261,12 +261,12 @@ impl Cpu {
         self.set_z_from_byte(result);
         self.set_pv(!result.lsb());
 
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn rrca(&mut self) {
         self.rrc_reg(Register::a);
-        self.incr_pc(1);
+        self.pc.reg_add(1);
     }
 
     // === Rotate registers left ===
@@ -318,12 +318,12 @@ impl Cpu {
         self.set_z_from_byte(result);
         self.set_pv(!result.lsb());
 
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn rlca(&mut self) {
         self.rlc_reg(Register::a);
-        self.incr_pc(1);
+        self.pc.reg_add(1);
     }
 
 
@@ -343,19 +343,19 @@ impl Cpu {
     pub fn rlc_hli(&mut self) {
         let addr = (self.h, self.l).promote() as usize;
         self.rlc_memory_location(addr);
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn rlc_ixdi(&mut self) {
         let addr = self.ix as usize + self.memory_at_pc(2) as usize;
         self.rlc_memory_location(addr);
-        self.incr_pc(4);
+        self.pc.reg_add(4);
     }
 
     pub fn rlc_iydi(&mut self) {
         let addr = self.iy as usize + self.memory_at_pc(2) as usize;
         self.rlc_memory_location(addr);
-        self.incr_pc(4);
+        self.pc.reg_add(4);
     }
 
     // === Rotate memory location right ===
@@ -374,19 +374,19 @@ impl Cpu {
     pub fn rrc_hli(&mut self) {
         let addr = (self.h, self.l).promote() as usize;
         self.rrc_memory_location(addr);
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn rrc_ixdi(&mut self) {
         let addr = self.ix as usize + self.memory_at_pc(2) as usize;
         self.rrc_memory_location(addr);
-        self.incr_pc(4);
+        self.pc.reg_add(4);
     }
 
     pub fn rrc_iydi(&mut self) {
         let addr = self.iy as usize + self.memory_at_pc(2) as usize;
         self.rrc_memory_location(addr);
-        self.incr_pc(4);
+        self.pc.reg_add(4);
     }
 
     fn low_nibble(value: u8) -> u8 {
@@ -410,7 +410,7 @@ impl Cpu {
         self.set_n(false);
         self.set_h(false);
 
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn rrd(&mut self) {
@@ -426,6 +426,6 @@ impl Cpu {
         self.set_n(false);
         self.set_h(false);
 
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 }

@@ -29,7 +29,6 @@ impl RegisterOperations<u16> for u16 {
     }
 
     fn reg_add(&mut self, value: u16) -> (u16, bool) {
-        // TODO: Check if compliant with z80 hw.
         let (result, overflow) = self.overflowing_add(value);
         *self = result;
         (result, overflow)
@@ -42,8 +41,6 @@ impl RegisterOperations<u16> for u16 {
     }
 
     fn is_zero(&self) -> bool {
-        // TODO: Check if testing u8 is correct
-        // or if i8 should be tested instead.
         *self == 0
     }
 

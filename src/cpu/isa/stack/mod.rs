@@ -2,6 +2,7 @@ use cpu::Cpu;
 use cpu::Register16;
 use cpu::RegisterDemote;
 use cpu::RegisterPromote;
+use cpu::RegisterOperations;
 
 #[cfg(test)]
 mod tests;
@@ -44,7 +45,7 @@ impl Cpu {
         self.push_byte(h);
         self.push_byte(l);
 
-        self.incr_pc(1);
+        self.pc.reg_add(1);
     }
 
     pub fn push_ix(&mut self) {
@@ -53,7 +54,7 @@ impl Cpu {
         self.push_byte(value.high());
         self.push_byte(value.low());
 
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn push_iy(&mut self) {
@@ -62,7 +63,7 @@ impl Cpu {
         self.push_byte(value.high());
         self.push_byte(value.low());
 
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn pop_qq(&mut self) {
@@ -91,7 +92,7 @@ impl Cpu {
             _ => panic!(),
         };
 
-        self.incr_pc(1);
+        self.pc.reg_add(1);
     }
 
     pub fn pop_ix(&mut self) {
@@ -100,7 +101,7 @@ impl Cpu {
 
         self.ix = (h, l).promote();
 
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn pop_iy(&mut self) {
@@ -109,7 +110,7 @@ impl Cpu {
 
         self.iy = (h, l).promote();
 
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
 }

@@ -16,7 +16,7 @@ impl Cpu {
         let dest = Cpu::select_dest(opcode);
         let value = self.read(src);
         self.write(dest, value);
-        self.incr_pc(1);
+        self.pc.reg_add(1);
     }
 
     pub fn ld_r_n(&mut self) {
@@ -24,7 +24,7 @@ impl Cpu {
         let dest = Cpu::select_dest(opcode);
         let value = self.memory_at_pc(1);
         self.write(dest, value);
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn ld_r_hl(&mut self) {
@@ -33,7 +33,7 @@ impl Cpu {
         let addr = self.read16(Register16::hl) as usize;
         let value = self.memory[addr];
         self.write(dest, value);
-        self.incr_pc(1);
+        self.pc.reg_add(1);
     }
 
     pub fn ld_r_ixd(&mut self) {
@@ -43,7 +43,7 @@ impl Cpu {
         let dest = Cpu::select_dest(opcode);
         let value = self.memory[addr];
         self.write(dest, value);
-        self.incr_pc(3);
+        self.pc.reg_add(3);
     }
 
     pub fn ld_r_iyd(&mut self) {
@@ -53,7 +53,7 @@ impl Cpu {
         let dest = Cpu::select_dest(opcode);
         let value = self.memory[addr];
         self.write(dest, value);
-        self.incr_pc(3);
+        self.pc.reg_add(3);
     }
 
     pub fn ld_hl_r(&mut self) {
@@ -61,7 +61,7 @@ impl Cpu {
         let src = Cpu::select_src(opcode);
         let addr = self.read16(Register16::hl) as usize;
         self.memory[addr] = self.read(src);
-        self.incr_pc(1);
+        self.pc.reg_add(1);
     }
 
     pub fn ld_ixd_r(&mut self) {
@@ -70,7 +70,7 @@ impl Cpu {
         let src = Cpu::select_src(opcode);
         let addr = self.ix as usize + self.memory_at_pc(2).two_compl() as usize;
         self.memory[addr] = self.read(src);
-        self.incr_pc(3);
+        self.pc.reg_add(3);
     }
 
     pub fn ld_iyd_r(&mut self) {
@@ -79,44 +79,44 @@ impl Cpu {
         let src = Cpu::select_src(opcode);
         let addr = self.iy as usize + self.memory_at_pc(2).two_compl() as usize;
         self.memory[addr] = self.read(src);
-        self.incr_pc(3);
+        self.pc.reg_add(3);
     }
 
     pub fn ld_hl_n(&mut self) {
         let addr = self.read16(Register16::hl) as usize;
         let value = self.memory_at_pc(1);
         self.memory[addr] = value;
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn ld_ixd_n(&mut self) {
         let addr = self.ix as usize + self.memory_at_pc(2) as usize;
         self.memory[addr] = self.memory_at_pc(3);
-        self.incr_pc(4);
+        self.pc.reg_add(4);
     }
 
     pub fn ld_iyd_n(&mut self) {
         let addr = self.iy as usize + self.memory_at_pc(2) as usize;
         self.memory[addr] = self.memory_at_pc(3);
-        self.incr_pc(4);
+        self.pc.reg_add(4);
     }
 
     pub fn ld_a_bc(&mut self) {
         let addr = self.read16(Register16::bc) as usize;
         self.a = self.memory[addr];
-        self.incr_pc(1);
+        self.pc.reg_add(1);
     }
 
     pub fn ld_a_de(&mut self) {
         let addr = self.read16(Register16::de) as usize;
         self.a = self.memory[addr];
-        self.incr_pc(1);
+        self.pc.reg_add(1);
     }
 
     pub fn ld_a_nn(&mut self) {
         let addr = self.memory_at_pc(1) as usize + self.memory_at_pc(2) as usize;
         self.a = self.memory[addr];
-        self.incr_pc(3);
+        self.pc.reg_add(3);
     }
 
     pub fn ld_a_i(&mut self) {
@@ -133,7 +133,7 @@ impl Cpu {
         self.set_h(false);
         self.set_n(false);
 
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn ld_a_r(&mut self) {
@@ -149,16 +149,16 @@ impl Cpu {
         self.set_h(false);
         self.set_n(false);
 
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn ld_i_a(&mut self) {
         self.i = self.a;
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn ld_r_a(&mut self) {
         self.r = self.a;
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 }

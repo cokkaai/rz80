@@ -2,7 +2,7 @@
 mod tests;
 
 use cpu::Cpu;
-use cpu::registers::RegisterOperations;
+use cpu::RegisterOperations;
 
 // === General-Purpose Arithmetic ===
 
@@ -16,7 +16,7 @@ impl Cpu {
         self.a = !self.a;
         self.set_h(true);
         self.set_n(false);
-        self.incr_pc(1);
+        self.pc.reg_add(1);
     }
 
     pub fn neg(&mut self) {
@@ -33,7 +33,7 @@ impl Cpu {
         // TODO: implement: H is set if borrow from bit 4; otherwise, it is reset.
         self.set_h(false);
 
-        self.incr_pc(2);
+        self.pc.reg_add(2);
     }
 
     pub fn ccf(&mut self) {
@@ -43,7 +43,7 @@ impl Cpu {
         self.set_c(!value);
         self.set_n(false);
 
-        self.incr_pc(1);
+        self.pc.reg_add(1);
     }
 
     pub fn scf(&mut self) {

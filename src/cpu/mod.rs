@@ -7,7 +7,11 @@ mod isa;
 #[cfg(test)]
 mod assertor;
 
+#[cfg(test)]
+mod tests;
+
 pub use self::registers::*;
+pub use self::registers::RegisterOperations;
 pub use self::builder::CpuBuilder;
 
 #[cfg(test)]
@@ -51,42 +55,14 @@ pub struct Cpu {
 impl Cpu {
     /// Read memory at address: pc + offset
     fn memory_at_pc(&self, offset_from_pc: u16) -> u8 {
-        //self.memory[(self.pc + offset_from_pc) as usize]
         self.memory[usize::from(self.pc + offset_from_pc)]
     }
 
-    /// Returns the memory address dtored in the memory location at pc.
+    /// Returns the memory address stored in the memory location at pc.
     fn addr_at_pc(&self, offset_from_pc: u16) -> usize {
         
         self.memory_at_pc(offset_from_pc) as usize
             + ((self.memory_at_pc(offset_from_pc + 1) as usize) << 8)
-    }
-
-    /// Adds offset to PC register.
-    /// TODO: Check if compliant with z80 hw.
-    fn incr_pc(&mut self, offset: u16) {
-        let msz = self.memory.capacity();
-        let mut next = self.pc as usize + offset as usize;
-
-        if next >= msz {
-            next %= msz;
-        }
-
-        self.pc = next as u16;
-    }
-
-    /// Adds signed offset to PC register.
-    /// TODO: Check if compliant with z80 hw.
-    fn offset_pc(&mut self, offset: i16) {
-        // Calculate the new pc 
-        let mut ipc = i32::from(self.pc) + i32::from(offset);
-
-        // Reduce ipc into u16 range. Z80 does this?
-        if ipc < 0 && ipc > i32::from(u16::max_value()) {
-            ipc = ipc % i32::from(u16::max_value());
-        }
-
-        self.pc = ipc as u16;
     }
 
     fn condition_at_pc(&self, offset_from_pc: u16) -> bool {
@@ -105,19 +81,37 @@ impl Cpu {
         }
     }
 
-    /// Read memory at address: hl + offset
-    fn memory_at_hl(&self, offset_from_hl: u16) -> u8 {
-        let addr = (self.h, self.l).promote() + offset_from_hl;
+    /// Read memory at address: hl
+    fn memory_at_hl(&self) -> u8 {
+        let addr = (self.h, self.l).promote();
         self.memory[addr as usize]
     }
 
     /// Read memory at address: ix + offset
-    fn memory_at_ix(&self, offset_from_ix: u16) -> u8 {
-        self.memory[(self.ix + offset_from_ix) as usize]
+    fn memory_at_ix(&self, offset: u8) -> u8 {
+        let addr = self.ix_addr(offset);
+        self.memory[addr]
     }
 
     /// Read memory at address: iy + offset
-    fn memory_at_iy(&self, offset_from_iy: u16) -> u8 {
-        self.memory[(self.iy + offset_from_iy) as usize]
+    fn memory_at_iy(&self, offset: u8) -> u8 {
+        let addr = self.iy_addr(offset);
+        self.memory[addr]
+    }
+
+    fn hl_addr(&self, offset: u8) -> usize {
+        let hl = (self.h, self.l).promote();
+        let addr = i32::from(hl) + i32::from(offset);
+        addr as usize
+    }
+
+    fn ix_addr(&self, offset: u8) -> usize {
+        let addr = i32::from(self.ix) + i32::from(offset);
+        addr as usize
+    }
+
+    fn iy_addr(&self, offset: u8) -> usize {
+        let addr = i32::from(self.iy) + i32::from(offset);
+        addr as usize
     }
 }

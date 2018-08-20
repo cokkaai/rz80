@@ -5,22 +5,6 @@ use cpu::RegisterOperations;
 use cpu::Assertor;
 
 #[test]
-fn memory_at_pc() {
-    let cpu = CpuBuilder::new()
-        .with_memory(vec![
-            0x01, 0x02, 0xa4, 0xa8, 0x0f, 0x11, 0x12, 0x14, 0x18, 0x1f, 0x22, 0x33, 0x44, 0x55,
-            0x66, 0x77,
-        ])
-        .build();
-
-    Assertor::new(cpu)
-        .memory_at_address_is(0, 0x01)
-        .memory_at_address_is(1, 0x02)
-        .memory_at_address_is(9, 0x1f)
-        .memory_at_address_is(15, 0x77);
-}
-
-#[test]
 fn twocmp() {
     assert_eq!(0u8.two_compl(), 0);
     assert_eq!(0b0000_0001u8.two_compl(), 0b1111_1111);
@@ -28,13 +12,6 @@ fn twocmp() {
     assert_eq!(0b0111_1110u8.two_compl(), 0b1000_0010);
     assert_eq!(0b0111_1111u8.two_compl(), 0b1000_0001);
     assert_eq!(0b1111_1111u8.two_compl(), 0b0000_0001);
-}
-
-#[test]
-fn incr_pc() {
-    let mut cpu = CpuBuilder::new().with_memory_size(16).build();
-    cpu.incr_pc(2);
-    Assertor::new(cpu).program_counter_is(2);
 }
 
 #[test]

@@ -321,9 +321,8 @@ impl Cpu {
         self.c = value.low();
     }
 
-    pub fn add_bc(&mut self, value: i16) {
-        // TODO: Verify it complies with z80
-        let bc = (self.read_bc() as i16) + value;
+    pub fn add_bc(&mut self, value: i8) {
+        let bc = i32::from(self.read_bc()) + i32::from(value);
         self.write_bc(bc as u16);
     }
 
@@ -338,9 +337,8 @@ impl Cpu {
         self.e = value.low();
     }
 
-    pub fn add_de(&mut self, value: i16) {
-        // TODO: Verify it complies with z80
-        let de = (self.read_de() as i16) + value;
+    pub fn add_de(&mut self, value: i8) {
+        let de = i32::from(self.read_de()) + i32::from(value);
         self.write_de(de as u16);
     }
 
@@ -355,9 +353,8 @@ impl Cpu {
         self.l = value.low();
     }
 
-    pub fn add_hl(&mut self, value: i16) {
-        // TODO: Verify it complies with z80
-        let hl = (self.read_hl() as i16) + value;
+    pub fn add_hl(&mut self, value: i8) {
+        let hl = i32::from(self.read_hl()) + i32::from(value);
         self.write_hl(hl as u16);
     }
 }
