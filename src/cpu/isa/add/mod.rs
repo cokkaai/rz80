@@ -18,8 +18,6 @@ impl Cpu {
             carry |= carry2;
         }
 
-        self.a = result;
-
         // S is set if result is negative (127<result<256).
         self.set_s_from_msb(result);
 
@@ -38,8 +36,21 @@ impl Cpu {
         self.set_c(carry);
 
         // H is set if carry from bit 3 (1 if carry from bit 3 to bit 4 else 0)
-        // TODO: calculate flag H
-        self.set_h(false);
+        // Whether a half carry occured or not can be determined by looking 
+        // at the 3rd bit of the two arguments and the result; these are 
+        // hashed into this table in the form r12, where r is the 3rd bit 
+        // of the result, 1 is the 3rd bit of the 1st argument and 2 is the 
+        // third bit of the 2nd argument; the tables differ for add and 
+        // subtract operations.
+        let lookup = ((self.a & 0x88) >> 3) |
+            ((value & 0x88) >> 2) |
+            ((result & 0x88) >> 1);
+
+        let halfcarry_add_table = [false, true, true, true, false, false, false, true];
+
+        self.set_h(halfcarry_add_table[(lookup & 0x07) as usize]);
+
+        self.a = result;
     }
 
     pub fn add_a_r(&mut self) {
@@ -69,7 +80,7 @@ impl Cpu {
     }
 
     pub fn add_a_iydi(&mut self) {
-        let offset = self.memory_at_pc(2);
+        let offset = self.memory_at_pc(1);
         let operand = self.memory_at_iy(offset);
         self._add_to_accumulator(operand, 0);
         self.pc += 3;

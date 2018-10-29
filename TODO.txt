@@ -29,7 +29,7 @@ TODO
 [TODO] Evaluate if it is possible to remove more register fns
        from registers.rs
 
-[TODO] Understand how to do math with half carry
+[TODO] Understand how to do math with half carry (with add/adc/sub/sbc/16 and cp???)
 
 [TODO] WTF DAA does?
 
